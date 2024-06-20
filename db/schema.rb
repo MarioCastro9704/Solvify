@@ -10,9 +10,56 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_19_000132) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_20_222855) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "availabilities", force: :cascade do |t|
+    t.bigint "psychologist_id", null: false
+    t.date "business_date"
+    t.time "starting_hour"
+    t.time "ending_hour"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["psychologist_id"], name: "index_availabilities_on_psychologist_id"
+  end
+
+  create_table "bookings", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "psychologist_id", null: false
+    t.date "date"
+    t.time "time"
+    t.string "link_to_meet"
+    t.string "payment_status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["psychologist_id"], name: "index_bookings_on_psychologist_id"
+    t.index ["user_id"], name: "index_bookings_on_user_id"
+  end
+
+  create_table "psychologists", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "specialty"
+    t.string "degree"
+    t.string "document_of_identity"
+    t.boolean "availability"
+    t.integer "years_of_experience"
+    t.text "description"
+    t.float "average_rating"
+    t.decimal "price_per_hour"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_psychologists_on_user_id"
+  end
+
+  create_table "reviews", force: :cascade do |t|
+    t.text "comments"
+    t.integer "ratings"
+    t.bigint "psychologist_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["psychologist_id"], name: "index_reviews_on_psychologist_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -22,8 +69,19 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_19_000132) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name"
+    t.string "last_name"
+    t.date "date_of_birth"
+    t.string "gender"
+    t.string "address"
+    t.string "nationality"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "availabilities", "psychologists"
+  add_foreign_key "bookings", "psychologists"
+  add_foreign_key "bookings", "users"
+  add_foreign_key "psychologists", "users"
+  add_foreign_key "reviews", "psychologists"
 end
