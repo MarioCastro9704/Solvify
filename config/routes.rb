@@ -44,4 +44,9 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+  resources :users
+  resources :psychologists
+  resources :bookings
+  resources :reviews
+  resources :availabilities
 end
