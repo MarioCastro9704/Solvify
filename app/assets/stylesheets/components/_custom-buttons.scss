@@ -1,0 +1,48 @@
+// custom-buttons.scss
+
+$primary-color: #16FEAD;
+$secondary-color: #000000;
+
+.btn-primary {
+  background-color: $primary-color;
+  color: #000000;
+  padding: 7px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-right: 0.5rem;
+  border: none;
+  outline: none;
+
+  &:hover {
+    background-color: darken($primary-color, 10%);
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.btn-secondary {
+  background-color: $secondary-color;
+  color: #ffffff;
+  padding: 7px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-right: 0.5rem;
+  border: none;
+  outline: none;
+
+  &:hover {
+    background-color: lighten($secondary-color, 10%);
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.navbar .btn {
+  margin-right: 10px;
+}
