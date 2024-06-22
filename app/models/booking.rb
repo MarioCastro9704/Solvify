@@ -4,4 +4,5 @@ class Booking < ApplicationRecord
 
   validates :date, presence: true
   validates :time, presence: true
+  validates :date, :time, :psychologist_id, presence: true
 end

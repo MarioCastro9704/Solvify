@@ -10,3 +10,26 @@
 // Your CSS partials
 @import "components/index";
 @import "pages/index";
+
+
+
+.table thead th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+  text-align: center;
+}
+
+.table tbody td {
+  height: 60px;
+}
+
+.booking {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 5px;
+  background-color: #f8f9fa;
+}
+
+.booking strong {
+  color: #333;
+}

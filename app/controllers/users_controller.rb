@@ -1,6 +1,8 @@
 class UsersController < ApplicationController
   def index
     @users = User.all
+    @bookings = Booking.includes(:psychologist).where(user: current_user)
+    @new_booking = Booking.new
   end
 
   def show

@@ -6,6 +6,7 @@ class User < ApplicationRecord
 
   has_many :bookings
   has_one :psychologist
+  has_many :psychologists, through: :bookings
 
   validates :name, presence: true
   validates :last_name, presence: true
