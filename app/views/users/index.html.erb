@@ -1,2 +1,70 @@
-<h1>Users#index</h1>
-<p>Find me in app/views/users/index.html.erb</p>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="text-center my-4">Weekly Calendar</h1>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <%= form_with model: Booking.new, url: bookings_path, local: true do |form| %>
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <%= form.label :date, 'Date' %>
+            <%= form.date_field :date, class: 'form-control' %>
+          </div>
+          <div class="form-group col-md-2">
+            <%= form.label :time, 'Time' %>
+            <%= form.time_field :time, class: 'form-control' %>
+          </div>
+          <div class="form-group col-md-4">
+            <%= form.label :psychologist_id, 'Psychologist' %>
+            <%= form.collection_select :psychologist_id, Psychologist.includes(:user).all, :id, :user_name, { prompt: 'Select Psychologist' }, class: 'form-control' %>
+          </div>
+          <div class="form-group col-md-3">
+            <%= form.label :link_to_meet, 'Link to Meet' %>
+            <%= form.text_field :link_to_meet, class: 'form-control' %>
+          </div>
+          <div class="form-group col-md-3">
+            <%= form.hidden_field :user_id, value: current_user.id %>
+            <%= form.submit 'Create Booking', class: 'btn btn-primary mt-4' %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-12">
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <% (0..6).each do |day| %>
+                <th><%= (Date.today.beginning_of_week + day).strftime("%a %d %b") %></th>
+              <% end %>
+            </tr>
+          </thead>
+          <tbody>
+            <% (0..23).each do |hour| %>
+              <tr>
+                <td><%= "%02d:00" % hour %></td>
+                <% (0..6).each do |day| %>
+                  <td class="align-top">
+                    <% bookings = @bookings.select { |b| b.date == (Date.today.beginning_of_week + day) && b.time.hour == hour } %>
+                    <% bookings.each do |booking| %>
+                      <div class="booking bg-light p-1 mb-1">
+                        <strong><%= booking.time.strftime("%H:%M") %></strong>: <%= booking.psychologist.user.name %>
+                      </div>
+                    <% end %>
+                  </td>
+                <% end %>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
