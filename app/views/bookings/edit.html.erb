@@ -1,2 +1,23 @@
-<h1>Bookings#edit</h1>
-<p>Find me in app/views/bookings/edit.html.erb</p>
+<h1>Edit Booking</h1>
+
+<%= form_with model: @booking, local: true do |form| %>
+  <div class="form-group my-4">
+    <%= form.label :date, 'Date' %>
+    <%= form.date_field :date, class: 'form-control' %>
+  </div>
+  <div class="form-group my-4">
+    <%= form.label :time, 'Time' %>
+    <%= form.time_field :time, class: 'form-control' %>
+  </div>
+  <div class="form-group my-4">
+    <%= form.label :psychologist_id, 'Psychologist' %>
+    <%= form.collection_select :psychologist_id, Psychologist.includes(:user).all, :id, :user_name, { prompt: 'Select Psychologist' }, class: 'form-control' %>
+  </div>
+  <div class="form-group my-4">
+    <%= form.label :link_to_meet, 'Link to Meet' %>
+    <%= form.text_field :link_to_meet, class: 'form-control' %>
+  </div>
+  <%= form.submit 'Update Booking', class: 'btn btn-primary' %>
+<% end %>
+
+<%= link_to 'Back', bookings_path, class: 'btn btn-secondary' %>

@@ -1,0 +1,37 @@
+<div class="sidebar d-flex flex-column p-2 bg-white fixed-left py-4" style="width: 100px; height: 100vh; position: fixed;">
+  <ul class="nav flex-column mb-auto text-center">
+    <% if current_user&.psychologist.present? %>
+      <li class="nav-item mb-3">
+        <%= link_to users_path, class: "nav-link text-secondary d-flex flex-column align-items-center" do %>
+          <i class="fas fa-home fa-sm mb-1"></i>
+          <span style="font-size: 0.65rem;">Inicio</span>
+        <% end %>
+      </li>
+      <li class="nav-item mb-3">
+        <%= link_to psychologist_clientes_path(current_user.psychologist), class: "nav-link text-secondary d-flex flex-column align-items-center" do %>
+          <i class="fas fa-user-friends fa-sm mb-1"></i>
+          <span style="font-size: 0.65rem;">Clientes</span>
+        <% end %>
+      </li>
+      <li class="nav-item mb-3">
+        <%= link_to edit_psychologist_path(current_user.psychologist), class: "nav-link text-secondary d-flex flex-column align-items-center" do %>
+          <i class="fas fa-cog fa-sm mb-1"></i>
+          <span style="font-size: 0.65rem;">Config</span>
+        <% end %>
+      </li>
+    <% else %>
+      <li class="nav-item mb-3">
+        <%= link_to user_bookings_path(current_user), class: "nav-link text-secondary d-flex flex-column align-items-center" do %>
+          <i class="fas fa-calendar-check fa-sm mb-1"></i>
+          <span style="font-size: 0.65rem;">Citas</span>
+        <% end %>
+      </li>
+      <li class="nav-item mb-3">
+        <%= link_to edit_user_registration_path, class: "nav-link text-secondary d-flex flex-column align-items-center" do %>
+          <i class="fas fa-user-cog fa-sm mb-1"></i>
+          <span style="font-size: 0.65rem;">Config</span>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</div>

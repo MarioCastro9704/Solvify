@@ -4,6 +4,7 @@ class Psychologist < ApplicationRecord
   has_many :reviews
   has_many :bookings
   has_many :users, through: :bookings
+  has_many :clientes, class_name: 'User', foreign_key: 'psychologist_id'
 
   validates :specialty, presence: true
   validates :degree, presence: true
