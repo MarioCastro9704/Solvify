@@ -1,10 +1,11 @@
 class BookingsController < ApplicationController
+  before_action :set_booking, only: [:show, :edit, :update, :destroy]
+
   def index
     @bookings = Booking.all
   end
 
   def show
-    @booking = Booking.find(params[:id])
   end
 
   def new
@@ -13,22 +14,19 @@ class BookingsController < ApplicationController
 
   def create
     @booking = Booking.new(booking_params)
-    @booking.user = current_user
+    @booking.user = current_user # Asignar el usuario que crea la reserva
 
     if @booking.save
-      redirect_to users_path, notice: 'Booking was successfully created.'
+      redirect_to @booking, notice: 'Booking was successfully created.'
     else
-      redirect_to users_path, alert: 'There was an error creating the booking.'
+      render :new
     end
   end
 
-
   def edit
-    @booking = Booking.find(params[:id])
   end
 
   def update
-    @booking = Booking.find(params[:id])
     if @booking.update(booking_params)
       redirect_to @booking, notice: 'Booking was successfully updated.'
     else
@@ -37,12 +35,15 @@ class BookingsController < ApplicationController
   end
 
   def destroy
-    @booking = Booking.find(params[:id])
     @booking.destroy
     redirect_to bookings_url, notice: 'Booking was successfully destroyed.'
   end
 
   private
+
+  def set_booking
+    @booking = Booking.find(params[:id])
+  end
 
   def booking_params
     params.require(:booking).permit(:psychologist_id, :date, :time, :link_to_meet, :payment_status)

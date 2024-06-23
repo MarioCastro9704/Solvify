@@ -6,13 +6,12 @@
 // External libraries
 @import "bootstrap";
 @import "font-awesome";
-
 // Your CSS partials
 @import "components/index";
 @import "components/custom-buttons";
 @import "pages/index";
 
-
+@import "components/calendar";
 
 .table thead th {
   background-color: #f8f9fa;

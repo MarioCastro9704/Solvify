@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   end
 
   resources :bookings, only: [:index, :show, :new, :create, :edit, :update, :destroy]
-
+  resources :users, only: [:index]
+  resources :bookings
   get "up" => "rails/health#show", as: :rails_health_check
 end

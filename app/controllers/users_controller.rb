@@ -2,7 +2,11 @@ class UsersController < ApplicationController
   def index
     @users = User.all
     @bookings = Booking.includes(:psychologist).where(user: current_user)
+    @bookings = Booking.includes(:psychologist).all
     @new_booking = Booking.new
+    @start_date = params[:start_date].present? ? Date.parse(params[:start_date]) : Date.today.beginning_of_week
+    @end_date = @start_date.end_of_week
+    @bookings = Booking.includes(:psychologist).where(date: @start_date..@end_date)
   end
 
   def show

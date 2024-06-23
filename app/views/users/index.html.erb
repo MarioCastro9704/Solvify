@@ -1,48 +1,34 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-12">
-      <h1 class="text-center my-4">Weekly Calendar</h1>
+<div class="calendar-container">
+  <div class="container">
+    <div class="row my-5 justify-content-center align-items-center text-center">
+      <div class="col-12 col-md-4 mb-3 mb-md-0">
+        <%= link_to users_path(start_date: (@start_date - 1.week).to_s), class: 'btn btn-outline-secondary rounded-pill' do %>
+          <%= tabler_icon('chevron-left', size: 18, class: 'me-1') %>Previous Week
+        <% end %>
+      </div>
+      <div class="col-12 col-md-4 mb-3 mb-md-0">
+        <h2 class="m-0">
+          <%= tabler_icon('calendar', size: 24, class: 'me-2') %>
+          <%= @start_date.strftime("%b %d") %> - <%= @end_date.strftime("%b %d, %Y") %>
+        </h2>
+      </div>
+      <div class="col-12 col-md-4">
+        <%= link_to users_path(start_date: (@start_date + 1.week).to_s), class: 'btn btn-outline-secondary rounded-pill' do %>
+          Next Week<%= tabler_icon('chevron-right', size: 18, class: 'ms-1') %>
+        <% end %>
+      </div>
     </div>
   </div>
 
   <div class="row">
-    <div class="col-12">
-      <%= form_with model: Booking.new, url: bookings_path, local: true do |form| %>
-        <div class="form-row">
-          <div class="form-group col-md-3">
-            <%= form.label :date, 'Date' %>
-            <%= form.date_field :date, class: 'form-control' %>
-          </div>
-          <div class="form-group col-md-2">
-            <%= form.label :time, 'Time' %>
-            <%= form.time_field :time, class: 'form-control' %>
-          </div>
-          <div class="form-group col-md-4">
-            <%= form.label :psychologist_id, 'Psychologist' %>
-            <%= form.collection_select :psychologist_id, Psychologist.includes(:user).all, :id, :user_name, { prompt: 'Select Psychologist' }, class: 'form-control' %>
-          </div>
-          <div class="form-group col-md-3">
-            <%= form.label :link_to_meet, 'Link to Meet' %>
-            <%= form.text_field :link_to_meet, class: 'form-control' %>
-          </div>
-          <div class="form-group col-md-3">
-            <%= form.hidden_field :user_id, value: current_user.id %>
-            <%= form.submit 'Create Booking', class: 'btn btn-primary mt-4' %>
-          </div>
-        </div>
-      <% end %>
-    </div>
-  </div>
-
-  <div class="row mt-5">
-    <div class="col-12">
+    <div class="col-10">
       <div class="table-responsive">
         <table class="table table-bordered">
           <thead>
             <tr>
               <th>Time</th>
-              <% (0..6).each do |day| %>
-                <th><%= (Date.today.beginning_of_week + day).strftime("%a %d %b") %></th>
+              <% (@start_date..@end_date).each do |day| %>
+                <th><%= day.strftime("%a %d %b") %></th>
               <% end %>
             </tr>
           </thead>
@@ -50,12 +36,21 @@
             <% (0..23).each do |hour| %>
               <tr>
                 <td><%= "%02d:00" % hour %></td>
-                <% (0..6).each do |day| %>
+                <% (@start_date..@end_date).each do |day| %>
                   <td class="align-top">
-                    <% bookings = @bookings.select { |b| b.date == (Date.today.beginning_of_week + day) && b.time.hour == hour } %>
+                    <% bookings = @bookings.select { |b| b.date == day && b.time.strftime("%H").to_i == hour } %>
                     <% bookings.each do |booking| %>
-                      <div class="booking bg-light p-1 mb-1">
-                        <strong><%= booking.time.strftime("%H:%M") %></strong>: <%= booking.psychologist.user.name %>
+                      <div class="booking bg-light p-2 mb-2" style="position: relative; border-left: 5px solid <%= booking_color(booking) %>;">
+                        <strong><%= booking.time.strftime("%H:%M") %></strong>: <%= booking.user.name %><br>
+                        <span class="text-muted"><%= booking.psychologist.user.name %></span>
+                        <div style="position: absolute; top: 5px; right: 5px;">
+                          <%= link_to edit_booking_path(booking), class: 'btn btn-primary btn-sm' do %>
+                            <i class="fa fa-pencil"></i>
+                          <% end %>
+                          <%= link_to booking.link_to_meet, target: '_blank', class: 'btn btn-primary btn-sm' do %>
+                            <i class="fa fa-video"></i>
+                          <% end %>
+                        </div>
                       </div>
                     <% end %>
                   </td>
@@ -64,6 +59,33 @@
             <% end %>
           </tbody>
         </table>
+      </div>
+    </div>
+    <div class="col-2">
+      <div class="sidebar p-4" id="sidebar">
+        <h2>Create Booking</h2>
+        <%= form_with model: Booking.new, url: bookings_path, local: true do |form| %>
+          <div class="form-group my-4">
+            <%= form.label :date, 'Date' %>
+            <%= form.date_field :date, class: 'form-control' %>
+          </div>
+          <div class="form-group my-4">
+            <%= form.label :time, 'Time' %>
+            <%= form.time_field :time, class: 'form-control' %>
+          </div>
+          <div class="form-group my-4">
+            <%= form.label :psychologist_id, 'Psychologist' %>
+            <%= form.collection_select :psychologist_id, Psychologist.includes(:user).all, :id, :user_name, { prompt: 'Select Psychologist' }, class: 'form-control' %>
+          </div>
+          <div class="form-group my-4">
+            <%= form.label :link_to_meet, 'Link to Meet' %>
+            <%= form.text_field :link_to_meet, class: 'form-control' %>
+          </div>
+          <div class="form-group my-4">
+            <%= form.hidden_field :user_id, value: current_user.id %>
+            <%= form.submit 'Create Booking', class: 'btn btn-primary' %>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>

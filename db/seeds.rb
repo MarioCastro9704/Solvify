@@ -60,6 +60,29 @@ booking = Booking.create!(
   time: "10:00"
 )
 
+# Crear 4 usuarios adicionales (no psicólogos)
+4.times do |i|
+  new_user = User.create!(
+    email: "user#{i + 2}@example.com",
+    password: "password",
+    password_confirmation: "password",
+    name: "User#{i + 2}",
+    last_name: "Doe",
+    date_of_birth: "1990-0#{i + 2}-01",
+    gender: "Male",
+    address: "123 Main St",
+    nationality: "American"
+  )
+
+  # Crear una reserva para cada nuevo usuario con el psicólogo
+  Booking.create!(
+    user: new_user,
+    psychologist: psychologist,
+    date: Date.today + i,
+    time: "#{10 + i}:00"
+  )
+end
+
 # Crear una reseña para el psicólogo
 review = Review.create!(
   psychologist: psychologist,
