@@ -1,20 +1,20 @@
 <div class="calendar-container">
-  <div class="container">
+  <div class="container-fluid">
     <div class="row my-5 justify-content-center align-items-center text-center">
       <div class="col-12 col-md-4 mb-3 mb-md-0">
         <%= link_to users_path(start_date: (@start_date - 1.week).to_s), class: 'btn btn-outline-secondary rounded-pill' do %>
-          <%= tabler_icon('chevron-left', size: 18, class: 'me-1') %>Previous Week
+          <i class="fas fa-chevron-left me-1"></i>Previous Week
         <% end %>
       </div>
       <div class="col-12 col-md-4 mb-3 mb-md-0">
         <h2 class="m-0">
-          <%= tabler_icon('calendar', size: 24, class: 'me-2') %>
+          <i class="fas fa-calendar-alt me-2"></i>
           <%= @start_date.strftime("%b %d") %> - <%= @end_date.strftime("%b %d, %Y") %>
         </h2>
       </div>
       <div class="col-12 col-md-4">
         <%= link_to users_path(start_date: (@start_date + 1.week).to_s), class: 'btn btn-outline-secondary rounded-pill' do %>
-          Next Week<%= tabler_icon('chevron-right', size: 18, class: 'ms-1') %>
+          Next Week<i class="fas fa-chevron-right ms-1"></i>
         <% end %>
       </div>
     </div>
@@ -43,7 +43,7 @@
                       <div class="booking bg-light p-2 mb-2" style="position: relative; border-left: 5px solid <%= booking_color(booking) %>;">
                         <strong><%= booking.time.strftime("%H:%M") %></strong>: <%= booking.user.name %><br>
                         <span class="text-muted"><%= booking.psychologist.user.name %></span>
-                        <div style="position: absolute; top: 5px; right: 5px;">
+                        <div class="btn-group" style="position: absolute; top: 5px; right: 5px;">
                           <%= link_to edit_booking_path(booking), class: 'btn btn-primary btn-sm' do %>
                             <i class="fa fa-pencil"></i>
                           <% end %>
@@ -62,7 +62,7 @@
       </div>
     </div>
     <div class="col-2">
-      <div class="sidebar p-4" id="sidebar">
+      <div class="p-4">
         <h2>Create Booking</h2>
         <%= form_with model: Booking.new, url: bookings_path, local: true do |form| %>
           <div class="form-group my-4">

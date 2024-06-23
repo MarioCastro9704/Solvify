@@ -12,7 +12,8 @@
 @import "pages/index";
 
 @import "components/calendar";
-
+@import "components/sidebar";
+@import "components/topbar";
 .table thead th {
   background-color: #f8f9fa;
   font-weight: bold;
@@ -32,4 +33,12 @@
 
 .booking strong {
   color: #333;
+}
+////////////////////////////////////////////////////////////////////////////////
+
+
+.content-wrapper {
+  margin-left: 100px; /* Debe coincidir con el ancho del sidebar */
+  margin-top: 60px; /* Debe coincidir con la altura del topbar */
+  padding: 20px;
 }
