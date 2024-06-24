@@ -3,8 +3,15 @@ class UsersController < ApplicationController
 
   def index
     @users = User.all
-    @bookings = Booking.includes(:psychologist, :user).where(date: @start_date..@end_date)
-    @new_booking = Booking.new
+    if params[:start_date].blank?
+      @start_date = Date.today.beginning_of_week
+    else
+      # Si hay una fecha en los parámetros, la usamos
+      @start_date = Date.parse(params[:start_date]).beginning_of_week
+    end
+
+    @end_date = @start_date.end_of_week
+    @bookings = Booking.where(date: @start_date..@end_date)
   end
 
   def show
@@ -47,7 +54,7 @@ class UsersController < ApplicationController
 
   def set_dates
     @start_date = params[:start_date].present? ? Date.parse(params[:start_date]) : Date.today.beginning_of_week
-    @end_date = @start_date.end_of_week
+     @end_date = @start_date.end_of_week
   end
 
   def user_params

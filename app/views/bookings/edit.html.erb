@@ -17,7 +17,10 @@
     <%= form.label :link_to_meet, 'Link to Meet' %>
     <%= form.text_field :link_to_meet, class: 'form-control' %>
   </div>
-  <%= form.submit 'Update Booking', class: 'btn btn-primary' %>
+  <div class="form-group my-4">
+    <%= form.submit 'Update Booking', class: 'btn btn-primary' %>
+    <%= button_to 'Delete Booking', booking_path(@booking), method: :delete, data: { confirm: 'Are you sure you want to delete this booking?' }, class: 'btn btn-danger ms-2' %>
+  </div>
 <% end %>
 
-<%= link_to 'Back', bookings_path, class: 'btn btn-secondary' %>
+<%= link_to 'Back', bookings_path, class: 'btn btn-secondary mt-3' %>

@@ -3,6 +3,7 @@ class BookingsController < ApplicationController
   before_action :authenticate_user!
   def index
     @bookings = current_user.bookings
+
   end
 
   def show
@@ -36,7 +37,10 @@ class BookingsController < ApplicationController
 
   def destroy
     @booking.destroy
-    redirect_to bookings_url, notice: 'Booking was successfully destroyed.'
+    respond_to do |format|
+      format.html { redirect_to bookings_path, notice: 'Booking was successfully deleted.' }
+      format.json { head :no_content }
+    end
   end
 
   private

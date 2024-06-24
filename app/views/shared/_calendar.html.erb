@@ -1,0 +1,30 @@
+<table class="table table-bordered calendar-table">
+  <thead>
+    <tr>
+      <th></th>
+      <% (start_date..end_date).each do |day| %>
+        <th class="<%= 'current-day' if day == Date.today %>">
+          <%= day.strftime("%a") %> <%= day.strftime("%d") %>
+        </th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% (0..23).each do |hour| %>
+      <tr>
+        <td class="hour-column"><%= "%d %s" % [hour % 12 == 0 ? 12 : hour % 12, hour < 12 ? 'AM' : 'PM'] %></td>
+        <% (start_date..end_date).each do |day| %>
+          <td class="calendar-cell">
+            <% day_bookings = bookings.select { |b| b.date == day && b.time.strftime("%H").to_i == hour } %>
+            <% day_bookings.each do |booking| %>
+              <div class="booking-item" style="background-color: <%= booking_color(booking) %>;">
+                <span class="booking-time"><%= booking.time.strftime("%I:%M %p") %></span>
+                <span class="booking-title"><%= booking.user.name %></span>
+              </div>
+            <% end %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -1,0 +1,37 @@
+.calendar-header {
+  background-color: #ffffff;
+  border-bottom: 1px solid #dee2e6;
+  padding: 20px;
+}
+
+.week-header .day-header {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.day-header.today {
+  background-color: #e9ecef;
+  font-weight: bold;
+}
+
+.booking {
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+}
+
+.booking-time {
+  font-weight: bold;
+}
+
+.booking-actions .btn {
+  margin-right: 0.5rem;
+}
+
+.booking-form-wrapper {
+  height: 100%;
+}
+
+.booking-form-container {
+  background-color: #f8f9fa;
+  border-left: 1px solid #dee2e6;
+  padding: 20px;
+}
