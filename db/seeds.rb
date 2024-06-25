@@ -57,7 +57,8 @@ booking = Booking.create!(
   user: user,
   psychologist: psychologist,
   date: Date.today,
-  time: "10:00"
+  time: "10:00",
+  end_time: "11:00"
 )
 
 # Crear 4 usuarios adicionales (no psicólogos)
@@ -79,7 +80,8 @@ booking = Booking.create!(
     user: new_user,
     psychologist: psychologist,
     date: Date.today + i,
-    time: "#{10 + i}:00"
+    time: "#{10 + i}:00",
+    end_time: "#{11 + i}:00"
   )
 end
 

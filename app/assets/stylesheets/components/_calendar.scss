@@ -1,0 +1,78 @@
+.calendar-header {
+  background-color: #ffffff;
+  border-bottom: 1px solid #dee2e6;
+  padding: 20px;
+}
+
+.week-header {
+  display: flex;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.week-header .day-header {
+  flex-grow: 1;
+  text-align: center;
+  padding: 10px 0;
+  box-sizing: border-box;
+}
+
+.day-header.today {
+  background-color: #e9ecef;
+  font-weight: bold;
+}
+
+.week-body {
+  display: flex;
+  flex-direction: row;
+}
+
+.time-slots {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 60px; /* Ancho ajustado a 60px */
+  border-right: 1px solid #dee2e6;
+}
+
+.time-slot {
+  height: 60px; /* Altura ajustada a 60px */
+  line-height: 60px;
+  text-align: center;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.day-column {
+  position: relative;
+  flex-grow: 1;
+  border-right: 1px solid #dee2e6;
+}
+
+.booking {
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  width: 95%;
+  box-sizing: border-box;
+}
+
+.booking-time {
+  font-weight: bold;
+}
+
+.booking-actions .btn {
+  margin-right: 0.5rem;
+}
+
+.current-time-line {
+  position: absolute;
+  width: 100%;
+  border-top: 2px solid red;
+  z-index: 10;
+}
+
+.time-column-header {
+  width: 60px; /* Ancho ajustado a 60px */
+  border-right: 1px solid #dee2e6;
+  text-align: center;
+  padding: 10px 0;
+  box-sizing: border-box;
+}
