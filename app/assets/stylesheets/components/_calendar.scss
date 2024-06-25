@@ -76,3 +76,24 @@
   padding: 10px 0;
   box-sizing: border-box;
 }
+
+.table thead th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+  text-align: center;
+}
+
+.table tbody td {
+  height: 60px;
+}
+
+.booking {
+  border: 1px solid #d4d4d4;
+  border-radius: 8px;
+  padding: 5px;
+  background-color: #ffffff;
+}
+
+.booking strong {
+  color: #333;
+}
