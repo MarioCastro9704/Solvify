@@ -14,31 +14,8 @@
 @import "components/calendar";
 @import "components/sidebar";
 @import "components/topbar";
-.table thead th {
-  background-color: #f8f9fa;
-  font-weight: bold;
-  text-align: center;
-}
-
-.table tbody td {
-  height: 60px;
-}
-
-.booking {
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  padding: 5px;
-  background-color: #f8f9fa;
-}
-
-.booking strong {
-  color: #333;
-}
-////////////////////////////////////////////////////////////////////////////////
-
 
 .content-wrapper {
-  margin-left: 100px; /* Debe coincidir con el ancho del sidebar */
-  margin-top: 60px; /* Debe coincidir con la altura del topbar */
-  padding: 20px;
+  margin-left: 175px;
+  padding: 40px;
 }
