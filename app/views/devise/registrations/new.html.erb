@@ -1,75 +1,89 @@
-<div class="container-fluid vh-100 d-flex p-0">
-  <div class="col-md-6 d-flex flex-column justify-content-center align-items-center bg-white" style="padding: 40px;">
-    <div class="w-100" style="max-width: 500px;">
+<!------------------- Contenedor Principal  ------------------->
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
 
-      <h2 class="mb-3">Registro de Cuenta</h2>
-      <p class="mb-4">Tu bienestar, nuestra prioridad: Terapia en línea para una mente sana y equilibrada.</p>
-      <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-        <%= f.error_notification %>
+  <!------------------- Contenedor Log-in  ------------------->
+  <div class="row border rounded-5 p-3 bg-white shadow box-area">
 
-        <!-- Nombre y Apellido -->
-        <div class="row">
-          <div class="form-group mb-3 col-sm-6">
-            <%= f.input :name, required: true, autofocus: true, input_html: { autocomplete: "First Name", class: 'form-control' }, label: 'Nombre' %>
+
+
+    <!------------------- Left Box ------------------->
+    <div class="col-md-6 left-box">
+      <div class="row align-items-center mx-2">
+        <div class="header-text mb-4 mt-3">
+          <h3>Únete a Solvify</h3>
+          <h5>Tu bienestar, nuestra prioridad.</h5>
+          <p class="text-secondary fs-6">Terapia en línea para una mente sana y equilibrada.</p>
+        </div>
+
+        <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+          <%= f.error_notification %>
+
+          <!-- Nombre y Apellido -->
+          <div class="row">
+            <div class="form-group col-sm-6">
+              <%= f.input :name, required: true, autofocus: true, input_html: { autocomplete: "First Name", class: 'form-control form-control-lg bg-light fs-6' }, label: false, placeholder: 'Nombre' %>
+            </div>
+
+            <div class="form-group col-sm-6">
+              <%= f.input :last_name, required: true, autofocus: true, input_html: { autocomplete: "Last Name", class: 'form-control form-control-lg bg-light fs-6' }, label: false, placeholder: 'Apellido' %>
+            </div>
+          </div>
+          <!--Fecha de Nacimiento y Genero -->
+          <div class="row mb-3">
+            <div class="form-group col-sm-6">
+              <%= f.date_field :date_of_birth, class: 'form-control form-control-lg bg-light fs-6', required: true %>
+            </div>
+
+            <div class="form-group col-sm-6">
+              <%= f.select :gender, [['Masculino', 'masculino'], ['Femenino', 'femenino'], ['Otros', 'otros']], { prompt: 'Género' }, { class: 'form-control form-control-lg bg-light fs-6' } %>
+            </div>
           </div>
 
-          <div class="form-group mb-3 col-sm-6">
-            <%= f.input :last_name, required: true, autofocus: true, input_html: { autocomplete: "Last Name", class: 'form-control' }, label: 'Apellido' %>
-          </div>
-        </div>
-        <!--Fecha de Nacimiento y Genero -->
-        <div class="row">
-          <div class="form-group mb-3 col-sm-6">
-            <%= f.label :date_of_birth, 'Fecha de Nacimiento' %>
-            <%= f.date_field :date_of_birth, class: 'form-control', required: true %>
+          <!--Email-->
+          <div class="form-group mb-3">
+            <%= f.input :email, required: true, autofocus: true, input_html: { autocomplete: "Email", class: 'form-control form-control-lg bg-light fs-6' }, label: false, placeholder: 'Correo electrónico' %>
           </div>
 
-          <div class="form-group mb-3 col-sm-6">
-            <%= f.label :gender, 'Género' %>
-            <%= f.select :gender, [['Masculino', 'masculino'], ['Femenino', 'femenino'], ['Otros', 'otros']], { prompt: 'Seleccione Género' }, { class: 'form-control' } %>
-          </div>
-        </div>
+          <!-- País de Residencia y Ciudad -->
+          <div class="row">
+            <div class="form-group col-sm-6">
+              <%= f.input :nationality, required: true, autofocus: true, input_html: { autocomplete: "Nationality", class: 'form-control form-control-lg bg-light fs-6' }, label: false, placeholder: 'País' %>
+            </div>
 
-        <!--Email-->
-        <div class="form-group mb-3">
-          <%= f.input :email, required: true, autofocus: true, input_html: { autocomplete: "Email", class: 'form-control' }, label: 'Correo Electrónico' %>
-        </div>
-
-        <!-- País de Residencia y Ciudad -->
-        <div class="row">
-          <div class="form-group mb-3 col-sm-6">
-            <%= f.input :nationality, required: true, autofocus: true, input_html: { autocomplete: "Nationality", class: 'form-control' }, label: 'País' %>
+            <div class="form-group col-sm-6">
+              <%= f.input :address, required: true, autofocus: true, input_html: { autocomplete: "Address", class: 'form-control form-control-lg bg-light fs-6' }, label: false, placeholder: 'Ciudad' %>
+            </div>
           </div>
 
-          <div class="form-group mb-3 col-sm-6">
-            <%= f.input :address, required: true, autofocus: true, input_html: { autocomplete: "Address", class: 'form-control' }, label: 'Ciudad' %>
+          <!--Password-->
+          <div class="form-group mb-3">
+            <%= f.input :password, required: true, hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length), input_html: { autocomplete: "new-password", class: 'form-control form-control-lg bg-light fs-6' }, label: false, placeholder: 'Contraseña' %>
           </div>
+          <div class="form-group mb-5">
+            <%= f.input :password_confirmation, required: true, input_html: { autocomplete: "new-password", class: 'form-control' }, label: false, placeholder: 'Confirma tu contraseña' %>
+          </div>
+
+          <!--Botón de Registro-->
+          <div class="form-actions mb-1">
+            <%= f.button :submit, "Regístrate", class: "btn btn-lg btn-primary w-100 fs-6 rounded-pill" %>
+          </div>
+        <% end %>
+
+        <div class="text-center mt-4">
+          <p class="text-secondary fs-6">Al registrarte, aceptas los <%= link_to 'Terminos de Uso y Datos', '#', class: 'text-dark' %> & <%= link_to 'Política de Privacidad', '#', class: 'text-dark' %>.</p>
+          <p class="mt-2 text-secondary fs-6">¿Ya está registrado?  <%= link_to 'Log in', new_user_session_path, class: 'text-dark' %></p>
         </div>
 
-        <!--Password-->
-        <div class="form-group mb-3">
-          <%= f.input :password, required: true, hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length), input_html: { autocomplete: "new-password", class: 'form-control' }, label: 'Contraseña' %>
-        </div>
-        <div class="form-group mb-3">
-          <%= f.input :password_confirmation, required: true, input_html: { autocomplete: "new-password", class: 'form-control' }, label: 'Confirma tu Contraseña' %>
-        </div>
-
-        <!--Botón de Registro-->
-        <div class="form-actions mb-3">
-          <%= f.button :submit, "Regístrate", class: "btn btn-primary rounded-pill w-100" %>
-        </div>
-      <% end %>
-
-      <div class="text-center mt-4">
-        <p>Al registrarte, aceptas los <%= link_to 'Terminos de Uso y Datos', '#', class: 'text-dark' %> & <%= link_to 'Política de Privacidad', '#', class: 'text-dark' %>.</p>
-        <p class="mt-2">¿Ya está registrado?  <%= link_to 'Log in', new_user_session_path, class: 'text-dark' %></p>
       </div>
 
     </div>
 
-  </div>
+    <!------------------- Right Box ------------------->
+    <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column right-box" style="background: #F5F8E5">
+      <div class="featured-image">
+        <%= image_tag "signup-ic.jpg", alt: "Random Image", class: "img-fluid"%>
+      </div>
+    </div>
 
-  <div class="col-md-6 d-none d-md-flex flex-column justify-content-center align-items-center p-0">
-    <%= image_tag "nature_background.jpg", alt: "Random Image", class: "img-fluid vh-100 w-100"  %>
   </div>
 </div>
