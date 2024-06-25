@@ -8,19 +8,24 @@
 
   <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
   <%= javascript_importmap_tags %>
-
 </head>
 
 <body>
-  <%= render 'shared/sidebar' %>
-
   <% if user_signed_in? %>
+    <%= render 'shared/sidebar' %>
     <%= render 'shared/topbar' %>
+    <div class="content-wrapper" style="margin-top: 60px; margin-left: 175px;">
+      <%= render 'shared/flashes' %>
+      <%= yield %>
+    </div>
+  <% else %>
+    <% unless controller_name == 'sessions' || controller_name == 'registrations' || controller_name == 'passwords' %>
+      <%= render 'shared/navbar' %>
+    <% end %>
+    <div class="content-wrapper">
+      <%= render 'shared/flashes' %>
+      <%= yield %>
+    </div>
   <% end %>
-
-  <div class="content-wrapper" style="<%= user_signed_in? ? 'margin-top: 60px;' : 'margin-left: 175px;' %>">
-    <%= render 'shared/flashes' %>
-    <%= yield %>
-  </div>
 </body>
 </html>
