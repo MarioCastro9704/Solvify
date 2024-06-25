@@ -248,6 +248,8 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
+    simple_calendar (3.0.4)
+      rails (>= 6.1)
     sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
@@ -259,6 +261,7 @@ GEM
       railties (>= 6.0.0)
     stringio (3.1.1)
     strscan (3.1.0)
+    tabler_icons (0.1.1)
     thor (1.3.1)
     tilt (2.3.0)
     timeout (0.4.1)
@@ -306,9 +309,11 @@ DEPENDENCIES
   rails (~> 7.1.3, >= 7.1.3.4)
   sassc-rails
   selenium-webdriver
+  simple_calendar
   simple_form!
   sprockets-rails
   stimulus-rails
+  tabler_icons
   turbo-rails
   tzinfo-data
   web-console

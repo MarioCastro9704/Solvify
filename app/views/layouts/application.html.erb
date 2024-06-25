@@ -1,22 +1,26 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Solvify</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+<head>
+  <title>Solvify</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
-  </head>
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <%= javascript_importmap_tags %>
 
-  <body>
-    <div>
-      <% unless devise_controller? %>
-        <%= render "shared/navbar" %>
-      <% end %>
-      <%= render "shared/flashes" %>
-      <%= yield %>
-    </div>
-  </body>
+</head>
+
+<body>
+  <%= render 'shared/sidebar' %>
+
+  <% if user_signed_in? %>
+    <%= render 'shared/topbar' %>
+  <% end %>
+
+  <div class="content-wrapper" style="<%= user_signed_in? ? 'margin-top: 60px;' : 'margin-left: 175px;' %>">
+    <%= render 'shared/flashes' %>
+    <%= yield %>
+  </div>
+</body>
 </html>

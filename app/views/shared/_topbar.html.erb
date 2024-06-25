@@ -1,0 +1,23 @@
+<div class="topbar d-flex justify-content-between align-items-center p-3 fixed-top" style="height: 60px;">
+  <div class="d-flex align-items-center px-5">
+    <%= link_to root_path, class: "navbar-brand d-flex align-items-center" do %>
+      <%= image_tag "logo-solvify.svg", alt: "Logo", class: "logo me-2" %>
+    <% end %>
+  </div>
+  <div>
+    <h1 class="h4 m-0"><%= content_for?(:page_title) ? yield(:page_title) : "Mis eventos" %></h1>
+  </div>
+  <div class="mt-auto text-center">
+    <div class="dropdown">
+      <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background-color: <%= user_color(current_user) %>;">
+          <span style="font-size: 0.9rem; color: white;"><%= current_user&.name[0].upcase %></span>
+        </div>
+      </a>
+      <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUser1">
+        <%= link_to "Editar cuenta", edit_user_registration_path, class: "dropdown-item" %>
+        <%= link_to "Cerrar sesión", destroy_user_session_path, data: { turbo_method: :delete }, class: "dropdown-item" %>
+      </div>
+    </div>
+  </div>
+</div>

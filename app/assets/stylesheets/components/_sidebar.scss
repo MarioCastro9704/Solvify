@@ -1,0 +1,20 @@
+.sidebar .nav-link {
+  border-radius: 0;
+  padding: 0.5rem 0;
+}
+.sidebar .nav-link:hover {
+  background-color: #f8f9fa;
+}
+.sidebar .fa-solid {
+  color: #6c757d;
+}
+.sidebar .nav-link:hover .fa-solid {
+  color: #00d1ab;
+}
+.sidebar .logo {
+  max-width: 100%;
+  height: auto;
+}
+.sidebar .dropdown-menu {
+  min-width: 200px;
+}

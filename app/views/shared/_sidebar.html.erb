@@ -1,0 +1,46 @@
+<div class="sidebar d-flex flex-column p-2 bg-white fixed-left py-4" style="width: 175px; height: 100vh; position: fixed;">
+  <ul class="nav flex-column mb-auto text-center">
+    <% if user_signed_in? %>
+      <% if current_user&.psychologist.present? %>
+        <li class="nav-item mb-3">
+          <%= link_to users_path, class: "nav-link text-secondary d-flex flex-column align-items-center py-4 rounded-pill" do %>
+            <i class="fa-solid fa-house mb-3" style="font-size: 1.5rem;"></i>
+            <span style="font-size: 1rem;">Inicio</span>
+          <% end %>
+        </li>
+        <li class="nav-item mb-3">
+          <%= link_to psychologist_clientes_path(current_user.psychologist), class: "nav-link text-secondary d-flex flex-column align-items-center py-4 rounded-pill" do %>
+            <i class="fa-solid fa-users mb-3" style="font-size: 1.5rem;"></i>
+            <span style="font-size: 1rem;">Mis Clientes</span>
+          <% end %>
+        </li>
+        <li class="nav-item mb-3">
+          <%= link_to edit_psychologist_path(current_user.psychologist), class: "nav-link text-secondary d-flex flex-column align-items-center py-4 rounded-pill" do %>
+            <i class="fa-solid fa-file-invoice mb-3" style="font-size: 1.5rem;"></i>
+            <span style="font-size: 1rem;">Mi Servicios</span>
+          <% end %>
+        </li>
+      <% else %>
+        <li class="nav-item mb-3">
+          <%= link_to user_bookings_path(current_user), class: "nav-link text-secondary d-flex flex-column align-items-center py-4 rounded-pill" do %>
+            <i class="fas fa-calendar-check mb-3" style="font-size: 1.5rem;"></i>
+            <span style="font-size: 1rem;">Citas</span>
+          <% end %>
+        </li>
+        <li class="nav-item mb-3">
+          <%= link_to edit_user_registration_path, class: "nav-link text-secondary d-flex flex-column align-items-center py-4 rounded-pill" do %>
+            <i class="fas fa-user-cog fa-lg mb-3"></i>
+            <span style="font-size: 1rem;">Config</span>
+          <% end %>
+        </li>
+      <% end %>
+    <% else %>
+      <li class="nav-item mb-3">
+        <%= link_to new_user_session_path, class: "nav-link text-secondary d-flex flex-column align-items-center" do %>
+          <i class="fas fa-sign-in-alt fa-sm mb-1"></i>
+          <span style="font-size: 1rem;">Login</span>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</div>

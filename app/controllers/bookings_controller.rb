@@ -1,47 +1,66 @@
 class BookingsController < ApplicationController
+  before_action :set_booking, only: %i[show edit update destroy]
+
   def index
     @bookings = Booking.all
   end
 
   def show
-    @booking = Booking.find(params[:id])
   end
 
   def new
     @booking = Booking.new
   end
 
-  def create
-    @booking = Booking.new(booking_params)
-    if @booking.save
-      redirect_to @booking, notice: 'Booking was successfully created.'
-    else
-      render :new
+  def edit
+    respond_to do |format|
+      format.html
+      format.turbo_stream
     end
   end
 
-  def edit
-    @booking = Booking.find(params[:id])
+  def create
+    @booking = Booking.new(booking_params)
+
+    respond_to do |format|
+      if @booking.save
+        format.html { redirect_to @booking, notice: "Booking was successfully created." }
+        format.json { render :show, status: :created, location: @booking }
+      else
+        format.html { render :new }
+        format.json { render json: @booking.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   def update
-    @booking = Booking.find(params[:id])
-    if @booking.update(booking_params)
-      redirect_to @booking, notice: 'Booking was successfully updated.'
-    else
-      render :edit
+    respond_to do |format|
+      if @booking.update(booking_params)
+        format.html { redirect_to @booking, notice: "Booking was successfully updated." }
+        format.json { render :show, status: :ok, location: @booking }
+      else
+        format.html { render :edit }
+        format.json { render json: @booking.errors, status: :unprocessable_entity }
+      end
     end
   end
 
   def destroy
-    @booking = Booking.find(params[:id])
     @booking.destroy
-    redirect_to bookings_url, notice: 'Booking was successfully destroyed.'
+    respond_to do |format|
+      format.html { redirect_to bookings_url, notice: "Booking was successfully destroyed." }
+      format.json { head :no_content }
+    end
   end
 
   private
 
+  def set_booking
+    @booking = Booking.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
   def booking_params
-    params.require(:booking).permit(:psychologist_id, :user_id, :date, :time, :link_to_meet, :payment_status)
+    params.require(:booking).permit(:date, :time, :end_time, :psychologist_id, :link_to_meet, :user_id)
   end
 end

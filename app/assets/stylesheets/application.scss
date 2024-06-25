@@ -6,9 +6,17 @@
 // External libraries
 @import "bootstrap";
 @import "font-awesome";
-
 // Your CSS partials
 @import "components/index";
 @import "components/custom-buttons";
 @import "pages/index";
-@import "components/login"
+@import "components/login";
+
+@import "components/calendar";
+@import "components/sidebar";
+@import "components/topbar";
+
+.content-wrapper {
+  margin-left: 175px;
+  padding: 40px;
+}
