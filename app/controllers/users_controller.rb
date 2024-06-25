@@ -54,7 +54,7 @@ class UsersController < ApplicationController
 
   def set_dates
     @start_date = params[:start_date].present? ? Date.parse(params[:start_date]) : Date.today.beginning_of_week
-     @end_date = @start_date.end_of_week
+    @end_date = @start_date.end_of_week
   end
 
   def user_params

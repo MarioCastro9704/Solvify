@@ -1,4 +1,4 @@
-<div class="container-fluid vh-100 p-0">
+<div class="container-fluid vh-100 p-0" data-controller="calendar">
   <div class="row h-100 no-gutters">
     <div class="col-md-10 p-0">
       <div class="calendar-container h-100 d-flex flex-column">
@@ -19,25 +19,45 @@
           </div>
         </div>
 
-        <div class="calendar-body flex-grow-1 overflow-auto">
+        <div class="calendar-body flex-grow-1 overflow-auto position-relative">
+          <!-- Line indicating current time -->
+          <div id="current-time-line" class="current-time-line" data-calendar-target="currentTimeLine"></div>
+
           <div class="week-container">
-            <div class="week-header d-flex bg-light border-bottom">
+            <div class="week-header">
+              <!-- Header for the time column -->
+              <div class="time-column-header">
+                <strong>Hora</strong>
+              </div>
               <% (0..6).each do |day_index| %>
                 <% date = @start_date + day_index.days %>
-                <div class="day-header flex-grow-1 text-center py-2 <%= 'today' if date == Date.today %>">
+                <div class="day-header <%= 'today' if date == Date.today %>">
                   <%= date.strftime("%a %d") %>
                 </div>
               <% end %>
             </div>
-            <div class="week-body d-flex">
+            <div class="week-body">
+              <!-- Time slots on the left -->
+              <div class="time-slots">
+                <% (0..23).each do |hour| %>
+                  <div class="time-slot">
+                    <%= Time.parse("#{hour}:00").strftime("%I %p") %>
+                  </div>
+                <% end %>
+              </div>
+
               <% (0..6).each do |day_index| %>
                 <% date = @start_date + day_index.days %>
-                <div class="day-column flex-grow-1 border-end p-2">
+                <div class="day-column">
                   <% @bookings.select { |b| b.date == date }.each do |booking| %>
-                    <div class="booking mb-2 p-2 rounded" style="border-left: 5px solid <%= booking_color(booking) %>;">
-                      <div class="booking-time font-weight-bold"><%= booking.time.strftime("%H:%M") %></div>
-                      <div class="booking-title"><%= booking.user.name %></div>
-                      <div class="booking-psychologist"><%= booking.psychologist.user.name %></div>
+                    <% booking_start_hour = booking.time.strftime("%H").to_i %>
+                    <% booking_start_minute = booking.time.strftime("%M").to_i %>
+                    <% booking_end_hour = booking.end_time.strftime("%H").to_i %>
+                    <% booking_end_minute = booking.end_time.strftime("%M").to_i %>
+                    <% booking_duration = (booking_end_hour * 60 + booking_end_minute) - (booking_start_hour * 60 + booking_start_minute) %> <!-- Calcular la duración real -->
+                    <div class="booking mb-2 p-2 rounded position-absolute" style="top: <%= (booking_start_hour * 60 + booking_start_minute) %>px; height: <%= booking_duration %>px; border-left: 5px solid <%= booking_color(booking) %>;">
+                      <div class="booking-title font-weight-bold"><%= booking.user.name %></div>
+                      <div class="booking-time"><%= booking.time.strftime("%I:%M %p") %> - <%= booking.end_time.strftime("%I:%M %p") %></div>
                       <div class="booking-actions mt-2">
                         <%= link_to edit_booking_path(booking), class: 'btn btn-primary btn-sm' do %>
                           <i class="fa fa-pencil"></i>
@@ -68,6 +88,10 @@
             <div class="mb-3">
               <%= form.label :time, 'Time', class: 'form-label' %>
               <%= form.time_field :time, class: 'form-control' %>
+            </div>
+            <div class="mb-3">
+              <%= form.label :end_time, 'End Time', class: 'form-label' %>
+              <%= form.time_field :end_time, class: 'form-control' %>
             </div>
             <div class="mb-3">
               <%= form.label :psychologist_id, 'Psychologist', class: 'form-label' %>

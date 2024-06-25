@@ -42,6 +42,7 @@ class PsychologistsController < ApplicationController
   private
 
   def psychologist_params
-    params.require(:psychologist).permit(:user_id, :specialty, :degree, :document_of_identity, :availability, :years_of_experience, :description, :average_rating, :price_per_hour)
+    params.require(:psychologist).permit(:user_id, :specialty, :degree, :document_of_identity, :availability,
+                                         :years_of_experience, :description, :average_rating, :price_per_hour)
   end
 end
