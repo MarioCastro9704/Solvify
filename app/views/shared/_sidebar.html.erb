@@ -4,38 +4,32 @@
       <% if current_user&.psychologist.present? %>
         <li class="nav-item mb-3">
           <%= link_to users_path, class: "nav-link text-secondary d-flex flex-column align-items-center py-4 rounded-pill" do %>
-            <i class="fas fa-home fa-sm mb-1"></i>
+            <i class="fa-solid fa-house mb-3" style="font-size: 1.5rem;"></i>
             <span style="font-size: 1rem;">Inicio</span>
           <% end %>
         </li>
         <li class="nav-item mb-3">
           <%= link_to psychologist_clientes_path(current_user.psychologist), class: "nav-link text-secondary d-flex flex-column align-items-center py-4 rounded-pill" do %>
-            <i class="fas fa-user-friends fa-sm mb-1"></i>
+            <i class="fa-solid fa-users mb-3" style="font-size: 1.5rem;"></i>
             <span style="font-size: 1rem;">Mis Clientes</span>
           <% end %>
         </li>
         <li class="nav-item mb-3">
           <%= link_to edit_psychologist_path(current_user.psychologist), class: "nav-link text-secondary d-flex flex-column align-items-center py-4 rounded-pill" do %>
-            <i class="fas fa-cog fa-sm mb-1"></i>
-            <span style="font-size: 1rem;">Mis servicios</span>
-          <% end %>
-        </li>
-        <li class="nav-item mb-3">
-          <%= link_to edit_psychologist_path(current_user.psychologist), class: "nav-link text-secondary d-flex flex-column align-items-center py-4 rounded-pill" do %>
-            <i class="fas fa-cog fa-sm mb-1"></i>
-            <span style="font-size: 1rem;">Config</span>
+            <i class="fa-solid fa-file-invoice mb-3" style="font-size: 1.5rem;"></i>
+            <span style="font-size: 1rem;">Mi Servicios</span>
           <% end %>
         </li>
       <% else %>
         <li class="nav-item mb-3">
           <%= link_to user_bookings_path(current_user), class: "nav-link text-secondary d-flex flex-column align-items-center py-4 rounded-pill" do %>
-            <i class="fas fa-calendar-check fa-sm mb-1"></i>
+            <i class="fas fa-calendar-check mb-3" style="font-size: 1.5rem;"></i>
             <span style="font-size: 1rem;">Citas</span>
           <% end %>
         </li>
         <li class="nav-item mb-3">
           <%= link_to edit_user_registration_path, class: "nav-link text-secondary d-flex flex-column align-items-center py-4 rounded-pill" do %>
-            <i class="fas fa-user-cog fa-sm mb-1"></i>
+            <i class="fas fa-user-cog fa-lg mb-3"></i>
             <span style="font-size: 1rem;">Config</span>
           <% end %>
         </li>
