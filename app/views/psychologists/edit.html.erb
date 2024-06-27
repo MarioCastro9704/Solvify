@@ -1,51 +1,118 @@
-<h1>Edit Psychologist</h1>
+<div class="container mt-5">
+  <h1 class="mb-4">Editar Perfil de Psicólogo</h1>
 
-<%= form_with(model: @psychologist, local: true) do |form| %>
-  <% if @psychologist.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@psychologist.errors.count, "error") %> prohibited this psychologist from being saved:</h2>
-      <ul>
-        <% @psychologist.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
+  <%= form_with(model: @psychologist, local: true, class: "needs-validation", novalidate: true) do |form| %>
+    <% if @psychologist.errors.any? %>
+      <div id="error_explanation" class="alert alert-danger">
+        <h2><%= pluralize(@psychologist.errors.count, "error") %> prohibited this psychologist from being saved:</h2>
+        <ul>
+          <% @psychologist.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <div class="mb-3">
+      <%= form.label :profile_picture, "Imagen de perfil", class: "form-label" %>
+      <%= form.file_field :profile_picture, class: "form-control" %>
+    </div>
+    <div class="mb-3">
+      <%= form.label :full_name, "Nombre completo", class: "form-label" %>
+      <%= form.text_field :full_name, disabled: true, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :document_of_identity, "Cédula", class: "form-label" %>
+      <%= form.text_field :document_of_identity, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :approach, "Enfoque terapéutico", class: "form-label" %>
+      <%= form.text_field :approach, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :specialties, 'Especialidades', class: "form-label" %>
+      <div class="row">
+        <%= form.collection_check_boxes :specialties, Psychologist::SPECIALTIES, :to_s, :to_s do |b| %>
+          <div class="col-md-4 mb-2">
+            <div class="form-check">
+              <%= b.check_box class: "form-check-input" %>
+              <%= b.label class: "form-check-label" %>
+            </div>
+          </div>
         <% end %>
-      </ul>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :languages, "Idiomas", class: "form-label" %>
+      <%= form.text_field :languages, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :nationality, "Nacionalidad", class: "form-label" %>
+      <%= form.text_field :nationality, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :price_per_session, "Precio por sesión (50 min)", class: "form-label" %>
+      <%= form.number_field :price_per_session, step: 0.01, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :degree, "Título académico", class: "form-label" %>
+      <%= form.text_field :degree, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.submit "Actualizar perfil", class: "btn btn-primary" %>
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :specialty %>
-    <%= form.text_field :specialty %>
+  <div class="mb-4">
+    <%= link_to 'Ver perfil', @psychologist, class: "btn btn-outline-secondary me-2" %>
+    <%= link_to 'Volver a la lista', psychologists_path, class: "btn btn-outline-secondary" %>
   </div>
 
-  <div class="field">
-    <%= form.label :specialties, 'Especialidades' %>
-    <%= form.collection_check_boxes :specialties, Psychologist::SPECIALTIES, :to_s, :to_s do |b| %>
-      <div class="checkbox">
-        <%= b.check_box %>
-        <%= b.label %>
-      </div>
-    <% end %>
+  <div class="card mb-4">
+    <div class="card-header">
+      <h2 class="mb-0">Gestionar disponibilidad</h2>
+    </div>
+    <div class="card-body">
+      <%= link_to 'Ver horarios disponibles', psychologist_availabilities_path(@psychologist), class: "btn btn-info me-2" %>
+      <%= link_to 'Añadir nuevo horario', new_psychologist_availability_path(@psychologist), class: "btn btn-success" %>
+    </div>
   </div>
 
-  <div class="field">
-    <%= form.label :degree %>
-    <%= form.text_field :degree %>
+  <div class="card mb-4">
+    <div class="card-header">
+      <h2 class="mb-0">Gestionar servicio</h2>
+    </div>
+    <div class="card-body">
+      <% if @psychologist.service %>
+        <%= link_to 'Editar servicio', edit_service_path(@psychologist.service), class: "btn btn-warning" %>
+      <% else %>
+        <%= link_to 'Crear servicio', new_service_path(psychologist_id: @psychologist.id), class: "btn btn-success" %>
+      <% end %>
+    </div>
   </div>
 
-  <div class="field">
-    <%= form.label :document_of_identity %>
-    <%= form.text_field :document_of_identity %>
+  <div class="card mb-4">
+    <div class="card-header">
+      <h2 class="mb-0">Ver reseñas</h2>
+    </div>
+    <div class="card-body">
+      <%= link_to 'Ver reseñas', psychologist_reviews_path(@psychologist), class: "btn btn-info" %>
+    </div>
   </div>
 
-  <div class="field">
-    <%= form.label :price_per_hour %>
-    <%= form.number_field :price_per_hour, step: 0.01 %>
+  <div class="card mb-4">
+    <div class="card-header">
+      <h2 class="mb-0">Ver clientes</h2>
+    </div>
+    <div class="card-body">
+      <%= link_to 'Ver clientes', psychologist_clientes_path(@psychologist), class: "btn btn-info" %>
+    </div>
   </div>
-
-  <div class="actions">
-    <%= form.submit %>
-  </div>
-<% end %>
-
-<%= link_to 'Show', @psychologist %> |
-<%= link_to 'Back', psychologists_path %>
+</div>

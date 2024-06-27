@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   resources :psychologists do
     resources :availabilities, only: [:index, :show, :new, :create, :edit, :update, :destroy]
     resources :reviews, only: [:index, :show, :new, :create, :edit, :update, :destroy]
-    resources :clientes, only: [:index]  # Aquí cambiamos de patients a clientes
+    resources :clientes, only: [:index]
   end
 
   resources :bookings, only: [:index, :show, :new, :create, :edit, :update, :destroy]

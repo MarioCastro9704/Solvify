@@ -6,6 +6,7 @@ class PsychologistsController < ApplicationController
   end
 
   def show
+    @availabilities = @psychologist.availabilities.where('start_time > ?', Time.now).order(:start_time).limit(20)
   end
 
   def new
@@ -22,7 +23,6 @@ class PsychologistsController < ApplicationController
   end
 
   def edit
-    @service = @psychologist.service || @psychologist.build_service
   end
 
   def update
@@ -45,6 +45,6 @@ class PsychologistsController < ApplicationController
   end
 
   def psychologist_params
-    params.require(:psychologist).permit(:specialty, :degree, :document_of_identity, :price_per_hour, specialties: [])
+    params.require(:psychologist).permit(:document_of_identity, :approach, :languages, :nationality, :price_per_session, :degree, specialties: [])
   end
 end
