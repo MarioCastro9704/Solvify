@@ -15,6 +15,13 @@ class ServicesController < ApplicationController
       render :new
     end
   end
+  def update
+    if @service.update(service_params)
+      redirect_to @service, notice: 'El servicio fue actualizado correctamente.'
+    else
+      render :edit
+    end
+  end
 
   private
 
@@ -29,6 +36,6 @@ class ServicesController < ApplicationController
   end
 
   def service_params
-    params.require(:service).permit(:name, :country, :price_per_session, :specialties)
+    params.require(:service).permit(:name, :description, :price, :visible, :psychologist_id)
   end
 end

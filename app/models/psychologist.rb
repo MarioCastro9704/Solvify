@@ -15,6 +15,7 @@ class Psychologist < ApplicationRecord
   validates :languages, presence: true
   validates :nationality, presence: true
   serialize :specialties, coder: JSON
+  accepts_nested_attributes_for :service
   SPECIALTIES = ['Terapia Cognitivo-Conductual', 'Psicoanálisis', 'Terapia Familiar', 'Psicología Infantil', 'Psicología Clínica', 'Neuropsicología', 'Psicología Organizacional', 'Terapia de Pareja'].freeze
 
   def user_name

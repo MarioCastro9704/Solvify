@@ -42,8 +42,8 @@
         <div class="day">
           <h3><%= (Date.today + i).strftime("%a") %></h3>
           <p><%= (Date.today + i).strftime("%d %b") %></p>
-          <% @availabilities.select { |a| a.start_time.to_date == Date.today + i }.each do |availability| %>
-            <%= link_to availability.start_time.strftime("%H:%M"), new_booking_path(psychologist_id: @psychologist.id, availability_id: availability.id), class: "time-slot" %>
+          <% @availabilities.select { |a| a.business_date == Date.today + i }.each do |availability| %>
+            <%= link_to availability.starting_hour.strftime("%H:%M"), new_booking_path(psychologist_id: @psychologist.id, availability_id: availability.id), class: "time-slot" %>
           <% end %>
         </div>
       <% end %>

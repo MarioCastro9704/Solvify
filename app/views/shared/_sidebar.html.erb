@@ -20,6 +20,14 @@
             <span style="font-size: 1rem;">Mi Servicios</span>
           <% end %>
         </li>
+        <!-- Solo para hacer pruebas-->
+        <li class="nav-item mb-3">
+          <%= link_to pages_home_path, class: "nav-link text-secondary d-flex flex-column align-items-center py-4 rounded-pill" do %>
+            <i class="fas fa-home mb-3" style="font-size: 1.5rem;"></i>
+            <span style="font-size: 1rem;">Inicio</span>
+          <% end %>
+        </li>
+        <!--Fin-->
       <% else %>
         <li class="nav-item mb-3">
           <%= link_to user_bookings_path(current_user), class: "nav-link text-secondary d-flex flex-column align-items-center py-4 rounded-pill" do %>
