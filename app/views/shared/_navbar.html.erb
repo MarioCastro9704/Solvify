@@ -1,4 +1,3 @@
-<!-- app/views/shared/_navbar.html.erb -->
 <div class="navbar navbar-expand-sm navbar-light bg-light">
   <div class="container-fluid">
     <%= link_to root_path, class: "navbar-brand" do %>
@@ -19,6 +18,13 @@
           <% if current_user.psychologist.present? %>
             <li class="nav-item">
               <%= link_to "Manage Psychologist Profile", edit_psychologist_path(current_user.psychologist), class: "nav-link btn btn-secondary" %>
+            </li>
+            <li class="nav-item">
+              <% if current_user.psychologist.service.present? %>
+                <%= link_to "Edit Service", edit_service_path(current_user.psychologist.service), class: "nav-link btn btn-secondary" %>
+              <% else %>
+                <%= link_to "Create Service", new_service_path, class: "nav-link btn btn-secondary" %>
+              <% end %>
             </li>
           <% end %>
           <li class="nav-item dropdown">

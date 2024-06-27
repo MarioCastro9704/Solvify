@@ -1,0 +1,67 @@
+.psychologist-profile {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profile-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-right: 20px;
+}
+
+.specialties {
+  margin-bottom: 20px;
+}
+
+.specialty-tag {
+  background-color: #e0e0e0;
+  padding: 5px 10px;
+  border-radius: 20px;
+  margin-right: 10px;
+  font-size: 14px;
+}
+
+.session-info {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.price {
+  font-size: 24px;
+  font-weight: bold;
+  color: #4CAF50;
+}
+
+.availability-calendar {
+  .calendar-days {
+    display: flex;
+    overflow-x: auto;
+  }
+
+  .day {
+    min-width: 100px;
+    text-align: center;
+    padding: 10px;
+  }
+
+  .time-slot {
+    display: block;
+    background-color: #2196F3;
+    color: white;
+    padding: 5px;
+    margin: 5px 0;
+    border-radius: 3px;
+    text-decoration: none;
+  }
+}

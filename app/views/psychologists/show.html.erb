@@ -1,2 +1,53 @@
-<h1>Psychologists#show</h1>
-<p>Find me in app/views/psychologists/show.html.erb</p>
+<div class="psychologist-profile">
+  <div class="profile-header">
+    <h1><%= @psychologist.full_name %></h1>
+    <p>Psicólogo/a online</p>
+    <p>Cédula: <%= @psychologist.document_of_identity %></p>
+    <p>Enfoque: <%= @psychologist.approach %> <%= link_to "?", "#", class: "info-icon" %></p>
+    <%= link_to "Ver opiniones (#{@psychologist.reviews.count})", psychologist_reviews_path(@psychologist) %>
+  </div>
+
+  <div class="specialties">
+    <% if @psychologist.specialties.is_a?(String) %>
+      <% JSON.parse(@psychologist.specialties).each do |specialty| %>
+        <% unless specialty.blank? %>
+          <span class="specialty-tag"><%= specialty %></span>
+        <% end %>
+      <% end %>
+    <% else %>
+      <% @psychologist.specialties.each do |specialty| %>
+        <% unless specialty.blank? %>
+          <span class="specialty-tag"><%= specialty %></span>
+        <% end %>
+      <% end %>
+    <% end %>
+    <%= link_to "Ver más", "#", class: "view-more-specialties" if @psychologist.specialties.is_a?(Array) ? @psychologist.specialties.count > 5 : JSON.parse(@psychologist.specialties).count > 5 %>
+  </div>
+
+  <div class="additional-info">
+    <p>Idiomas: <%= @psychologist.languages %></p>
+    <p>Nacionalidad: <%= @psychologist.nationality %></p>
+  </div>
+
+  <div class="session-info">
+    <h2>Cita individual - 50 min.</h2>
+    <p class="price"><%= number_to_currency(@psychologist.price_per_hour * (50.0 / 60), unit: "$ ", precision: 0) %> COP</p>
+  </div>
+
+  <div class="availability-calendar">
+    <h2>Disponibilidad</h2>
+    <p><%= Time.zone.name %></p>
+    <div class="calendar-days">
+      <% 7.times do |i| %>
+        <div class="day">
+          <h3><%= (Date.today + i).strftime("%a") %></h3>
+          <p><%= (Date.today + i).strftime("%d %b") %></p>
+          <% @availabilities.select { |a| a.business_date == Date.today + i }.each do |availability| %>
+            <%= link_to availability.starting_hour.strftime("%H:%M"), new_booking_path(psychologist_id: @psychologist.id, availability_id: availability.id), class: "time-slot" %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+    <%= link_to "Ver más horas", psychologist_availabilities_path(@psychologist) %>
+  </div>
+</div>

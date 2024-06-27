@@ -7,7 +7,7 @@ class User < ApplicationRecord
   has_many :bookings
   has_one :psychologist
   has_many :psychologists, through: :bookings
-
+  has_one_attached :avatar
   validates :name, presence: true
   validates :last_name, presence: true
   validates :date_of_birth, presence: true
