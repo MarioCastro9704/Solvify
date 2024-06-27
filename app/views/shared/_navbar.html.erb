@@ -4,9 +4,9 @@
       <%= image_tag "logo-solvify.svg", alt: "Logo", class: "logo" %>
     <% end %>
 
-    <button class="navbar-toggler" data-controller="toggle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" data-action="click->toggle#toggle">
-      <%= image_tag "menu-icon.svg", alt: "menu icon", id: "menu-icon", data: {toggle_target: "menuIcon"} %>
-      <%= image_tag "close-icon.svg", alt: "close icon", id: "close-icon", class: "d-none", data: {toggle_target: "closeIcon"} %>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" data-controller="toggle" data-action="click->toggle#toggle">
+      <%= image_tag "menu-icon.svg", alt: "menu icon", id: "menu-icon", data: { toggle_target: "menuIcon" } %>
+      <%= image_tag "close-icon.svg", alt: "close icon", id: "close-icon", class: "d-none", data: { toggle_target: "closeIcon" } %>
     </button>
 
     <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">

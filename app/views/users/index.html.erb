@@ -50,6 +50,7 @@
                 <% date = @start_date + day_index.days %>
                 <div class="day-column">
                   <% @bookings.select { |b| b.date == date }.each do |booking| %>
+                    <%= link_to edit_booking_path(booking), data: { turbo_frame: "edit" } do %>
                     <% booking_start_hour = booking.time.strftime("%H").to_i %>
                     <% booking_start_minute = booking.time.strftime("%M").to_i %>
                     <% booking_end_hour = booking.end_time.strftime("%H").to_i %>
@@ -67,6 +68,7 @@
                         <% end %>
                       </div>
                     </div>
+                    <% end %>
                   <% end %>
                 </div>
               <% end %>
@@ -76,35 +78,38 @@
       </div>
     </div>
 
+
     <div class="col-md-2 bg-light p-4">
       <div class="booking-form-wrapper">
         <div class="booking-form-container h-100 bg-light border-left p-4 overflow-auto">
-          <h2 class="mb-4">Create Booking</h2>
-          <%= form_with model: Booking.new, url: bookings_path, local: true do |form| %>
-            <div class="mb-3">
-              <%= form.label :date, 'Date', class: 'form-label' %>
-              <%= form.date_field :date, class: 'form-control' %>
-            </div>
-            <div class="mb-3">
-              <%= form.label :time, 'Time', class: 'form-label' %>
-              <%= form.time_field :time, class: 'form-control' %>
-            </div>
-            <div class="mb-3">
-              <%= form.label :end_time, 'End Time', class: 'form-label' %>
-              <%= form.time_field :end_time, class: 'form-control' %>
-            </div>
-            <div class="mb-3">
-              <%= form.label :psychologist_id, 'Psychologist', class: 'form-label' %>
-              <%= form.collection_select :psychologist_id, Psychologist.includes(:user).all, :id, :user_name, { prompt: 'Select Psychologist' }, class: 'form-control' %>
-            </div>
-            <div class="mb-3">
-              <%= form.label :link_to_meet, 'Link to Meet', class: 'form-label' %>
-              <%= form.text_field :link_to_meet, class: 'form-control' %>
-            </div>
-            <div class="mb-3">
-              <%= form.hidden_field :user_id, value: current_user.id %>
-              <%= form.submit 'Create Booking', class: 'btn btn-primary' %>
-            </div>
+          <%= turbo_frame_tag "edit" do %>
+            <h2 class="mb-4">Create Booking</h2>
+            <%= form_with model: Booking.new, url: bookings_path, local: true do |form| %>
+              <div class="mb-3">
+                <%= form.label :date, 'Date', class: 'form-label' %>
+                <%= form.date_field :date, class: 'form-control' %>
+              </div>
+              <div class="mb-3">
+                <%= form.label :time, 'Time', class: 'form-label' %>
+                <%= form.time_field :time, class: 'form-control' %>
+              </div>
+              <div class="mb-3">
+                <%= form.label :end_time, 'End Time', class: 'form-label' %>
+                <%= form.time_field :end_time, class: 'form-control' %>
+              </div>
+              <div class="mb-3">
+                <%= form.label :psychologist_id, 'Psychologist', class: 'form-label' %>
+                <%= form.collection_select :psychologist_id, Psychologist.includes(:user).all, :id, :user_name, { prompt: 'Select Psychologist' }, class: 'form-control' %>
+              </div>
+              <div class="mb-3">
+                <%= form.label :link_to_meet, 'Link to Meet', class: 'form-label' %>
+                <%= form.text_field :link_to_meet, class: 'form-control' %>
+              </div>
+              <div class="mb-3">
+                <%= form.hidden_field :user_id, value: current_user.id %>
+                <%= form.submit 'Create Booking', class: 'btn btn-primary' %>
+              </div>
+            <% end %>
           <% end %>
         </div>
       </div>
