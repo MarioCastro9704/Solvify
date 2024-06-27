@@ -1,2 +1,13 @@
-<h1>Pages#home</h1>
-<p>Find me in app/views/pages/home.html.erb</p>
+<h2>Published Services</h2>
+<div id="services">
+  <% Service.where(published: true).each do |service| %>
+    <div class="service">
+      <h3><%= service.name %></h3>
+      <p>Psychologist: <%= service.psychologist.user.name %></p>
+      <p>Country: <%= service.country %></p>
+      <p>Price per 50 min session: <%= number_to_currency(service.price_per_session) %></p>
+      <p>Specialties: <%= service.specialties %></p>
+      <%= link_to "Book Now", new_booking_path(psychologist_id: service.psychologist.id) %>
+    </div>
+  <% end %>
+</div>

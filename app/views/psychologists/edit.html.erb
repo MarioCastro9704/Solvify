@@ -1,2 +1,51 @@
-<h1>Psychologists#edit</h1>
-<p>Find me in app/views/psychologists/edit.html.erb</p>
+<h1>Edit Psychologist</h1>
+
+<%= form_with(model: @psychologist, local: true) do |form| %>
+  <% if @psychologist.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@psychologist.errors.count, "error") %> prohibited this psychologist from being saved:</h2>
+      <ul>
+        <% @psychologist.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :specialty %>
+    <%= form.text_field :specialty %>
+  </div>
+
+  <div class="field">
+    <%= form.label :specialties, 'Especialidades' %>
+    <%= form.collection_check_boxes :specialties, Psychologist::SPECIALTIES, :to_s, :to_s do |b| %>
+      <div class="checkbox">
+        <%= b.check_box %>
+        <%= b.label %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="field">
+    <%= form.label :degree %>
+    <%= form.text_field :degree %>
+  </div>
+
+  <div class="field">
+    <%= form.label :document_of_identity %>
+    <%= form.text_field :document_of_identity %>
+  </div>
+
+  <div class="field">
+    <%= form.label :price_per_hour %>
+    <%= form.number_field :price_per_hour, step: 0.01 %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+
+<%= link_to 'Show', @psychologist %> |
+<%= link_to 'Back', psychologists_path %>
