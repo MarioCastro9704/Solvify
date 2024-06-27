@@ -1,3 +1,4 @@
+<%= turbo_frame_tag "edit" do %>
 <h1>Edit Booking</h1>
 
 <%= form_with model: @booking, local: true do |form| %>
@@ -17,7 +18,8 @@
     <%= form.label :link_to_meet, 'Link to Meet' %>
     <%= form.text_field :link_to_meet, class: 'form-control' %>
   </div>
-  <%= form.submit 'Update Booking', class: 'btn btn-primary' %>
+  <%= form.submit 'Update Booking', class: 'btn btn-primary', data: { turbo_frame: "_top" }%>
 <% end %>
 
 <%= link_to 'Back', bookings_path, class: 'btn btn-secondary' %>
+<% end %>
