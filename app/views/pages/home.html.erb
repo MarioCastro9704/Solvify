@@ -1,6 +1,6 @@
 <h2>Published Services</h2>
 <div id="services">
-  <% Service.where(published: true).each do |service| %>
+  <% Service.published.each do |service| %>
     <div class="service">
       <h3><%= service.name %></h3>
       <p>Psychologist: <%= service.psychologist.user.name %></p>

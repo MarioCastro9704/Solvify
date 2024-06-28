@@ -35,13 +35,16 @@ psychologist_user = User.create!(
 psychologist = Psychologist.create!(
   user: psychologist_user,
   specialty: "Clinical Psychology",
+  approach: "Terapia General",
+  specialties: ["Terapia Cognitivo-Conductual", "Psicología Infantil", "Psicología Organizacional"],
+  languages: "Español",
+  nationality: "Chilena",
+  price_per_session: 23000.0,
+  price_per_hour: 100.0,
+  currency: "USD",
   degree: "PhD",
   document_of_identity: "123456789",
-  availability: true,
-  years_of_experience: 10,
-  description: "Experienced clinical psychologist",
-  average_rating: 4.5,
-  price_per_hour: 100.0
+  description: "Experienced clinical psychologist"
 )
 
 # Crear una disponibilidad para el psicólogo
@@ -85,11 +88,5 @@ booking = Booking.create!(
   )
 end
 
-# Crear una reseña para el psicólogo
-review = Review.create!(
-  psychologist: psychologist,
-  comments: "Great psychologist!",
-  ratings: 5
-)
 
 puts "Seeding completed successfully."
