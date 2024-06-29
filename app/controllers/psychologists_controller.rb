@@ -57,8 +57,7 @@ class PsychologistsController < ApplicationController
     params.require(:psychologist).permit(
       :document_of_identity, :approach, :languages, :nationality,
       :price_per_session, :currency, :degree, :profile_picture, specialties: [],
-      service_attributes: [:id, :published],
-      availabilities: {}
+      service_attributes: [:id, :published]
     )
   end
 

@@ -18,10 +18,10 @@ export default class extends Controller {
       button.textContent = 'No disponible';
     }
 
-    // Aquí puedes añadir la lógica para enviar datos al servidor si es necesario
+    // Actualizar el valor del campo oculto asociado
     const dayIndex = this.data.get("toggleDay");
     const hour = this.data.get("toggleHour");
-    const isChecked = button.classList.contains('btn-primary');
-    console.log(`Day: ${dayIndex}, Hour: ${hour}, Checked: ${isChecked}`);
+    const hiddenInput = button.nextElementSibling;
+    hiddenInput.value = button.classList.contains('btn-primary') ? "1" : "0";
   }
 }
