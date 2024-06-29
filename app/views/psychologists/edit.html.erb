@@ -87,41 +87,39 @@
     </div>
 
     <!-- Sección de Disponibilidad -->
-    <div class="card mb-4">
-      <div class="card-header">
-        <h2 class="mb-0">Gestionar disponibilidad</h2>
-      </div>
-      <div class="card-body">
-        <table class="table table-bordered">
-          <thead>
+    <div class="card-body">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Hora</th>
+            <% Date::DAYNAMES.each do |day| %>
+              <th><%= day %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @time_slots.each do |start_hour, end_hour| %>
             <tr>
-              <th>Hora</th>
-              <% Date::DAYNAMES.each do |day| %>
-                <th><%= day %></th>
+              <td><%= "#{start_hour}:00 - #{end_hour}:00" %></td>
+              <% (0..6).each do |day_index| %>
+                <td>
+                  <div class="btn-group" role="group" aria-label="Disponibilidad"
+                       data-controller="toggle"
+                       data-toggle-day="<%= day_index %>"
+                       data-toggle-hour="<%= start_hour %>">
+                    <% checked = @availabilities[day_index]&.any? { |a| a.starting_hour.hour == start_hour } %>
+                    <% button_class = checked ? 'btn btn-primary active' : 'btn btn-outline-primary' %>
+                    <button type="button" class="<%= button_class %>"
+                            data-action="toggle#toggle">
+                      <%= checked ? 'Disponible' : 'No disponible' %>
+                    </button>
+                  </div>
+                </td>
               <% end %>
             </tr>
-          </thead>
-          <tbody>
-            <% @time_slots.each do |start_hour, end_hour| %>
-              <tr>
-                <td><%= "#{start_hour}:00 - #{end_hour}:00" %></td>
-                <% (0..6).each do |day_index| %>
-                  <td>
-                    <div class="form-check form-switch">
-                      <%= form.check_box "availabilities[#{day_index}][#{start_hour}]",
-                          checked: @availabilities[day_index]&.any? { |a| a.starting_hour.hour == start_hour },
-                          class: 'form-check-input',
-                          role: 'switch',
-                          id: "flexSwitchCheck#{day_index}#{start_hour}" %>
-                      <label class="form-check-label" for="flexSwitchCheck#{day_index}#{start_hour}"></label>
-                    </div>
-                  </td>
-                <% end %>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
+          <% end %>
+        </tbody>
+      </table>
     </div>
 
     <div class="mb-3">
