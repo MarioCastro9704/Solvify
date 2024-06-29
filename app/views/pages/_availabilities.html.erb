@@ -1,0 +1,27 @@
+<table class="table">
+  <thead>
+    <tr>
+      <% (0..3).each do |i| %>
+        <th><%= (Date.today + i.days).strftime("%a %d %b") %></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <% (0..3).each do |i| %>
+        <td>
+          <% availability = availabilities.select { |a| a.business_date == Date.today + i.days } %>
+          <% if availability.any? %>
+            <ul class="list-unstyled">
+              <% availability.each do |a| %>
+                <li><%= a.starting_hour.strftime("%H:%M") %></li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p>-</p>
+          <% end %>
+        </td>
+      <% end %>
+    </tr>
+  </tbody>
+</table>
