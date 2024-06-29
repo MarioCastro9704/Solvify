@@ -1,5 +1,5 @@
 class PsychologistsController < ApplicationController
-  before_action :set_psychologist, only: [:show, :edit, :update, :destroy]
+  before_action :set_psychologist, only: [:show, :edit, :update, :destroy, :load_availabilities]
 
   def index
     @psychologists = Psychologist.all
@@ -45,6 +45,11 @@ class PsychologistsController < ApplicationController
   def destroy
     @psychologist.destroy
     redirect_to psychologists_url, notice: 'Psychologist was successfully destroyed.'
+  end
+
+  def load_availabilities
+    @availabilities = @psychologist.availabilities.where('business_date >= ?', Date.today).order(:business_date).limit(20)
+    render partial: "pages/availabilities", locals: { availabilities: @availabilities }
   end
 
   private
