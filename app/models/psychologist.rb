@@ -16,7 +16,15 @@ class Psychologist < ApplicationRecord
   validates :nationality, presence: true
   serialize :specialties, coder: JSON
   accepts_nested_attributes_for :service
+  validates :currency, presence: true
   SPECIALTIES = ['Terapia Cognitivo-Conductual', 'Psicoanálisis', 'Terapia Familiar', 'Psicología Infantil', 'Psicología Clínica', 'Neuropsicología', 'Psicología Organizacional', 'Terapia de Pareja'].freeze
+  CURRENCIES = [
+    ['USD', 'USD'],
+    ['EUR', 'EUR'],
+    ['GBP', 'GBP'],
+    ['JPY', 'JPY'],
+    ['COP', 'COP']
+  ].freeze
 
   def user_name
     user.name

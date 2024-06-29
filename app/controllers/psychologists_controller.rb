@@ -11,10 +11,12 @@ class PsychologistsController < ApplicationController
 
   def new
     @psychologist = Psychologist.new
+    @psychologist.build_service
   end
 
   def create
     @psychologist = Psychologist.new(psychologist_params)
+    assign_service_attributes
     if @psychologist.save
       redirect_to @psychologist, notice: 'Psychologist was successfully created.'
     else
@@ -23,23 +25,21 @@ class PsychologistsController < ApplicationController
   end
 
   def edit
+    @psychologist.build_service if @psychologist.service.nil?
     @availabilities = @psychologist.availabilities.group_by { |a| a.business_date.wday }
-    @time_slots = (7..20).map { |hour| [hour, hour + 1] }  # 7 AM to 8 PM
-    @reviews = @psychologist.reviews.includes(:user).order(created_at: :desc)
+    @time_slots = (7..20).map { |hour| [hour, hour + 1] }
   end
 
   def update
-    ActiveRecord::Base.transaction do
-      @psychologist.update!(psychologist_params)
-      update_availabilities
-      update_service
+    assign_service_attributes
+    if @psychologist.update(psychologist_params)
+      update_availabilities if params[:psychologist][:availabilities].present?
+      redirect_to @psychologist, notice: 'Psychologist was successfully updated.'
+    else
+      @availabilities = @psychologist.availabilities.group_by { |a| a.business_date.wday }
+      @time_slots = (7..20).map { |hour| [hour, hour + 1] }
+      render :edit, status: :unprocessable_entity
     end
-    redirect_to @psychologist, notice: 'Psychologist was successfully updated.'
-  rescue ActiveRecord::RecordInvalid
-    @availabilities = @psychologist.availabilities.group_by { |a| a.business_date.wday }
-    @time_slots = (7..20).map { |hour| [hour, hour + 1] }
-    @reviews = @psychologist.reviews.includes(:user).order(created_at: :desc)
-    render :edit
   end
 
   def destroy
@@ -56,8 +56,20 @@ class PsychologistsController < ApplicationController
   def psychologist_params
     params.require(:psychologist).permit(
       :document_of_identity, :approach, :languages, :nationality,
-      :price_per_session, :degree, :profile_picture, specialties: [],
-      service_attributes: [:id, :visible]
+      :price_per_session, :currency, :degree, :profile_picture, specialties: [],
+      service_attributes: [:id, :published],
+      availabilities: {}
+    )
+  end
+
+  def assign_service_attributes
+    @psychologist.build_service if @psychologist.service.nil?
+    @psychologist.service.assign_attributes(
+      name: @psychologist.full_name,
+      country: @psychologist.nationality,
+      price_per_session: @psychologist.price_per_session,
+      specialties: @psychologist.specialties.join(', '),  # Converting array to string
+      published: @psychologist.service.published
     )
   end
 
@@ -78,12 +90,6 @@ class PsychologistsController < ApplicationController
           ending_hour: Time.zone.parse("#{(start_hour.to_i + 1)}:00")
         )
       end
-    end
-  end
-
-  def update_service
-    if @psychologist.service && params[:psychologist][:service_attributes]
-      @psychologist.service.update!(params[:psychologist][:service_attributes].permit(:visible))
     end
   end
 end

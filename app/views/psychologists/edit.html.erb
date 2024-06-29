@@ -58,7 +58,10 @@
         </div>
         <div class="mb-3">
           <%= form.label :price_per_session, "Precio por sesión (50 min)", class: "form-label" %>
-          <%= form.number_field :price_per_session, step: 0.01, class: "form-control" %>
+          <div class="input-group">
+            <%= form.number_field :price_per_session, step: 0.01, class: "form-control" %>
+            <%= form.select :currency, Psychologist::CURRENCIES, {}, class: "form-select" %>
+          </div>
         </div>
         <div class="mb-3">
           <%= form.label :degree, "Título académico", class: "form-label" %>
@@ -67,71 +70,60 @@
       </div>
     </div>
 
-    <!-- Sección de Disponibilidad -->
-    <div class="card mb-4">
-      <div class="card-header">
-        <h2 class="mb-0">Gestionar disponibilidad</h2>
-      </div>
-      <div class="card-body">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>Hora</th>
-              <% Date::DAYNAMES.each do |day| %>
-                <th><%= day %></th>
-              <% end %>
-            </tr>
-          </thead>
-          <tbody>
-            <% @time_slots.each do |start_hour, end_hour| %>
-              <tr>
-                <td><%= "#{start_hour}:00 - #{end_hour}:00" %></td>
-                <% (0..6).each do |day_index| %>
-                  <td>
-                    <div class="form-check form-switch">
-                      <%= form.check_box "availabilities[#{day_index}][#{start_hour}]",
-                          checked: @availabilities[day_index]&.any? { |a| a.starting_hour.hour == start_hour },
-                          class: 'form-check-input',
-                          role: 'switch',
-                          id: "flexSwitchCheck#{day_index}#{start_hour}" %>
-                      <label class="form-check-label" for="flexSwitchCheck#{day_index}#{start_hour}"></label>
-                    </div>
-                  </td>
-                <% end %>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
     <!-- Sección de Servicio -->
     <div class="card mb-4">
       <div class="card-header">
-        <h2 class="mb-0">Gestionar servicio</h2>
+        <h2 class="mb-0">Información del Servicio</h2>
       </div>
       <div class="card-body">
-        <% if @psychologist.service %>
-          <%= form.fields_for :service do |service_form| %>
-            <div class="mb-3 form-check form-switch">
-              <%= service_form.check_box :visible, class: "form-check-input", role: "switch", id: "serviceVisibilityToggle" %>
-              <%= service_form.label :visible, "Servicio visible", class: "form-check-label", for: "serviceVisibilityToggle" %>
-            </div>
-          <% end %>
-          <p class="mt-3">
-            Estado actual:
-            <span id="visibilityStatus" class="badge <%= @psychologist.service.visible ? 'bg-success' : 'bg-secondary' %>">
-              <%= @psychologist.service.visible ? 'Visible' : 'Oculto' %>
-            </span>
-          </p>
-        <% else %>
-          <p>No tienes un servicio creado aún.</p>
+        <%= form.fields_for :service do |service_form| %>
+          <div class="form-check form-switch mb-3">
+            <%= service_form.check_box :published, class: "form-check-input", role: "switch", id: "servicePublishedToggle" %>
+            <%= service_form.label :published, "Mostrar servicio en la página de inicio", class: "form-check-label", for: "servicePublishedToggle" %>
+          </div>
+          <p>El servicio utilizará la información de tu perfil para mostrarse en la página de inicio.</p>
         <% end %>
       </div>
     </div>
 
+    <!-- Sección de Disponibilidad -->
+    <div class="card-body">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Hora</th>
+            <% Date::DAYNAMES.each do |day| %>
+              <th><%= day %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @time_slots.each do |start_hour, end_hour| %>
+            <tr>
+              <td><%= "#{start_hour}:00 - #{end_hour}:00" %></td>
+              <% (0..6).each do |day_index| %>
+                <td>
+                  <div class="btn-group" role="group" aria-label="Disponibilidad"
+                       data-controller="toggle"
+                       data-toggle-day="<%= day_index %>"
+                       data-toggle-hour="<%= start_hour %>">
+                    <% checked = @availabilities[day_index]&.any? { |a| a.starting_hour.hour == start_hour } %>
+                    <% button_class = checked ? 'btn btn-primary active' : 'btn btn-outline-primary' %>
+                    <button type="button" class="<%= button_class %>"
+                            data-action="toggle#toggle">
+                      <%= checked ? 'Disponible' : 'No disponible' %>
+                    </button>
+                  </div>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
     <div class="mb-3">
-      <%= form.submit "Guardar todos los cambios", class: "btn btn-primary rouded-pill" %>
+      <%= form.submit "Guardar todos los cambios", class: "btn btn-primary rounded-pill" %>
     </div>
   <% end %>
 
@@ -139,7 +131,4 @@
     <%= link_to 'Ver perfil', @psychologist, class: "btn btn-outline-secondary me-2" %>
     <%= link_to 'Volver a la lista', psychologists_path, class: "btn btn-outline-secondary" %>
   </div>
-
-  <!-- Otras secciones (reseñas, clientes) se mantienen igual -->
-
 </div>
