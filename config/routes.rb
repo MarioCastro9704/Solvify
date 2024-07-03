@@ -5,6 +5,9 @@ Rails.application.routes.draw do
   get 'pages/home', to: 'pages#home', as: 'pages_home'
 
   resources :users, only: [:index, :show, :edit, :update, :destroy] do
+    member do
+      get 'medical_record'
+    end
     resources :bookings, only: [:index]
   end
 
@@ -12,6 +15,7 @@ Rails.application.routes.draw do
     member do
       patch 'update_availabilities'
       get 'load_availabilities'
+      get 'user_requests'
     end
     resources :availabilities, only: [:index, :show, :new, :create, :edit, :update, :destroy]
     resources :reviews, only: [:index, :show, :new, :create, :edit, :update, :destroy]
@@ -24,5 +28,6 @@ Rails.application.routes.draw do
       patch :publish
     end
   end
+
   get "up" => "rails/health#show", as: :rails_health_check
 end

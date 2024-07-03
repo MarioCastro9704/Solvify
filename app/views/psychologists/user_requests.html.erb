@@ -1,0 +1,34 @@
+<h1>Solicitudes de Usuarios</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Nombre del Paciente</th>
+      <th>DNI</th>
+      <th>Especialidad</th>
+      <th>Fecha de Solicitud</th>
+      <th>Sesiones Solicitadas</th>
+      <th>Sesiones Realizadas</th>
+      <th>Estado del Primer Pago</th>
+      <th>Opciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @requests.each do |request| %>
+      <tr>
+        <td><%= request.user.name %></td>
+        <td><%= request.user.document_of_identity %></td>
+        <td><%= request.psychologist.specialties.join(', ') %></td>
+        <td><%= request.created_at.strftime("%d/%m/%Y") %></td>
+        <td><%= request.sessions_requested %></td>
+        <td><%= request.sessions_completed %></td>
+        <td><%= request.first_payment_status %></td>
+        <td>
+          <%= link_to 'Ajustar Información', edit_booking_path(request), class: "btn btn-primary" %>
+          <%= link_to 'Ver Ficha Médica', medical_record_user_path(request.user), class: "btn btn-secondary" %>
+          <%= link_to 'Eliminar', booking_path(request), method: :delete, data: { confirm: "¿Estás seguro?" }, class: "btn btn-danger" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
