@@ -31,15 +31,20 @@
           <div class="card-footer">
             <div class="row">
               <div class="col-2">
-                <%= link_to "«", load_availabilities_psychologist_path(service.psychologist, day: "prev"), data: { turbo_frame: "availabilities_#{service.psychologist.id}" }, class: "btn btn-outline-secondary" %>
+                <%= link_to "«", pages_home_path(day: "prev", psychologist_id: service.psychologist.id), data: { turbo_frame: "availabilities_#{service.psychologist.id}" }, class: "btn btn-outline-secondary" %>
               </div>
               <div class="col-8">
                 <turbo-frame id="availabilities_<%= service.psychologist.id %>">
-                  <%= render partial: "pages/availabilities", locals: { availabilities: service.psychologist.availabilities.where('business_date >= ?', Date.today).order(:business_date).limit(4) } %>
+                  <% if params[:psychologist].present? %>
+                  <% availabilities = @availabilities  %>
+                  <% else %>
+                  <% availabilities = service.psychologist.availabilities.where('business_date >= ?', Date.today).order(:business_date).limit(4)%>
+                  <% end %>
+                  <%= render partial: "pages/availabilities", locals: { availabilities: availabilities } %>
                 </turbo-frame>
               </div>
               <div class="col-2 text-end">
-                <%= link_to "»", load_availabilities_psychologist_path(service.psychologist, day: "next"), data: { turbo_frame: "availabilities_#{service.psychologist.id}" }, class: "btn btn-outline-secondary" %>
+                <%= link_to "»", pages_home_path(day: "next", psychologist_id: service.psychologist.id), data: { turbo_frame: "availabilities_#{service.psychologist.id}" }, class: "btn btn-outline-secondary" %>
               </div>
             </div>
           </div>

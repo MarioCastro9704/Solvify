@@ -1,8 +1,15 @@
 <table class="table">
   <thead>
     <tr>
-      <% (0..3).each do |i| %>
-        <th><%= (Date.today + i.days).strftime("%a %d %b") %></th>
+      <% if params[:day] == 'next' %>
+      <% dates = (Date.today + 4.days..Date.today + 7.days) %>
+      <% elsif params[:day] == 'prev' %>
+      <% dates = (Date.today - 4.days..Date.today - 1.days) %>
+      <% else %>
+      <% dates = (Date.today..Date.today + 4.days) %>
+      <% end %>
+      <% dates.each do |i| %>
+        <th><%= i.strftime("%a %d %b") %></th>
       <% end %>
     </tr>
   </thead>
