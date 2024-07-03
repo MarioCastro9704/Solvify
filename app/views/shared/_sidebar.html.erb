@@ -9,9 +9,9 @@
           <% end %>
         </li>
         <li class="nav-item mb-3">
-          <%= link_to psychologist_clientes_path(current_user.psychologist), class: "nav-link text-secondary d-flex flex-column align-items-center py-4 rounded-pill" do %>
+          <%= link_to user_requests_psychologist_path(current_user.psychologist), class: "nav-link text-secondary d-flex flex-column align-items-center py-4 rounded-pill" do %>
             <i class="fa-solid fa-users mb-3" style="font-size: 1.5rem;"></i>
-            <span style="font-size: 1rem;">Mis Clientes</span>
+            <span style="font-size: 1rem;">Solicitudes</span>
           <% end %>
         </li>
         <li class="nav-item mb-3">
