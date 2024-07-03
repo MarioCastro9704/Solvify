@@ -1,53 +1,88 @@
-<div class="psychologist-profile">
-  <div class="profile-header">
-    <h1><%= @psychologist.full_name %></h1>
-    <p>Psicólogo/a online</p>
-    <p>Cédula: <%= @psychologist.document_of_identity %></p>
-    <p>Enfoque: <%= @psychologist.approach %> <%= link_to "?", "#", class: "info-icon" %></p>
-    <%= link_to "Ver opiniones (#{@psychologist.reviews.count})", psychologist_reviews_path(@psychologist) %>
-  </div>
-
-  <div class="specialties">
-    <% if @psychologist.specialties.is_a?(String) %>
-      <% JSON.parse(@psychologist.specialties).each do |specialty| %>
-        <% unless specialty.blank? %>
-          <span class="specialty-tag"><%= specialty %></span>
-        <% end %>
-      <% end %>
-    <% else %>
-      <% @psychologist.specialties.each do |specialty| %>
-        <% unless specialty.blank? %>
-          <span class="specialty-tag"><%= specialty %></span>
-        <% end %>
-      <% end %>
-    <% end %>
-    <%= link_to "Ver más", "#", class: "view-more-specialties" if @psychologist.specialties.is_a?(Array) ? @psychologist.specialties.count > 5 : JSON.parse(@psychologist.specialties).count > 5 %>
-  </div>
-
-  <div class="additional-info">
-    <p>Idiomas: <%= @psychologist.languages %></p>
-    <p>Nacionalidad: <%= @psychologist.nationality %></p>
-  </div>
-
-  <div class="session-info">
-    <h2>Cita individual - 50 min.</h2>
-    <p class="price"><%= number_to_currency(@psychologist.price_per_hour * (50.0 / 60), unit: "$ ", precision: 0) %> COP</p>
-  </div>
-
-  <div class="availability-calendar">
-    <h2>Disponibilidad</h2>
-    <p><%= Time.zone.name %></p>
-    <div class="calendar-days">
-      <% 7.times do |i| %>
-        <div class="day">
-          <h3><%= (Date.today + i).strftime("%a") %></h3>
-          <p><%= (Date.today + i).strftime("%d %b") %></p>
-          <% @availabilities.select { |a| a.business_date == Date.today + i }.each do |availability| %>
-            <%= link_to availability.starting_hour.strftime("%H:%M"), new_booking_path(psychologist_id: @psychologist.id, availability_id: availability.id), class: "time-slot" %>
-          <% end %>
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-2">
+          <%= image_tag @psychologist.user.avatar.url, class: "img-fluid rounded-circle" if @psychologist.user.avatar.attached? %>
         </div>
-      <% end %>
+        <div class="col-md-10">
+          <div class="d-flex justify-content-between align-items-start">
+            <h2 class="mb-0"><%= "#{@psychologist.user.name} #{@psychologist.user.last_name}" %></h2>
+            <%= link_to "Edit my profile", edit_psychologist_path(@psychologist), class: "btn btn-outline-secondary" %>
+          </div>
+          <p>Cédula: <%= @psychologist.document_of_identity %></p>
+          <p>Enfoque: <%= @psychologist.approach %> <i class="fas fa-check-circle text-primary"></i></p>
+          <%= link_to "Ver opiniones (6)", "#", class: "text-primary" %>
+          <div class="tags mt-2">
+            <% @psychologist.specialties.each do |specialty| %>
+              <% unless specialty.blank? %>
+                <span class="badge rounded-pill text-bg-primary me-1"><%= specialty %></span>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
     </div>
-    <%= link_to "Ver más horas", psychologist_availabilities_path(@psychologist) %>
   </div>
+
+  <div class="card mt-3">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <p><i class="fas fa-language"></i> Idiomas: <%= @psychologist.languages %></p>
+          <p><i class="fas fa-flag"></i> Nacionalidad: <%= @psychologist.user.nationality %></p>
+        </div>
+        <div class="col-md-6">
+          <h3 class="text-primary mt-2"><%= number_to_currency(@psychologist.price_per_session, unit: @psychologist.currency, precision: 0) %></h3>
+          <p>Precio por sesión (50 min)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mt-3">
+    <div class="card-body">
+      <h4>Sobre mí</h4>
+      <p>Te ofrezco un espacio de acompañamiento seguro y cuidadoso, en el que podamos profundizar en la comprensión de tu situación presente, en tu relación con los otros, con el mundo y contigo mismo, resignificando experiencias y actualizando paradigmas, para explorar juntos las...</p>
+      <%= link_to "Leer más", "#", class: "btn btn-link" %>
+    </div>
+  </div>
+
+  <div class="card mt-3">
+    <div class="card-body">
+      <h4>Áreas de atención</h4>
+      <div class="row">
+        <div class="col-md-6">
+          <ul class="list-unstyled">
+            <% @psychologist.specialties.first(5).each do |specialty| %>
+              <li><i class="fas fa-check text-success"></i> <%= specialty %></li>
+            <% end %>
+          </ul>
+        </div>
+        <div class="col-md-6">
+          <ul class="list-unstyled">
+            <% @psychologist.specialties.last(5).each do |specialty| %>
+              <li><i class="fas fa-check text-success"></i> <%= specialty %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <h4 class="mt-3">DISPONIBILIDAD</h4>
+  <p class="text-muted"><%= Time.zone.name %></p>
+  <div class="row">
+    <% 7.times do |i| %>
+      <div class="col text-center">
+        <h6><%= (Date.today + i).strftime("%a") %></h6>
+        <p><small><%= (Date.today + i).strftime("%d %b") %></small></p>
+        <% @availabilities.select { |a| a.business_date == Date.today + i }.each do |availability| %>
+          <%= link_to availability.starting_hour.strftime("%H:%M"), new_booking_path(psychologist_id: @psychologist.id, availability_id: availability.id), class: "btn btn-outline-primary btn-sm d-block mb-2" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  <%= link_to "Ver más horas", psychologist_availabilities_path(@psychologist), class: "btn btn-link mt-3" %>
 </div>
