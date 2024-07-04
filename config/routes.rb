@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users
+
   root to: 'pages#home'
 
   get 'pages/home', to: 'pages#home', as: 'pages_home'
@@ -8,7 +9,7 @@ Rails.application.routes.draw do
     resources :bookings, only: [:index]
   end
 
-  resources :psychologists do
+  resources :psychologists, only: [:new, :create, :show, :edit, :update, :destroy] do
     member do
       patch 'update_availabilities'
       get 'load_availabilities'
@@ -24,5 +25,6 @@ Rails.application.routes.draw do
       patch :publish
     end
   end
+
   get "up" => "rails/health#show", as: :rails_health_check
 end

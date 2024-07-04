@@ -1,5 +1,6 @@
 class PsychologistsController < ApplicationController
-  before_action :set_psychologist, only: [:show, :edit, :update, :destroy, :load_availabilities]
+  before_action :authenticate_user!
+  before_action :set_psychologist, only: [:show, :edit, :update, :destroy]
 
   def index
     @psychologists = Psychologist.all
@@ -10,12 +11,12 @@ class PsychologistsController < ApplicationController
   end
 
   def new
-    @psychologist = Psychologist.new
+    @psychologist = current_user.build_psychologist
     @psychologist.build_service
   end
 
   def create
-    @psychologist = Psychologist.new(psychologist_params)
+    @psychologist = current_user.build_psychologist(psychologist_params)
     assign_service_attributes
     if @psychologist.save
       redirect_to @psychologist, notice: 'Psychologist was successfully created.'
@@ -47,11 +48,6 @@ class PsychologistsController < ApplicationController
     redirect_to psychologists_url, notice: 'Psychologist was successfully destroyed.'
   end
 
-  # def load_availabilities
-  #   @availabilities = @psychologist.availabilities.where('business_date >= ?', Date.today).order(:business_date).limit(20)
-  #   render partial: "pages/availabilities", locals: { availabilities: @availabilities }
-  # end
-
   private
 
   def set_psychologist
@@ -72,7 +68,7 @@ class PsychologistsController < ApplicationController
       name: @psychologist.full_name,
       country: @psychologist.nationality,
       price_per_session: @psychologist.price_per_session,
-      specialties: @psychologist.specialties.join(', '),  # Converting array to string
+      specialties: @psychologist.specialties.join(', '),
       published: @psychologist.service.published
     )
   end
