@@ -20,3 +20,23 @@
   margin-left: 175px;
   padding: 40px;
 }
+.custom-rounded {
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+// toggle
+.large-switch .form-check-input {
+  width: 3rem;
+  height: 1.5rem;
+}
+
+.large-switch .form-check-input:checked {
+  background-position: right center;
+  background-size: auto 100%;
+}
+
+.large-switch .form-check-label {
+  padding-left: 0.5rem;
+  padding-top: 0.2rem;
+}
