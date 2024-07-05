@@ -9,7 +9,7 @@
   color: #6c757d;
 }
 .sidebar .nav-link:hover .fa-solid {
-  color: #00d1ab;
+  color: #4f46e5;
 }
 .sidebar .logo {
   max-width: 100%;
@@ -17,4 +17,25 @@
 }
 .sidebar .dropdown-menu {
   min-width: 200px;
+}
+.sidebar .nav-link {
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
+}
+
+.sidebar .nav-link:hover {
+  background-color: #fefefe;
+}
+
+.sidebar .nav-link.active {
+  background-color: #eef2ff;
+  color: #4f46e5;
+}
+
+.sidebar .nav-link.active i {
+  color: #4f46e5;
+}
+
+.sidebar .nav-link.active span {
+  font-weight: bold;
 }
