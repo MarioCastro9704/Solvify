@@ -1,100 +1,216 @@
-# Limpia la base de datos
+# db/seeds.rb
+
+# Clear existing data
 Booking.destroy_all
-Availability.destroy_all
 Review.destroy_all
+Availability.destroy_all
+Service.destroy_all
 Psychologist.destroy_all
 User.destroy_all
 
-# Crear un usuario normal
-user = User.create!(
-  email: "user@example.com",
-  password: "password",
-  password_confirmation: "password",
-  name: "John",
-  last_name: "Doe",
-  date_of_birth: "1990-01-01",
-  gender: "Male",
-  address: "123 Main St",
-  nationality: "American",
-  document_of_identity: "987654321"
+# Create Users
+users = []
+users << User.create!(
+  name: "Ana",
+  last_name: "García",
+  email: "ana.garcia@example.com",
+  password: 'password',
+  date_of_birth: "1985-05-23",
+  gender: "Femenino",
+  address: "Calle Falsa 123, Ciudad",
+  nationality: "Argentina"
+)
+users << User.create!(
+  name: "Carlos",
+  last_name: "Pérez",
+  email: "carlos.perez@example.com",
+  password: 'password',
+  date_of_birth: "1990-09-17",
+  gender: "Masculino",
+  address: "Avenida Siempre Viva 742, Ciudad",
+  nationality: "México"
+)
+users << User.create!(
+  name: "Laura",
+  last_name: "López",
+  email: "laura.lopez@example.com",
+  password: 'password',
+  date_of_birth: "1992-11-11",
+  gender: "Femenino",
+  address: "Calle Principal 456, Ciudad",
+  nationality: "Chile"
+)
+users << User.create!(
+  name: "Juan",
+  last_name: "Martínez",
+  email: "juan.martinez@example.com",
+  password: 'password',
+  date_of_birth: "1988-02-14",
+  gender: "Masculino",
+  address: "Pasaje Secundario 789, Ciudad",
+  nationality: "Colombia"
+)
+users << User.create!(
+  name: "María",
+  last_name: "Rodríguez",
+  email: "maria.rodriguez@example.com",
+  password: 'password',
+  date_of_birth: "1995-07-29",
+  gender: "Femenino",
+  address: "Boulevard Central 321, Ciudad",
+  nationality: "Perú"
 )
 
-# Crear un usuario psicólogo
-psychologist_user = User.create!(
-  email: "psychologist@example.com",
-  password: "password",
-  password_confirmation: "password",
-  name: "Jane",
-  last_name: "Smith",
-  date_of_birth: "1985-05-15",
-  gender: "Female",
-  address: "456 Elm St",
-  nationality: "American",
-  document_of_identity: "123456789"
+# Create Psychologists
+psychologists = []
+psychologists << User.create!(
+  name: "Dr. Pedro",
+  last_name: "Ramírez",
+  email: "pedro.ramirez@example.com",
+  password: 'password',
+  date_of_birth: "1975-03-20",
+  gender: "Masculino",
+  address: "Calle Psicología 123, Ciudad",
+  nationality: "España"
+).create_psychologist!(
+  degree: "Licenciatura en Psicología",
+  document_of_identity: "DNI12345678",
+  price_per_hour: 70,
+  approach: "Cognitivo-Conductual",
+  languages: "Español, Inglés",
+  nationality: "España",
+  currency: "EUR",
+  specialty: "Terapia Cognitivo-Conductual",
+  specialties: ["Terapia Cognitivo-Conductual", "Psicoanálisis"]
 )
-
-# Crear un psicólogo asociado al usuario psicólogo
-psychologist = Psychologist.create!(
-  user: psychologist_user,
-  specialty: "Clinical Psychology",
-  approach: "Terapia General",
-  specialties: ["Terapia Cognitivo-Conductual", "Psicología Infantil", "Psicología Organizacional"],
-  languages: "Español",
-  nationality: "Chilena",
-  price_per_session: 23000.0,
-  price_per_hour: 100.0,
+psychologists << User.create!(
+  name: "Dra. Elena",
+  last_name: "Gómez",
+  email: "elena.gomez@example.com",
+  password: 'password',
+  date_of_birth: "1980-08-15",
+  gender: "Femenino",
+  address: "Avenida Psicología 456, Ciudad",
+  nationality: "Argentina"
+).create_psychologist!(
+  degree: "Licenciatura en Psicología",
+  document_of_identity: "DNI87654321",
+  price_per_hour: 80,
+  approach: "Psicoanálisis",
+  languages: "Español, Francés",
+  nationality: "Argentina",
   currency: "USD",
-  degree: "PhD",
-  document_of_identity: "123456789",
-  description: "Experienced clinical psychologist"
+  specialty: "Psicoanálisis",
+  specialties: ["Psicoanálisis", "Terapia Familiar"]
+)
+psychologists << User.create!(
+  name: "Dr. Roberto",
+  last_name: "Fernández",
+  email: "roberto.fernandez@example.com",
+  password: 'password',
+  date_of_birth: "1983-12-05",
+  gender: "Masculino",
+  address: "Calle Terapia 789, Ciudad",
+  nationality: "Chile"
+).create_psychologist!(
+  degree: "Licenciatura en Psicología",
+  document_of_identity: "DNI11223344",
+  price_per_hour: 75,
+  approach: "Terapia Familiar",
+  languages: "Español, Italiano",
+  nationality: "Chile",
+  currency: "CLP",
+  specialty: "Terapia Familiar",
+  specialties: ["Terapia Familiar", "Psicología Infantil"]
+)
+psychologists << User.create!(
+  name: "Dra. Laura",
+  last_name: "Hernández",
+  email: "laura.hernandez@example.com",
+  password: 'password',
+  date_of_birth: "1987-06-25",
+  gender: "Femenino",
+  address: "Boulevard Terapia 321, Ciudad",
+  nationality: "México"
+).create_psychologist!(
+  degree: "Licenciatura en Psicología",
+  document_of_identity: "DNI44556677",
+  price_per_hour: 65,
+  approach: "Terapia Cognitivo-Conductual",
+  languages: "Español, Alemán",
+  nationality: "México",
+  currency: "MXN",
+  specialty: "Terapia Cognitivo-Conductual",
+  specialties: ["Terapia Cognitivo-Conductual", "Neuropsicología"]
+)
+psychologists << User.create!(
+  name: "Dr. Luis",
+  last_name: "García",
+  email: "luis.garcia@example.com",
+  password: 'password',
+  date_of_birth: "1982-01-30",
+  gender: "Masculino",
+  address: "Avenida Psicología 987, Ciudad",
+  nationality: "Perú"
+).create_psychologist!(
+  degree: "Licenciatura en Psicología",
+  document_of_identity: "DNI99887766",
+  price_per_hour: 90,
+  approach: "Psicología Organizacional",
+  languages: "Español, Portugués",
+  nationality: "Perú",
+  currency: "PEN",
+  specialty: "Psicología Organizacional",
+  specialties: ["Psicología Organizacional", "Terapia de Pareja"]
 )
 
-# Crear una disponibilidad para el psicólogo
-availability = Availability.create!(
-  psychologist: psychologist,
-  business_date: Date.today,
-  starting_hour: "09:00",
-  ending_hour: "17:00"
-)
-
-# Crear una reserva lógica para el usuario con el psicólogo
-booking = Booking.create!(
-  user: user,
-  psychologist: psychologist,
-  date: Date.today,
-  time: "10:00",
-  end_time: "11:00",
-  sessions_requested: 1,
-  sessions_completed: 0,
-  payment_status: "Pending"
-)
-
-# Crear 4 usuarios adicionales (no psicólogos)
-4.times do |i|
-  new_user = User.create!(
-    email: "user#{i + 2}@example.com",
-    password: "password",
-    password_confirmation: "password",
-    name: "User#{i + 2}",
-    last_name: "Doe",
-    date_of_birth: "1990-0#{i + 2}-01",
-    gender: "Male",
-    address: "123 Main St",
-    nationality: "American",
-    document_of_identity: "98765432#{i + 2}"
-  )
-
-  # Crear una reserva para cada nuevo usuario con el psicólogo
-  Booking.create!(
-    user: new_user,
+# Create Services
+psychologists.each do |psychologist|
+  Service.create!(
     psychologist: psychologist,
-    date: Date.today + i,
-    time: "#{10 + i}:00",
-    end_time: "#{11 + i}:00",
-    sessions_requested: 1,
-    sessions_completed: 0,
-    payment_status: "Pending"
+    name: psychologist.full_name,
+    country: psychologist.nationality,
+    price_per_session: psychologist.price_per_hour,
+    specialties: psychologist.specialties.join(', '),
+    published: true
   )
 end
 
-puts "Seeding completed successfully."
+# Create Availabilities
+psychologists.each do |psychologist|
+  3.times do |j|
+    Availability.create!(
+      psychologist: psychologist,
+      business_date: Date.today + j.days,
+      starting_hour: "#{9 + j}:00",
+      ending_hour: "#{10 + j}:00"
+    )
+  end
+end
+
+# Create Reviews
+psychologists.each do |psychologist|
+  3.times do |j|
+    Review.create!(
+      psychologist: psychologist,
+      comments: "Comentario de revisión #{j + 1} para #{psychologist.full_name}",
+      ratings: rand(1..5)
+    )
+  end
+end
+
+# Create Bookings
+psychologists.each do |psychologist|
+  2.times do |j|
+    Booking.create!(
+      date: Date.today + (j + 1).weeks,
+      time: "10:00",
+      end_time: "11:00",
+      psychologist: psychologist,
+      user: users.sample,
+      link_to_meet: "http://meeting-link#{psychologist.id}.com"
+    )
+  end
+end
+
+puts "Seeded #{User.count} users, #{Psychologist.count} psychologists, #{Service.count} services, #{Availability.count} availabilities, #{Review.count} reviews, and #{Booking.count} bookings."
