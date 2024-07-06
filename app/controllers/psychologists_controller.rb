@@ -22,7 +22,6 @@ class PsychologistsController < ApplicationController
     if @psychologist.save
       redirect_to @psychologist, notice: 'El psicólogo fue creado exitosamente.'
     else
-      # Renderizar sin el sidebar y topbar en caso de error
       render :new, layout: false
     end
   end
@@ -73,7 +72,8 @@ class PsychologistsController < ApplicationController
   def psychologist_params
     params.require(:psychologist).permit(
       :full_name, :document_of_identity, :approach, :languages, :nationality,
-      :price_per_session, :currency, :degree, :profile_picture, specialties: []
+      :price_per_session, :currency, :degree, :profile_picture, specialties: [],
+      service_attributes: [:id, :published] # Permitir los atributos del servicio
     )
   end
 
@@ -98,15 +98,12 @@ class PsychologistsController < ApplicationController
     availabilities_params = params[:psychologist][:availabilities]
     return unless availabilities_params
 
-    # Eliminar todas las disponibilidades existentes para este psicólogo
     @psychologist.availabilities.destroy_all
 
-    # Crear nuevas disponibilidades basadas en los parámetros enviados
     availabilities_params.each do |day, hours|
       hours.each do |start_hour, value|
         next unless value == "1"
 
-        # Crear una nueva disponibilidad para cada semana a partir de la fecha actual
         4.times do |week_offset|
           date = Date.today.beginning_of_week + day.to_i.days + (week_offset * 7).days
           @psychologist.availabilities.create!(
