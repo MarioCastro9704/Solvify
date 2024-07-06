@@ -50,6 +50,7 @@ class BookingsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to bookings_url, notice: "Booking was successfully destroyed." }
       format.json { head :no_content }
+      format.js   # Añadir esto para responder a AJAX
     end
   end
 
@@ -59,7 +60,6 @@ class BookingsController < ApplicationController
     @booking = Booking.find(params[:id])
   end
 
-  # Only allow a list of trusted parameters through.
   def booking_params
     params.require(:booking).permit(:date, :time, :end_time, :psychologist_id, :link_to_meet, :user_id)
   end

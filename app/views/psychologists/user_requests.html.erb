@@ -1,0 +1,47 @@
+
+<div class="mt-5 container-xxl">
+    <h1 class="mb-4">Solicitudes de Usuarios</h1>
+   <% content_for :page_title, "Solicitudes" %>
+   <div class="card custom-rounded p-3">
+    <table class="table table-hover table-bordered">
+      <thead class="thead-light">
+        <tr>
+          <th class="text-start ">Nombre del Paciente</th>
+          <th class="text-start">DNI</th>
+          <th class="text-start">Especialidad</th>
+          <th class="text-start">Fecha de Solicitud</th>
+          <th class="text-start">Sesiones Solicitadas</th>
+          <th class="text-start">Sesiones Realizadas</th>
+          <th class="text-start">Estado del Primer Pago</th>
+          <th class="text-center">Opciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @requests.each do |request| %>
+          <tr id="booking_<%= request.id %>">
+            <td class="text-start"><%= request.user.name %></td>
+            <td class="text-start"><%= request.user.document_of_identity %></td>
+            <td class="text-start"><%= request.psychologist.specialties.join(', ') %></td>
+            <td class="text-start"><%= request.created_at.strftime("%d/%m/%Y") %></td>
+            <td class="text-start"><%= request.sessions_requested %></td>
+            <td class="text-start"><%= request.sessions_completed %></td>
+            <td class="text-start"><%= request.first_payment_status %></td>
+            <td class="text-center">
+              <div class="btn-group" role="group" aria-label="Opciones">
+                <%= link_to edit_booking_path(request), class: "btn btn-primary btn-sm rounded-pill mx-1", title: "Ajustar Información", data: { toggle: "tooltip" } do %>
+                  <i class="fa-solid fa-pencil-alt"></i>
+                <% end %>
+                <%= link_to medical_record_user_path(request.user), class: "btn btn-success btn-sm rounded-pill mx-1 text-white", title: "Ver Ficha Médica", data: { toggle: "tooltip" } do %>
+                  <i class="fa-solid fa-file-medical"></i>
+                <% end %>
+                <%= link_to booking_path(request), method: :delete, remote: true, data: { confirm: "¿Estás seguro?" }, class: "btn btn-danger btn-sm rounded-pill mx-1 text-white", title: "Eliminar", data: { toggle: "tooltip" } do %>
+                  <i class="fa-solid fa-trash-alt"></i>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+   </div>
+</div>
