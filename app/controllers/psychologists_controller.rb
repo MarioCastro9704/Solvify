@@ -1,5 +1,7 @@
 class PsychologistsController < ApplicationController
-  before_action :set_psychologist, only: [:show, :edit, :update, :destroy, :load_availabilities, :user_requests]
+  before_action :authenticate_user!
+  before_action :set_psychologist, only: [:show, :edit, :update, :destroy, :user_requests]
+  before_action :ensure_user_is_not_already_psychologist, only: [:new, :create]
 
   def index
     @psychologists = Psychologist.all
@@ -10,17 +12,18 @@ class PsychologistsController < ApplicationController
   end
 
   def new
-    @psychologist = Psychologist.new
+    @psychologist = current_user.build_psychologist
     @psychologist.build_service
   end
 
   def create
-    @psychologist = Psychologist.new(psychologist_params)
+    @psychologist = current_user.build_psychologist(psychologist_params)
     assign_service_attributes
     if @psychologist.save
-      redirect_to @psychologist, notice: 'Psychologist was successfully created.'
+      redirect_to @psychologist, notice: 'El psicólogo fue creado exitosamente.'
     else
-      render :new
+      # Renderizar sin el sidebar y topbar en caso de error
+      render :new, layout: false
     end
   end
 
@@ -34,7 +37,7 @@ class PsychologistsController < ApplicationController
     if @psychologist.update(psychologist_params)
       handle_profile_picture_upload
       update_availabilities if params[:psychologist][:availabilities].present?
-      redirect_to @psychologist, notice: 'Psychologist was successfully updated.'
+      redirect_to @psychologist, notice: 'El psicólogo fue actualizado exitosamente.'
     else
       load_availability_data
       render :edit, status: :unprocessable_entity
@@ -43,7 +46,7 @@ class PsychologistsController < ApplicationController
 
   def destroy
     @psychologist.destroy
-    redirect_to psychologists_url, notice: 'Psychologist was successfully destroyed.'
+    redirect_to psychologists_url, notice: 'El psicólogo fue eliminado exitosamente.'
   end
 
   def user_requests
@@ -59,6 +62,12 @@ class PsychologistsController < ApplicationController
 
   def set_psychologist
     @psychologist = Psychologist.find(params[:id])
+  end
+
+  def ensure_user_is_not_already_psychologist
+    if current_user.psychologist.present?
+      redirect_to root_path, alert: 'Ya eres un psicólogo registrado.'
+    end
   end
 
   def psychologist_params

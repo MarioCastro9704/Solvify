@@ -1,54 +1,83 @@
-<div class="navbar navbar-expand-sm navbar-light bg-light">
+<!------------------- Contenedor Principal  ------------------->
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
 
-  <div class="container-fluid">
-    <%= link_to root_path, class: "navbar-brand" do %>
-      <%= image_tag "logo-solvify.svg", alt: "Logo", class: "logo" %>
-    <% end %>
+  <!------------------- Contenedor de Registro de Psicólogo  ------------------->
+  <div class="row border rounded-5 p-3 bg-white shadow box-area">
 
-    <button class="navbar-toggler" data-controller="toggle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" data-action="click->toggle#toggle">
-      <%= image_tag "menu-icon.svg", alt: "menu icon", id: "menu-icon", data: {toggle_target: "menuIcon"} %>
-      <%= image_tag "close-icon.svg", alt: "close icon", id: "close-icon", class: "d-none", data: {toggle_target: "closeIcon"} %>
-    </button>
+    <!------------------- Left Box ------------------->
+    <div class="col-md-6 left-box">
+      <div class="row align-items-center mx-2">
+        <div class="header-text mb-4 mt-3">
+          <h3>Únete a Solvify como Psicólogo</h3>
+          <h5>Ayuda a mejorar el bienestar de los demás.</h5>
+          <p class="text-secondary fs-6">Ofrece tus servicios de terapia en línea para una mente sana y equilibrada.</p>
+        </div>
 
-    <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
-      <ul class="navbar-nav">
-        <% if user_signed_in? %>
-          <li class="nav-item">
-            <%#= link_to "Messages", messages_path, class: "nav-link btn btn-primary" %>
-          </li>
-          <% if current_user.psychologist.present? %>
-            <li class="nav-item">
-              <%= link_to "Manage Psychologist Profile", edit_psychologist_path(current_user.psychologist), class: "nav-link btn btn-secondary" %>
-            </li>
-            <li class="nav-item">
-              <% if current_user.psychologist.service.present? %>
-                <%= link_to "Edit Service", edit_service_path(current_user.psychologist.service), class: "nav-link btn btn-secondary" %>
-              <% else %>
-                <%= link_to "Create Service", new_service_path, class: "nav-link btn btn-secondary" %>
-              <% end %>
-            </li>
-          <% end %>
-          <li class="nav-item dropdown">
-            <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <%= simple_form_for(@psychologist, url: psychologists_path) do |f| %>
+          <%= f.error_notification %>
 
-            </a>
-            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-              <%= link_to "Profile", edit_user_registration_path, class: "dropdown-item" %>
-              <%= link_to "Log out", destroy_user_session_path, data: { turbo_method: :delete }, class: "dropdown-item" %>
+          <!-- Título y Documento de Identidad -->
+          <div class="row">
+            <div class="form-group col-sm-6">
+              <%= f.input :degree, required: true, input_html: { class: 'form-control form-control-lg bg-light fs-6' }, label: false, placeholder: 'Título' %>
             </div>
-          </li>
-        <% else %>
-          <li class="nav-item">
-            <%= link_to "Login", new_user_session_path, class: "nav-link btn btn-primary" %>
-          </li>
-          <li class="nav-item">
-            <%= link_to "Register as Client", new_user_registration_path, class: "nav-link btn btn-secondary" %>
-          </li>
-          <li class="nav-item">
-            <%= link_to "Register as Psychologist", new_psychologist_path, class: "nav-link btn btn-secondary" %>
-          </li>
+
+            <div class="form-group col-sm-6">
+              <%= f.input :document_of_identity, required: true, input_html: { class: 'form-control form-control-lg bg-light fs-6' }, label: false, placeholder: 'Documento de Identidad' %>
+            </div>
+          </div>
+
+          <!-- Precio por Hora y Enfoque -->
+          <div class="row mb-3">
+            <div class="form-group col-sm-6">
+              <%= f.input :price_per_hour, required: true, input_html: { class: 'form-control form-control-lg bg-light fs-6' }, label: false, placeholder: 'Precio por Hora' %>
+            </div>
+
+            <div class="form-group col-sm-6">
+              <%= f.input :approach, required: true, input_html: { class: 'form-control form-control-lg bg-light fs-6' }, label: false, placeholder: 'Enfoque' %>
+            </div>
+          </div>
+
+          <!-- Idiomas -->
+          <div class="form-group mb-3">
+            <%= f.input :languages, required: true, input_html: { class: 'form-control form-control-lg bg-light fs-6' }, label: false, placeholder: 'Idiomas' %>
+          </div>
+
+          <!-- País y Moneda -->
+          <div class="row">
+            <div class="form-group col-sm-6">
+              <%= f.input :nationality, required: true, input_html: { class: 'form-control form-control-lg bg-light fs-6' }, label: false, placeholder: 'País' %>
+            </div>
+
+            <div class="form-group col-sm-6">
+              <%= f.input :currency, collection: Psychologist::CURRENCIES, required: true, input_html: { class: 'form-control form-control-lg bg-light fs-6' }, label: false, placeholder: 'Moneda' %>
+            </div>
+          </div>
+
+          <!-- Especialidades -->
+          <div class="form-group mb-3">
+            <%= f.input :specialties, collection: Psychologist::SPECIALTIES, as: :check_boxes, required: true, input_html: { class: 'form-control form-control-lg bg-light fs-6' }, label: 'Especialidades' %>
+          </div>
+
+          <!-- Botón de Registro -->
+          <div class="form-actions mb-1">
+            <%= f.button :submit, "Registrarse como Psicólogo", class: "btn btn-lg btn-primary w-100 fs-6 rounded-pill" %>
+          </div>
         <% end %>
-      </ul>
+
+        <div class="text-center mt-4">
+          <%= link_to "Volver", root_path, class: 'text-dark' %>
+        </div>
+
+      </div>
     </div>
+
+    <!------------------- Right Box ------------------->
+    <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column right-box" style="background: #F5F8E5">
+      <div class="featured-image">
+        <%= image_tag "signup-ic.jpg", alt: "Registro de Psicólogo", class: "img-fluid" %>
+      </div>
+    </div>
+
   </div>
 </div>

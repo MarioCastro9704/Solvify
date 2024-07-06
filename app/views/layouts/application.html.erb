@@ -12,12 +12,19 @@
 
 <body>
   <% if user_signed_in? %>
-    <%= render 'shared/sidebar' %>
-    <%= render 'shared/topbar' %>
-    <div class="content-wrapper" style="margin-top: 60px; margin-left: 175px;">
-      <%= render 'shared/flashes' %>
-      <%= yield %>
-    </div>
+    <% unless controller_name == 'psychologists' && action_name == 'new' || controller_name == 'psychologists' && action_name == 'create' %>
+      <%= render 'shared/sidebar' %>
+      <%= render 'shared/topbar' %>
+      <div class="content-wrapper" style="margin-top: 60px; margin-left: 175px;">
+        <%= render 'shared/flashes' %>
+        <%= yield %>
+      </div>
+    <% else %>
+      <div class="content-wrapper">
+        <%= render 'shared/flashes' %>
+        <%= yield %>
+      </div>
+    <% end %>
   <% else %>
     <% unless controller_name == 'sessions' || controller_name == 'registrations' || controller_name == 'passwords' %>
       <%= render 'shared/navbar' %>
