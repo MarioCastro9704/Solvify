@@ -1,41 +1,70 @@
+.calendar-body {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 .calendar-header {
   background-color: #ffffff;
   border-bottom: 1px solid #dee2e6;
   padding: 20px;
 }
 
-.week-header {
+.week-container {
   display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.week-header, .week-body {
+  display: flex;
+}
+
+.week-header {
   border-bottom: 1px solid #dee2e6;
 }
 
-.week-header .day-header {
-  flex-grow: 1;
+.time-column-header, .time-slots {
+  flex: 0 0 60px;
+  border-right: 1px solid #dee2e6;
+  text-align: center;
+}
+
+.time-column-header {
+  padding: 10px 0;
+  box-sizing: border-box;
+}
+
+.day-headers-container, .day-columns-container {
+  display: flex;
+  flex: 1;
+}
+
+.day-header, .day-column {
+  flex: 1;
+  min-width: 0;
+}
+
+.day-header {
   text-align: center;
   padding: 10px 0;
   box-sizing: border-box;
 }
 
 .day-header.today {
-  background-color: #e9ecef;
+  background-color: $blue;
+  color: white;
   font-weight: bold;
-}
-
-.week-body {
-  display: flex;
-  flex-direction: row;
 }
 
 .time-slots {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 60px; /* Ancho ajustado a 60px */
-  border-right: 1px solid #dee2e6;
 }
 
 .time-slot {
-  height: 60px; /* Altura ajustada a 60px */
+  height: 60px;
   line-height: 60px;
   text-align: center;
   border-bottom: 1px solid #dee2e6;
@@ -43,15 +72,18 @@
 
 .day-column {
   position: relative;
-  flex-grow: 1;
   border-right: 1px solid #dee2e6;
 }
 
 .booking {
   background-color: #ffffff;
-  border: 1px solid #dee2e6;
-  width: 95%;
+  border: 1px solid #d4d4d4;
+  border-radius: 8px;
+  width: calc(100% - 10px);
+  left: 5px;
   box-sizing: border-box;
+  padding: 5px;
+  position: absolute;
 }
 
 .booking-time {
@@ -62,19 +94,15 @@
   margin-right: 0.5rem;
 }
 
+.booking strong {
+  color: #333;
+}
+
 .current-time-line {
   position: absolute;
   width: 100%;
-  border-top: 2px solid red;
+  border-top: 1.5px solid #4f46e5;
   z-index: 10;
-}
-
-.time-column-header {
-  width: 60px; /* Ancho ajustado a 60px */
-  border-right: 1px solid #dee2e6;
-  text-align: center;
-  padding: 10px 0;
-  box-sizing: border-box;
 }
 
 .table thead th {
@@ -85,15 +113,4 @@
 
 .table tbody td {
   height: 60px;
-}
-
-.booking {
-  border: 1px solid #d4d4d4;
-  border-radius: 8px;
-  padding: 5px;
-  background-color: #ffffff;
-}
-
-.booking strong {
-  color: #333;
 }
