@@ -1,28 +1,39 @@
 <%= turbo_frame_tag "edit" do %>
-<h1>Edit Booking</h1>
+  <h1 class="fs-3"><%= @booking.user.name %></h1>
 
-<%= form_with model: @booking, local: true do |form| %>
-  <div class="form-group my-4">
-    <%= form.label :date, 'Date' %>
-    <%= form.date_field :date, class: 'form-control' %>
-  </div>
-  <div class="form-group my-4">
-    <%= form.label :time, 'Time' %>
-    <%= form.time_field :time, class: 'form-control' %>
-  </div>
-  <div class="form-group my-4">
-    <%= form.label :psychologist_id, 'Psychologist' %>
-    <%= form.collection_select :psychologist_id, Psychologist.includes(:user).all, :id, :user_name, { prompt: 'Select Psychologist' }, class: 'form-control' %>
-  </div>
-  <div class="form-group my-4">
-    <%= form.label :link_to_meet, 'Link to Meet' %>
-    <%= form.text_field :link_to_meet, class: 'form-control' %>
-  </div>
-  <div class="d-flex justify-content-end">
-    <%= link_to 'Cancelar', bookings_path, class: 'btn btn-outline-secondary rounded-pill mx-2' , data: { turbo_frame: "_top" } %>
-    <%= form.submit 'Actualizar reserva', class: 'btn btn-primary rounded-pill mx-2', data: { turbo_frame: "_top" }%>
-  </div>
+  <%= form_with model: @booking, local: true do |form| %>
+    <div class="form-group my-4">
+      <%= form.label :date, 'Fecha' %>
+      <%= form.date_field :date, class: 'form-control' %>
+    </div>
+    <div class="form-group my-4">
+      <%= form.label :time, 'Hora de inicio' %>
+      <%= form.time_field :time, class: 'form-control' %>
+    </div>
+    <div class="form-group my-4">
+      <%= form.label :end_time, 'Hora de finalización' %>
+      <%= form.time_field :end_time, class: 'form-control' %>
+    </div>
+    <div class="form-group my-4">
+      <%= form.label :psychologist_id, 'Psicólogo' %>
+      <%= form.collection_select :psychologist_id, Psychologist.includes(:user).all, :id, :user_name, { prompt: 'Select Psychologist' }, class: 'form-control' %>
+    </div>
+    <div class="form-group my-4">
+      <%= form.label :link_to_meet, 'Enlace para la videollamada' %>
+      <%= form.text_field :link_to_meet, class: 'form-control' %>
+    </div>
 
+    <% if @booking.link_to_meet.present? %>
+      <div class="form-group my-4">
+        <%= link_to @booking.link_to_meet, class: 'btn btn-success rounded-pill w-100 text-white', target: '_blank' do %>
+          <i class="fas fa-video me-2"></i> Unirse a la videollamada
+        <% end %>
+      </div>
+    <% end %>
 
-<% end %>
+    <div class="d-flex justify-content-end">
+      <%= link_to 'Cancelar', users_path, class: 'btn btn-outline-secondary rounded-pill mx-2', data: { turbo_frame: "_top" } %>
+      <%= form.submit 'Actualizar reserva', class: 'btn btn-primary rounded-pill mx-2', data: { turbo_frame: "_top" } %>
+    </div>
+  <% end %>
 <% end %>

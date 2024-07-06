@@ -4,7 +4,11 @@
     <div class="card-body">
       <div class="row">
         <div class="col-md-2">
-          <%= image_tag @psychologist.user.avatar.url, class: "img-fluid rounded-circle" if @psychologist.user.avatar.attached? %>
+          <% if @psychologist.profile_picture.attached? %>
+            <%= cl_image_tag @psychologist.profile_picture.key, class: "img-fluid rounded-circle", transformation: { width: 200, height: 200, crop: :fill } %>
+          <% else %>
+            <%= image_tag "default_avatar.png", class: "img-fluid rounded-circle", width: 200, height: 200 %>
+          <% end %>
         </div>
         <div class="col-md-10">
           <div class="d-flex justify-content-between align-items-start">
@@ -31,7 +35,7 @@
       <div class="row">
         <div class="col-md-6">
           <p><i class="fas fa-language"></i> Idiomas: <%= @psychologist.languages %></p>
-          <p><i class="fas fa-flag"></i> Nacionalidad: <%= @psychologist.user.nationality %></p>
+          <p><i class="fas fa-flag"></i> Nacionalidad: <%= @psychologist.nationality %></p>
         </div>
         <div class="col-md-6">
           <h3 class="text-primary mt-2"><%= number_to_currency(@psychologist.price_per_session, unit: @psychologist.currency, precision: 0) %></h3>
@@ -71,14 +75,19 @@
   </div>
 
   <div class="card mt-3 p-3 custom-rounded">
-    <h4 class="mt-3">Disponibilidad semanal </h4>
+    <h4 class="mt-3">Disponibilidad semanal</h4>
     <div class="row my-3">
-      <% 7.times do |i| %>
+      <% (0..6).each do |i| %>
         <div class="col text-center">
           <h6><%= I18n.l(Date.today + i, format: '%a') %></h6>
           <p><small><%= I18n.l(Date.today + i, format: '%d %b') %></small></p>
-          <% @availabilities.select { |a| a.business_date == Date.today + i }.each do |availability| %>
-            <%= link_to I18n.l(availability.starting_hour, format: '%H:%M'), new_booking_path(psychologist_id: @psychologist.id, availability_id: availability.id), class: "btn btn-outline-primary btn-sm d-block mb-2 rounded-pill" %>
+          <% availabilities = @availabilities.select { |a| a.business_date == (Date.today + i) } %>
+          <% if availabilities.any? %>
+            <% availabilities.each do |availability| %>
+              <%= link_to I18n.l(availability.starting_hour, format: '%H:%M'), new_booking_path(psychologist_id: @psychologist.id, availability_id: availability.id), class: "btn btn-outline-primary btn-sm d-block mb-2 rounded-pill" %>
+            <% end %>
+          <% else %>
+            <p>No hay disponibilidad</p>
           <% end %>
         </div>
       <% end %>

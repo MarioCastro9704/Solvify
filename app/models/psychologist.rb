@@ -1,5 +1,6 @@
 class Psychologist < ApplicationRecord
   belongs_to :user
+  has_one_attached :profile_picture
   has_one :service, dependent: :destroy
   has_many :availabilities
   has_many :reviews
