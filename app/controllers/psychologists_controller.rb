@@ -10,12 +10,12 @@ class PsychologistsController < ApplicationController
   end
 
   def new
-    @psychologist = Psychologist.new
+    @psychologist = current_user.build_psychologist
     @psychologist.build_service
   end
 
   def create
-    @psychologist = Psychologist.new(psychologist_params)
+    @psychologist = current_user.build_psychologist(psychologist_params)
     assign_service_attributes
     if @psychologist.save
       redirect_to @psychologist, notice: 'Psychologist was successfully created.'
@@ -76,7 +76,7 @@ class PsychologistsController < ApplicationController
       name: @psychologist.full_name,
       country: @psychologist.nationality,
       price_per_session: @psychologist.price_per_session,
-      specialties: @psychologist.specialties.join(', '),  # Converting array to string
+      specialties: @psychologist.specialties.join(', '),
       published: @psychologist.service.published
     )
   end
