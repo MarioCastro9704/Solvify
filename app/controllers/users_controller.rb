@@ -1,12 +1,11 @@
 class UsersController < ApplicationController
-  before_action :set_dates, only: [:index]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :medical_record]
 
   def index
     @users = User.all
     if params[:start_date].blank?
       @start_date = Date.today.beginning_of_week
     else
-      # Si hay una fecha en los parámetros, la usamos
       @start_date = Date.parse(params[:start_date]).beginning_of_week
     end
 
@@ -50,6 +49,10 @@ class UsersController < ApplicationController
     redirect_to users_url, notice: 'User was successfully destroyed.'
   end
 
+  def medical_record
+    # Lógica para mostrar la ficha médica del usuario
+  end
+
   private
 
   def set_dates
@@ -58,6 +61,10 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:name, :last_name, :date_of_birth, :gender, :address, :email, :password, :nationality, :avatar)
+    params.require(:user).permit(:name, :last_name, :date_of_birth, :gender, :address, :email, :password, :nationality, :avatar, :document_of_identity)
+  end
+
+  def set_user
+    @user = User.find(params[:id])
   end
 end

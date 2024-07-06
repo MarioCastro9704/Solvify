@@ -15,7 +15,8 @@ user = User.create!(
   date_of_birth: "1990-01-01",
   gender: "Male",
   address: "123 Main St",
-  nationality: "American"
+  nationality: "American",
+  document_of_identity: "987654321"
 )
 
 # Crear un usuario psicólogo
@@ -28,7 +29,8 @@ psychologist_user = User.create!(
   date_of_birth: "1985-05-15",
   gender: "Female",
   address: "456 Elm St",
-  nationality: "American"
+  nationality: "American",
+  document_of_identity: "123456789"
 )
 
 # Crear un psicólogo asociado al usuario psicólogo
@@ -61,7 +63,10 @@ booking = Booking.create!(
   psychologist: psychologist,
   date: Date.today,
   time: "10:00",
-  end_time: "11:00"
+  end_time: "11:00",
+  sessions_requested: 1,
+  sessions_completed: 0,
+  payment_status: "Pending"
 )
 
 # Crear 4 usuarios adicionales (no psicólogos)
@@ -75,7 +80,8 @@ booking = Booking.create!(
     date_of_birth: "1990-0#{i + 2}-01",
     gender: "Male",
     address: "123 Main St",
-    nationality: "American"
+    nationality: "American",
+    document_of_identity: "98765432#{i + 2}"
   )
 
   # Crear una reserva para cada nuevo usuario con el psicólogo
@@ -84,9 +90,11 @@ booking = Booking.create!(
     psychologist: psychologist,
     date: Date.today + i,
     time: "#{10 + i}:00",
-    end_time: "#{11 + i}:00"
+    end_time: "#{11 + i}:00",
+    sessions_requested: 1,
+    sessions_completed: 0,
+    payment_status: "Pending"
   )
 end
-
 
 puts "Seeding completed successfully."

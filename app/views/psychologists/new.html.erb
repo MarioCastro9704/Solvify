@@ -1,4 +1,9 @@
-<h2>Registrarse como Psicólogo</h2>
+<div class="navbar navbar-expand-sm navbar-light bg-light">
+
+  <div class="container-fluid">
+    <%= link_to root_path, class: "navbar-brand" do %>
+      <%= image_tag "logo-solvify.svg", alt: "Logo", class: "logo" %>
+    <% end %>
 
 <%= simple_form_for(@psychologist, url: psychologists_path) do |f| %>
   <%= f.error_notification %>
