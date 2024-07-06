@@ -1,13 +1,6 @@
 <table class="table">
   <thead>
     <tr>
-      <% if params[:day] == 'next' %>
-      <% dates = (Date.today + 4.days..Date.today + 7.days) %>
-      <% elsif params[:day] == 'prev' %>
-      <% dates = (Date.today - 4.days..Date.today - 1.days) %>
-      <% else %>
-      <% dates = (Date.today..Date.today + 4.days) %>
-      <% end %>
       <% dates.each do |i| %>
         <th><%= i.strftime("%a %d %b") %></th>
       <% end %>
@@ -17,7 +10,7 @@
     <tr>
       <% (0..3).each do |i| %>
         <td>
-          <% availability = availabilities.select { |a| a.business_date == Date.today + i.days } %>
+          <% availability = availabilities.select { |a| a.business_date == dates[i] } %>
           <% if availability.any? %>
             <ul class="list-unstyled">
               <% availability.each do |a| %>
