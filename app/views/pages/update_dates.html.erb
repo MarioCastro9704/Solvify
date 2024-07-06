@@ -1,0 +1,17 @@
+<turbo-frame id="availabilities_<%= @psychologist.id %>">
+    <div class="card-footer">
+      <div class="row">
+        <div class="col-2">
+          <%= link_to "«", pages_update_dates_path(day: "prev", start_date: @primer_dia, psychologist_id: @psychologist.id), data: { turbo_frame: "availabilities_#{@psychologist.id}" }, class: "btn btn-outline-secondary" %>
+        </div>
+        <div class="col-8">
+
+            <%= render partial: "pages/availabilities", locals: { availabilities: @service.psychologist.availabilities.where('business_date >= ?', @dates.first).where('business_date <= ?', @dates.last).order(:business_date), dates: @dates } %>
+
+        </div>
+        <div class="col-2 text-end">
+          <%= link_to "»", pages_update_dates_path(day: "next", start_date: @primer_dia, psychologist_id: @psychologist.id), data: { turbo_frame: "availabilities_#{@psychologist.id}" }, class: "btn btn-outline-secondary" %>
+        </div>
+      </div>
+    </div>
+  </turbo-frame>
