@@ -23,6 +23,14 @@
       <%= form.text_field :link_to_meet, class: 'form-control' %>
     </div>
 
+    <div>
+      <h2>Call</h2>
+      <div data-controller="daily-video" data-daily-video-target="daily" data-daily-video-videocall-value= <%= @booking.videocall_id %>>
+        <h2 data-action="click->daily-video#joinCall">Join Call</h2>
+        <h2 data-action="click->daily-video#endCall">End Call</h2>
+      </div>
+    </div>
+
     <% if @booking.link_to_meet.present? %>
       <div class="form-group my-4">
         <%= link_to @booking.link_to_meet, class: 'btn btn-success rounded-pill w-100 text-white', target: '_blank' do %>
