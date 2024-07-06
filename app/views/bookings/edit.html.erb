@@ -18,8 +18,11 @@
     <%= form.label :link_to_meet, 'Link to Meet' %>
     <%= form.text_field :link_to_meet, class: 'form-control' %>
   </div>
-  <%= form.submit 'Update Booking', class: 'btn btn-primary', data: { turbo_frame: "_top" }%>
-<% end %>
+  <div class="d-flex justify-content-end">
+    <%= link_to 'Cancelar', bookings_path, class: 'btn btn-outline-secondary rounded-pill mx-2' , data: { turbo_frame: "_top" } %>
+    <%= form.submit 'Actualizar reserva', class: 'btn btn-primary rounded-pill mx-2', data: { turbo_frame: "_top" }%>
+  </div>
 
-<%= link_to 'Back', bookings_path, class: 'btn btn-secondary' %>
+
+<% end %>
 <% end %>

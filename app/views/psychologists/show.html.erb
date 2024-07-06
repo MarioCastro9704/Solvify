@@ -75,10 +75,10 @@
     <div class="row my-3">
       <% 7.times do |i| %>
         <div class="col text-center">
-          <h6><%= (Date.today + i).strftime("%a") %></h6>
-          <p><small><%= (Date.today + i).strftime("%d %b") %></small></p>
+          <h6><%= I18n.l(Date.today + i, format: '%a') %></h6>
+          <p><small><%= I18n.l(Date.today + i, format: '%d %b') %></small></p>
           <% @availabilities.select { |a| a.business_date == Date.today + i }.each do |availability| %>
-            <%= link_to availability.starting_hour.strftime("%H:%M"), new_booking_path(psychologist_id: @psychologist.id, availability_id: availability.id), class: "btn btn-outline-primary btn-sm d-block mb-2 rounded-pill" %>
+            <%= link_to I18n.l(availability.starting_hour, format: '%H:%M'), new_booking_path(psychologist_id: @psychologist.id, availability_id: availability.id), class: "btn btn-outline-primary btn-sm d-block mb-2 rounded-pill" %>
           <% end %>
         </div>
       <% end %>
