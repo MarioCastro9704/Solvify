@@ -19,14 +19,14 @@
         <%= f.input :password,
                     hint: "Dejar en blanco si no deseas cambiarla",
                     required: false,
-                    input_html: { autocomplete: "Nueva contraseña", class: 'form-control' } %>
+                    input_html: { autocomplete: "new-password", class: 'form-control' } %>
         <%= f.input :password_confirmation,
                     required: false,
-                    input_html: { autocomplete: "Confirmar nueva contraseña", class: 'form-control' } %>
+                    input_html: { autocomplete: "new-password", class: 'form-control' } %>
         <%= f.input :current_password,
                     hint: "Necesitamos tu contraseña actual para confirmar los cambios",
                     required: true,
-                    input_html: { autocomplete: "Contraseña actual", class: 'form-control' } %>
+                    input_html: { autocomplete: "current-password", class: 'form-control' } %>
       </div>
     </div>
 
@@ -43,6 +43,17 @@
     <div class="card-body">
       <p>¿No estás satisfecho? Puedes cancelar tu cuenta:</p>
       <%= button_to "Cancelar mi cuenta", registration_path(resource_name), data: { confirm: "¿Estás seguro?", turbo_confirm: "¿Estás seguro?" }, method: :delete, class: "btn btn-danger rounded-pill text-white" %>
+    </div>
+  </div>
+
+  <!-- Botón para registrarse como psicólogo -->
+  <div class="card mb-4 custom-rounded">
+    <div class="card-header">
+      <h2 class="mb-0 fs-4">Registrar como Psicólogo</h2>
+    </div>
+    <div class="card-body">
+      <p>¿Eres psicólogo y quieres ofrecer tus servicios? Regístrate como psicólogo aquí:</p>
+      <%= link_to "Registrar como Psicólogo", new_psychologist_path, class: "btn btn-success rounded-pill" %>
     </div>
   </div>
 </div>
