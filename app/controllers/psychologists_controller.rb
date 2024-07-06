@@ -8,7 +8,7 @@ class PsychologistsController < ApplicationController
   end
 
   def show
-    @availabilities = @psychologist.availabilities.where('business_date >= ?', Date.today).order(:business_date, :starting_hour).limit(20)
+    @availabilities = @psychologist.availabilities.where('business_date >= ?', Date.today).order(:business_date, :starting_hour)
   end
 
   def new
@@ -22,25 +22,23 @@ class PsychologistsController < ApplicationController
     if @psychologist.save
       redirect_to @psychologist, notice: 'El psicólogo fue creado exitosamente.'
     else
-      # Renderizar sin el sidebar y topbar en caso de error
       render :new, layout: false
     end
   end
 
   def edit
     @psychologist.build_service if @psychologist.service.nil?
-    @availabilities = @psychologist.availabilities.group_by { |a| a.business_date.wday }
-    @time_slots = (7..20).map { |hour| [hour, hour + 1] }
+    load_availability_data
   end
 
   def update
     assign_service_attributes
     if @psychologist.update(psychologist_params)
+      handle_profile_picture_upload
       update_availabilities if params[:psychologist][:availabilities].present?
       redirect_to @psychologist, notice: 'El psicólogo fue actualizado exitosamente.'
     else
-      @availabilities = @psychologist.availabilities.group_by { |a| a.business_date.wday }
-      @time_slots = (7..20).map { |hour| [hour, hour + 1] }
+      load_availability_data
       render :edit, status: :unprocessable_entity
     end
   end
@@ -52,6 +50,11 @@ class PsychologistsController < ApplicationController
 
   def user_requests
     @requests = @psychologist.bookings.includes(:user)
+  end
+
+  def load_availabilities
+    @availabilities = @psychologist.availabilities.where('business_date >= ?', Date.today).order(:business_date)
+    render partial: "pages/availabilities", locals: { availabilities: @availabilities }
   end
 
   private
@@ -68,9 +71,9 @@ class PsychologistsController < ApplicationController
 
   def psychologist_params
     params.require(:psychologist).permit(
-      :document_of_identity, :approach, :languages, :nationality,
+      :full_name, :document_of_identity, :approach, :languages, :nationality,
       :price_per_session, :currency, :degree, :profile_picture, specialties: [],
-      service_attributes: [:id, :published]
+      service_attributes: [:id, :published] # Permitir los atributos del servicio
     )
   end
 
@@ -85,6 +88,12 @@ class PsychologistsController < ApplicationController
     )
   end
 
+  def handle_profile_picture_upload
+    if params[:psychologist][:profile_picture].present?
+      @psychologist.profile_picture.attach(params[:psychologist][:profile_picture])
+    end
+  end
+
   def update_availabilities
     availabilities_params = params[:psychologist][:availabilities]
     return unless availabilities_params
@@ -95,13 +104,20 @@ class PsychologistsController < ApplicationController
       hours.each do |start_hour, value|
         next unless value == "1"
 
-        date = Date.today.beginning_of_week + day.to_i.days
-        @psychologist.availabilities.create!(
-          business_date: date,
-          starting_hour: Time.zone.parse("#{start_hour}:00"),
-          ending_hour: Time.zone.parse("#{(start_hour.to_i + 1)}:00")
-        )
+        4.times do |week_offset|
+          date = Date.today.beginning_of_week + day.to_i.days + (week_offset * 7).days
+          @psychologist.availabilities.create!(
+            business_date: date,
+            starting_hour: Time.zone.parse("#{start_hour}:00"),
+            ending_hour: Time.zone.parse("#{(start_hour.to_i + 1)}:00")
+          )
+        end
       end
     end
+  end
+
+  def load_availability_data
+    @availabilities = @psychologist.availabilities.group_by { |a| a.business_date.wday }
+    @time_slots = (7..20).map { |hour| [hour, hour + 1] }
   end
 end

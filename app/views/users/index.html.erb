@@ -81,7 +81,7 @@
       <div class="booking-form-wrapper">
         <div class="booking-form-container h-100 bg-light border-left p-4 overflow-auto">
           <%= turbo_frame_tag "edit" do %>
-            <h2 class="mb-4">Nueva reserva</h2>
+            <h2 class="mb-4 fs-3">Nueva reserva</h2>
             <%= form_with model: Booking.new, url: bookings_path, local: true do |form| %>
               <div class="mb-3">
                 <%= form.label :date, 'Fecha', class: 'form-label' %>
