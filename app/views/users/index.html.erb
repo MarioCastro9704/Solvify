@@ -7,7 +7,7 @@
           <div class="d-flex justify-content-between align-items-center">
             <h2 class="m-0">
               <i class="fa-solid fa-calendar me-2 mx-1"></i>
-              <%= @start_date.strftime("%B %d") %> - <%= (@start_date + 6.days).strftime("%B %d, %Y") %>
+              <%= I18n.l(@start_date, format: '%d de %B') %> - <%= I18n.l(@start_date + 6.days, format: '%d de %B de %Y') %>
             </h2>
             <div>
               <%= link_to users_path(start_date: (@start_date - 1.week).to_s), class: 'btn btn btn-light rounded-pill me-2' do %>
@@ -34,7 +34,7 @@
                 <% (0..6).each do |day_index| %>
                   <% date = @start_date + day_index.days %>
                   <div class="day-header <%= 'today' if date == Date.today %>">
-                    <%= date.strftime("%a %d") %>
+                    <%= I18n.l(date, format: '%a %d') %>
                   </div>
                 <% end %>
               </div>
@@ -44,7 +44,7 @@
               <div class="time-slots">
                 <% (0..23).each do |hour| %>
                   <div class="time-slot">
-                    <%= Time.parse("#{hour}:00").strftime("%I %p") %>
+                    <%= I18n.l(Time.parse("#{hour}:00"), format: '%I %p') %>
                   </div>
                 <% end %>
               </div>
@@ -52,7 +52,7 @@
               <div class="day-columns-container">
                 <% (0..6).each do |day_index| %>
                   <% date = @start_date + day_index.days %>
-                  <div class="day-column">
+                  <div class="day-column <%= 'today-column' if date == Date.today %>">
                     <% @bookings.select { |b| b.date == date }.each do |booking| %>
                       <%= link_to edit_booking_path(booking), data: { turbo_frame: "edit" } do %>
                         <% booking_start_hour = booking.time.strftime("%H").to_i %>
@@ -62,7 +62,9 @@
                         <% booking_duration = (booking_end_hour * 60 + booking_end_minute) - (booking_start_hour * 60 + booking_start_minute) %>
                         <div class="booking mb-2 p-2 rounded position-absolute" style="top: <%= (booking_start_hour * 60 + booking_start_minute) %>px; height: <%= booking_duration %>px; border-left: 5px solid <%= booking_color(booking) %>;">
                           <div class="booking-title font-weight-bold"><%= booking.user.name %></div>
-                          <div class="booking-time"><%= booking.time.strftime("%I:%M %p") %> - <%= booking.end_time.strftime("%I:%M %p") %></div>
+                          <div class="booking-time">
+                            <%= I18n.l(booking.time, format: '%I:%M %p') %> - <%= I18n.l(booking.end_time, format: '%I:%M %p') %>
+                          </div>
                         </div>
                       <% end %>
                     <% end %>
@@ -95,7 +97,7 @@
               </div>
               <div class="mb-3">
                 <%= form.label :psychologist_id, 'Psicólogo', class: 'form-label' %>
-                <%= form.collection_select :psychologist_id, Psychologist.includes(:user).all, :id, :user_name, { prompt: 'Select Psychologist' }, class: 'form-control' %>
+                <%= form.collection_select :psychologist_id, Psychologist.includes(:user).all, :id, :user_name, { prompt: 'Seleccionar Psicólogo' }, class: 'form-control' %>
               </div>
               <div class="mb-3">
                 <%= form.label :link_to_meet, 'Enlace para la videollamada', class: 'form-label' %>

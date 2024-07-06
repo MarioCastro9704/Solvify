@@ -1,6 +1,6 @@
 <div class="container mt-5">
   <% content_for :page_title, "Editar mi servicio" %>
-  <h1 class="mb-4 ">Editar Perfil de Psicólogo</h1>
+  <h1 class="mb-4">Editar Perfil de Psicólogo</h1>
 
   <%= form_with(model: @psychologist, local: true, class: "needs-validation", novalidate: true) do |form| %>
     <% if @psychologist.errors.any? %>
@@ -15,7 +15,7 @@
     <% end %>
 
     <!-- Sección de Perfil -->
-    <div class="card  mb-4 custom-rounded">
+    <div class="card mb-4 custom-rounded">
       <div class="card-header">
         <h2 class="mb-0 fs-4">Información del Perfil</h2>
       </div>
@@ -71,50 +71,51 @@
       </div>
     </div>
 
-
-
     <!-- Sección de Disponibilidad -->
-  <div class="card mb-4 custom-rounded">
-    <div class="card-header">
-      <h2 class="mb-0 fs-4">Mi horario</h2>
-    </div>
-    <div class="card-body">
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>Hora</th>
-            <% Date::DAYNAMES.each do |day| %>
-              <th><%= day %></th>
-            <% end %>
-          </tr>
-        </thead>
-        <tbody>
-          <% @time_slots.each do |start_hour, end_hour| %>
+    <div class="card mb-4 custom-rounded">
+      <div class="card-header">
+        <h2 class="mb-0 fs-4">Mi horario</h2>
+      </div>
+      <div class="card-body">
+        <table class="table table-bordered">
+          <thead>
             <tr>
-              <td><%= "#{start_hour}:00 - #{end_hour}:00" %></td>
-              <% (0..6).each do |day_index| %>
-                <td>
-                  <div class="btn-group" role="group" aria-label="Disponibilidad"
-                       data-controller="toggle"
-                       data-toggle-day="<%= day_index %>"
-                       data-toggle-hour="<%= start_hour %>">
-                    <% checked = @availabilities[day_index]&.any? { |a| a.starting_hour.hour == start_hour } %>
-                    <% button_class = checked ? 'btn btn-primary rounded-pill' : 'btn btn-light rounded-pill' %>
-                    <button type="button rounded-pill" class="<%= button_class %>"
-                            data-action="toggle#toggle">
-                      <%= checked ? 'Disponible' : 'No disponible' %>
-                    </button>
-                    <input type="hidden" name="psychologist[availabilities][<%= day_index %>][<%= start_hour %>]" value="<%= checked ? 1 : 0 %>">
-                  </div>
-                </td>
+              <th>Hora</th>
+              <% days_of_week = I18n.t('date.day_names').rotate %>
+              <% days_of_week.each do |day| %>
+                <th><%= day.capitalize %></th>
               <% end %>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <% @time_slots.each do |start_hour, end_hour| %>
+              <tr>
+                <td><%= "#{start_hour}:00 - #{end_hour}:00" %></td>
+                <% (1..7).each do |day_index| %>
+                  <% day_index = day_index % 7 %>
+                  <td>
+                    <div class="btn-group" role="group" aria-label="Disponibilidad"
+                         data-controller="toggle"
+                         data-toggle-day="<%= day_index %>"
+                         data-toggle-hour="<%= start_hour %>">
+                      <% checked = @availabilities[day_index]&.any? { |a| a.starting_hour.hour == start_hour } %>
+                      <% button_class = checked ? 'btn btn-primary rounded-pill' : 'btn btn-light rounded-pill' %>
+                      <button type="button rounded-pill" class="<%= button_class %>"
+                              data-action="toggle#toggle">
+                        <%= checked ? 'Disponible' : 'No disponible' %>
+                      </button>
+                      <input type="hidden" name="psychologist[availabilities][<%= day_index %>][<%= start_hour %>]" value="<%= checked ? 1 : 0 %>">
+                    </div>
+                  </td>
+                <% end %>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
-      <!-- Sección de Servicio -->
+
+    <!-- Sección de Servicio -->
     <div class="card mb-4 custom-rounded">
       <div class="card-header">
         <h2 class="mb-0 fs-4">Activar mi servicio</h2>
@@ -128,8 +129,10 @@
         <% end %>
       </div>
     </div>
-  <div class="mb-3 d-flex justify-content-end">
-    <%= link_to 'Cancelar', @psychologist, class: "btn btn-outline-secondary rounded-pill me-2" %>
-    <%= form.submit "Guardar", class: "btn btn-primary rounded-pill me-2" %>
-  </div>
-<% end %>
+
+    <div class="mb-3 d-flex justify-content-end">
+      <%= link_to 'Cancelar', @psychologist, class: "btn btn-outline-secondary rounded-pill me-2" %>
+      <%= form.submit "Guardar", class: "btn btn-primary rounded-pill me-2" %>
+    </div>
+  <% end %>
+</div>
