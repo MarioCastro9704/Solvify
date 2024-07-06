@@ -22,7 +22,7 @@
       <div class="card-body">
         <div class="mb-3">
           <%= form.label :profile_picture, "Imagen de perfil", class: "form-label" %>
-          <%= form.file_field :profile_picture, class: "form-control" %>
+          <%= form.file_field :profile_picture, class: "form-control", direct_upload: true %>
         </div>
         <div class="mb-3">
           <%= form.label :full_name, "Nombre completo", class: "form-label" %>
@@ -82,7 +82,7 @@
             <tr>
               <th>Hora</th>
               <% days_of_week = I18n.t('date.day_names').rotate %>
-              <% days_of_week.each do |day| %>
+              <% days_of_week.each_with_index do |day, day_index| %>
                 <th><%= day.capitalize %></th>
               <% end %>
             </tr>
@@ -91,8 +91,7 @@
             <% @time_slots.each do |start_hour, end_hour| %>
               <tr>
                 <td><%= "#{start_hour}:00 - #{end_hour}:00" %></td>
-                <% (1..7).each do |day_index| %>
-                  <% day_index = day_index % 7 %>
+                <% (0..6).each do |day_index| %>
                   <td>
                     <div class="btn-group" role="group" aria-label="Disponibilidad"
                          data-controller="toggle"
@@ -100,7 +99,7 @@
                          data-toggle-hour="<%= start_hour %>">
                       <% checked = @availabilities[day_index]&.any? { |a| a.starting_hour.hour == start_hour } %>
                       <% button_class = checked ? 'btn btn-primary rounded-pill' : 'btn btn-light rounded-pill' %>
-                      <button type="button rounded-pill" class="<%= button_class %>"
+                      <button type="button" class="<%= button_class %>"
                               data-action="toggle#toggle">
                         <%= checked ? 'Disponible' : 'No disponible' %>
                       </button>
