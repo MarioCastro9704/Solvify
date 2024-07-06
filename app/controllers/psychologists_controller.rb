@@ -18,7 +18,6 @@ class PsychologistsController < ApplicationController
 
   def create
     @psychologist = current_user.build_psychologist(psychologist_params)
-    assign_service_attributes
     if @psychologist.save
       redirect_to @psychologist, notice: 'El psicólogo fue creado exitosamente.'
     else
@@ -32,7 +31,6 @@ class PsychologistsController < ApplicationController
   end
 
   def update
-    assign_service_attributes
     if @psychologist.update(psychologist_params)
       handle_profile_picture_upload
       update_availabilities if params[:psychologist][:availabilities].present?
@@ -73,18 +71,7 @@ class PsychologistsController < ApplicationController
     params.require(:psychologist).permit(
       :full_name, :document_of_identity, :approach, :languages, :nationality,
       :price_per_session, :currency, :degree, :profile_picture, specialties: [],
-      service_attributes: [:id, :published] # Permitir los atributos del servicio
-    )
-  end
-
-  def assign_service_attributes
-    @psychologist.build_service if @psychologist.service.nil?
-    @psychologist.service.assign_attributes(
-      name: @psychologist.full_name,
-      country: @psychologist.nationality,
-      price_per_session: @psychologist.price_per_session,
-      specialties: @psychologist.specialties.join(', '),
-      published: @psychologist.service.published
+      service_attributes: [:id, :published, :name, :country, :price_per_session, :specialties]
     )
   end
 
