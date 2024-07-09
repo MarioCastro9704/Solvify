@@ -8,6 +8,7 @@ class User < ApplicationRecord
   has_one :psychologist
   has_many :psychologists, through: :bookings
   has_one_attached :avatar
+  has_rich_text :medical_record
   validates :name, presence: true
   validates :last_name, presence: true
   validates :date_of_birth, presence: true
