@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :medical_record]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :medical_record, :update_medical_record]
 
   def index
     @users = User.all
@@ -50,18 +50,21 @@ class UsersController < ApplicationController
   end
 
   def medical_record
-    # Lógica para mostrar la ficha médica del usuario
+    # Aquí se muestra la ficha médica y el formulario de notas
+  end
+
+  def update_medical_record
+    if @user.update(user_params)
+      redirect_to medical_record_user_path(@user), notice: 'Las notas fueron actualizadas exitosamente.'
+    else
+      render :medical_record
+    end
   end
 
   private
 
-  def set_dates
-    @start_date = params[:start_date].present? ? Date.parse(params[:start_date]) : Date.today.beginning_of_week
-    @end_date = @start_date.end_of_week
-  end
-
   def user_params
-    params.require(:user).permit(:name, :last_name, :date_of_birth, :gender, :address, :email, :password, :nationality, :avatar, :document_of_identity)
+    params.require(:user).permit(:name, :last_name, :date_of_birth, :gender, :address, :email, :password, :nationality, :avatar, :document_of_identity, :medical_record)
   end
 
   def set_user

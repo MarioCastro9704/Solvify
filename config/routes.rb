@@ -4,11 +4,11 @@ Rails.application.routes.draw do
   root to: 'pages#home'
 
   get 'pages/home', to: 'pages#home', as: 'pages_home'
-  get 'pages/update_dates', to: 'pages#update_dates', as: 'pages_update_dates'
 
   resources :users, only: [:index, :show, :edit, :update, :destroy] do
     member do
       get 'medical_record'
+      patch 'update_medical_record'
     end
     resources :bookings, only: [:index]
   end
