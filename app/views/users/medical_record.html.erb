@@ -1,9 +1,6 @@
 
-
-<!-- Aquí va la información médica del usuario -->\
 <div class="container">
   <h1>Notas del Proceso para <%= @user.name %></h1>
-
   <%= form_with(model: @user, url: update_medical_record_user_path(@user), method: :patch, local: true) do |form| %>
     <div class="editor-wrapper">
       <div class="editor-toolbar">
