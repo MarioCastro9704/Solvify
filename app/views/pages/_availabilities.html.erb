@@ -14,7 +14,10 @@
           <% if availability.any? %>
             <ul class="list-unstyled">
               <% availability.each do |a| %>
-                <li><%= a.starting_hour.strftime("%H:%M") %></li>
+                <li>
+                  <%= link_to a.starting_hour.strftime("%H:%M"), new_booking_path(service_id: service.id, date: a.business_date, time: a.starting_hour), class: "btn btn-outline-primary w-100 mb-1" %>
+                </li>
+                </li>
               <% end %>
             </ul>
           <% else %>
