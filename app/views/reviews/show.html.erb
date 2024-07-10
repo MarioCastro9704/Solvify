@@ -1,2 +1,25 @@
-<h1>Reviews#show</h1>
-<p>Find me in app/views/reviews/show.html.erb</p>
+<h2>Reseña para <%= @review.psychologist.full_name %></h2>
+
+<p>
+  <strong>Autor:</strong>
+  <%= @review.author.full_name %>
+</p>
+
+<p>
+  <strong>Comentarios:</strong>
+  <%= @review.comments %>
+</p>
+
+<p>
+  <strong>Calificación:</strong>
+  <%= @review.ratings %> / 5
+</p>
+
+<p>
+  <strong>Fecha de creación:</strong>
+  <%= @review.created_at.strftime("%d/%m/%Y") %>
+</p>
+
+<%= link_to "Editar", edit_psychologist_review_path(@review.psychologist, @review), class: "btn btn-secondary" %>
+<%= link_to "Eliminar", psychologist_review_path(@review.psychologist, @review), method: :delete, data: { confirm: "¿Estás seguro?" }, class: "btn btn-danger" %>
+<%= link_to "Volver a Reseñas", psychologist_reviews_path(@review.psychologist), class: "btn btn-primary" %>

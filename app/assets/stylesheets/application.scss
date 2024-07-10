@@ -16,6 +16,8 @@
 @import "components/sidebar";
 @import "components/topbar";
 
+@import "star-rating.js/dist/star-rating.css";
+
 .content-wrapper {
   margin-left: 175px;
   padding: 40px;
@@ -64,4 +66,8 @@
   margin-bottom: 10px;
   display: block;
   font-size: 1.2em;
+}
+
+.starrr {
+  display: inline-block;
 }
