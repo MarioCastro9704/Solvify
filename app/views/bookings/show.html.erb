@@ -1,2 +1,12 @@
 <h1>Bookings#show</h1>
 <p>Find me in app/views/bookings/show.html.erb</p>
+<%= turbo_stream_from @booking %>
+<div id="messages">
+  <% @booking.messages.each do |message| %>
+  <%= render "message", message: message  %>
+  <% end %>
+</div>
+<%= simple_form_for [@booking, @message] do |f| %>
+<%= f.input :content, input_html: {id: "content"} %>
+<%= f.submit %>
+<% end %>
