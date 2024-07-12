@@ -1,6 +1,7 @@
 class Booking < ApplicationRecord
   belongs_to :user
   belongs_to :psychologist
+  has_many :messages
 
   validates :date, presence: true
   validates :time, presence: true
