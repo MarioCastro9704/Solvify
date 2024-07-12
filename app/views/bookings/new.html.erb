@@ -4,49 +4,10 @@
   <% if @psychologist.present? %>
     <div class="row">
       <div class="col-md-7">
-        <div class="mb-4">
-          <label class="form-label d-block">¿Para quién es la cita?</label>
-          <div class="btn-group" role="group" aria-label="Para quién es la cita">
-            <%= radio_button_tag :for_whom, 'me', true, class: "btn-check", id: "for_whom_me", autocomplete: "off", data: { action: "change->booking#togglePatientForm" } %>
-            <%= label_tag :for_whom_me, "Para mí", class: "btn btn-outline-primary" %>
-
-            <%= radio_button_tag :for_whom, 'other', false, class: "btn-check", id: "for_whom_other", autocomplete: "off", data: { action: "change->booking#togglePatientForm" } %>
-            <%= label_tag :for_whom_other, "Para alguien más", class: "btn btn-outline-primary" %>
-          </div>
-        </div>
-
         <%= form_with(model: @booking, local: true, data: { booking_target: "form" }) do |form| %>
-          <div data-booking-target="patientForm" style="display: none;">
-            <%= form.label :dni, "DNI", class: "form-label" %>
-            <%= form.text_field :dni, class: "form-control mb-3" %>
-
-            <%= form.label :name, "Nombre", class: "form-label" %>
-            <%= form.text_field :name, class: "form-control mb-3" %>
-
-            <%= form.label :last_name, "Apellidos", class: "form-label" %>
-            <%= form.text_field :last_name, class: "form-control mb-3" %>
-
-            <%= form.label :email, "Correo electrónico", class: "form-label" %>
-            <%= form.email_field :email, class: "form-control mb-3" %>
-
-            <%= form.label :phone, "Teléfono", class: "form-label" %>
-            <%= form.telephone_field :phone, class: "form-control mb-3" %>
-
-            <div class="mb-3">
-              <label class="form-label d-block">Sexo al nacer</label>
-              <div class="btn-group" role="group" aria-label="Sexo al nacer">
-                <%= form.radio_button :sex, 'female', class: "btn-check", id: "sex_female", autocomplete: "off" %>
-                <%= form.label :sex_female, "Femenino", class: "btn btn-outline-primary" %>
-
-                <%= form.radio_button :sex, 'male', class: "btn-check", id: "sex_male", autocomplete: "off" %>
-                <%= form.label :sex_male, "Masculino", class: "btn btn-outline-primary" %>
-              </div>
-            </div>
-          </div>
-
           <div class="mb-3">
-            <%= form.label :day, "Selecciona un día", class: "form-label" %>
-            <%= form.select :day, @days, { prompt: "Selecciona un día" }, {
+            <%= form.label :date, "Selecciona un día", class: "form-label" %>
+            <%= form.select :date, @days, { prompt: "Selecciona un día" }, {
               class: "form-select",
               data: {
                 booking_target: "daySelect",
@@ -77,8 +38,7 @@
           <%= form.hidden_field :psychologist_id, value: @psychologist.id %>
 
           <%= form.submit "Reservar Sesión", class: "btn btn-primary", data: { booking_target: "submitButton" } %>
-          <%= link_to root_path, class: "btn btn-outline-secondary rounded-pill mx-1" do %>Volver<% end %>
-
+          <%= link_to "Volver", root_path, class: "btn btn-outline-secondary rounded-pill mx-1" %>
         <% end %>
       </div>
 

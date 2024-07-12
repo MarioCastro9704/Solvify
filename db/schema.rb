@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_12_044116) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_12_054232) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -76,6 +76,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_12_044116) do
     t.integer "sessions_completed"
     t.string "videocall_id"
     t.string "sex"
+    t.date "day"
+    t.string "reason"
+    t.string "dni"
     t.index ["psychologist_id"], name: "index_bookings_on_psychologist_id"
     t.index ["user_id"], name: "index_bookings_on_user_id"
   end
