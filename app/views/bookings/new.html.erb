@@ -1,2 +1,91 @@
-<h1>Bookings#new</h1>
-<p>Find me in app/views/bookings/new.html.erb</p>
+<div class="container">
+  <h1>Schedule a Session</h1>
+
+  <% if @psychologist.present? %>
+    <div class="row">
+      <div class="col-md-7">
+        <%= form_with(model: @booking, local: true) do |form| %>
+          <div class="mb-3">
+            <%= form.label :day, "Select a day", class: "form-label" %>
+            <%= form.select :day, @days, {}, { class: "form-select", id: "day_select" } %>
+          </div>
+
+          <div class="mb-3">
+            <%= form.label :time, "Select a time", class: "form-label" %>
+            <%= form.select :time, [], {}, { class: "form-select", id: "time_select" } %>
+          </div>
+
+          <%= form.hidden_field :psychologist_id, value: @psychologist.id %>
+
+          <%= form.submit "Book Session", class: "btn btn-primary" %>
+        <% end %>
+      </div>
+
+      <div class="col-md-5">
+        <h2>Session Summary</h2>
+        <div class="card custom-rounded">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <% if @psychologist.profile_picture.attached? %>
+                <%= cl_image_tag @psychologist.profile_picture.key, class: "img-fluid rounded-circle me-3", transformation: { width: 100, height: 100, crop: :fill } %>
+              <% else %>
+                <%= image_tag "default_avatar.png", class: "img-fluid rounded-circle me-3", width: 100, height: 100 %>
+              <% end %>
+              <div>
+                <h5 class="card-title mb-0"><%= "#{@psychologist.user.name} #{@psychologist.user.last_name}" %></h5>
+                <p class="text-muted mb-0">Cédula: <%= @psychologist.document_of_identity %></p>
+              </div>
+            </div>
+            <p><strong>Enfoque:</strong> <%= @psychologist.approach %></p>
+            <p><strong>Especialidades:</strong></p>
+            <div class="mb-3">
+              <% @psychologist.specialties.each do |specialty| %>
+                <% unless specialty.blank? %>
+                  <span class="badge rounded-pill text-bg-primary me-1"><%= specialty %></span>
+                <% end %>
+              <% end %>
+            </div>
+            <p><i class="fas fa-language"></i> <strong>Idiomas:</strong> <%= @psychologist.languages %></p>
+            <p><i class="fas fa-flag"></i> <strong>Nacionalidad:</strong> <%= @psychologist.nationality %></p>
+            <h3 class="text-primary mt-3"><%= number_to_currency(@psychologist.price_per_session, unit: @psychologist.currency, precision: 0) %></h3>
+            <p class="text-muted">Precio por sesión (50 min)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+     <script>
+     document.addEventListener('DOMContentLoaded', function() {
+       const daySelect = document.getElementById('day_select');
+       const timeSelect = document.getElementById('time_select');
+
+       daySelect.addEventListener('change', function() {
+         const selectedDate = this.value;
+         fetch(`/availabilities?date=${selectedDate}&psychologist_id=<%= @psychologist.id %>`)
+           .then(response => {
+             if (!response.ok) {
+               throw new Error('Network response was not ok');
+             }
+             return response.json();
+           })
+           .then(data => {
+             timeSelect.innerHTML = '<option value="">Select a time</option>';
+             data.forEach(time => {
+               const option = document.createElement('option');
+               option.value = time;
+               option.textContent = time;
+               timeSelect.appendChild(option);
+             });
+           })
+           .catch(error => {
+             console.error('There was a problem with the fetch operation:', error);
+             timeSelect.innerHTML = '<option value="">No times available</option>';
+           });
+       });
+     });
+     </script>
+  <% else %>
+    <p>Please select a psychologist to book a session.</p>
+    <%= link_to "View Psychologists", psychologists_path, class: "btn btn-primary" %>
+  <% end %>
+</div>

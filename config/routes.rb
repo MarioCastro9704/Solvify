@@ -5,6 +5,13 @@ Rails.application.routes.draw do
 
   get 'pages/home', to: 'pages#home', as: 'pages_home'
   get 'pages/update_dates', to: 'pages#update_dates', as: 'pages_update_dates'
+  get 'availabilities', to: 'availabilities#for_date'
+
+  resources :bookings, only: [:new, :create, :index, :show, :edit, :update, :destroy] do
+    collection do
+      get 'new/:psychologist_id', action: :new, as: :new_with_psychologist
+    end
+  end
 
   resources :users, only: [:index, :show, :edit, :update, :destroy] do
     member do
@@ -25,7 +32,6 @@ Rails.application.routes.draw do
     resources :clientes, only: [:index]
   end
 
-  resources :bookings, only: [:index, :show, :new, :create, :edit, :update, :destroy]
   resources :services, only: [:new, :create, :edit, :update] do
     member do
       patch :publish

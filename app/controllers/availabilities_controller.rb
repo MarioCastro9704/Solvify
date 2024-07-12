@@ -39,6 +39,15 @@ class AvailabilitiesController < ApplicationController
     redirect_to availabilities_url, notice: 'Availability was successfully destroyed.'
   end
 
+  def for_date
+    date = Date.parse(params[:date])
+    psychologist = Psychologist.find(params[:psychologist_id])
+    availabilities = psychologist.availabilities.where(business_date: date)
+    times = availabilities.map { |a| a.starting_hour.strftime("%H:%M") }
+    render json: times
+  end
+
+
   private
 
   def availability_params
