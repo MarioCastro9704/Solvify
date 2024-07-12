@@ -14,7 +14,6 @@ class BookingsController < ApplicationController
       @psychologist = Psychologist.find(params[:psychologist_id])
       @availabilities = @psychologist.availabilities.where('business_date >= ?', Date.today).order(:business_date)
 
-      # Generar un array de los próximos 7 días
       @days = (Date.today..Date.today + 6.days).map do |date|
         [I18n.l(date, format: '%A, %d %B'), date.to_s]
       end
@@ -36,13 +35,19 @@ class BookingsController < ApplicationController
     @psychologist = Psychologist.find(booking_params[:psychologist_id])
 
     if @booking.save
-      redirect_to @booking, notice: 'Booking was successfully created.'
+      redirect_to booking_summary_path(@booking), notice: 'La reserva se ha creado exitosamente.'
     else
       @availabilities = @psychologist.availabilities.where('business_date >= ?', Date.today).order(:business_date)
-      @days_of_week = @availabilities.map { |a| [a.business_date.strftime("%A"), a.business_date] }.uniq
+      @days = @availabilities.map { |a| [a.business_date.strftime("%A, %d %B"), a.business_date.to_s] }.uniq
       render :new
     end
   end
+
+  def summary
+    @booking = Booking.find(params[:id])
+    @psychologist = @booking.psychologist
+  end
+
 
   def update
     respond_to do |format|
@@ -72,6 +77,6 @@ class BookingsController < ApplicationController
   end
 
   def booking_params
-    params.require(:booking).permit(:day_of_week, :time, :psychologist_id)
+    params.require(:booking).permit(:psychologist_id, :day, :time, :reason, :dni, :name, :last_name, :email, :phone, :sex)
   end
 end

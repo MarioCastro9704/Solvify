@@ -1,0 +1,76 @@
+<div class="container mt-4">
+  <h1>Tus datos</h1>
+  <p class="text-muted">Asegúrate de que los datos sean idénticos a tu carnet o pasaporte.</p>
+
+  <div class="row">
+    <div class="col-md-7">
+      <p><strong>Servicio (1)</strong> <%= link_to "Ver detalle", "#", class: "text-primary" %></p>
+
+      <div class="mb-3">
+        <strong>Pasaporte</strong>
+        <p><%= @booking.dni %></p>
+      </div>
+
+      <div class="mb-3">
+        <strong>Nombre completo</strong>
+        <p><%= "#{@booking.name} #{@booking.last_name}" %></p>
+      </div>
+
+      <div class="mb-3">
+        <strong>Sexo al nacer</strong>
+        <p><%= @booking.sex.capitalize %></p>
+      </div>
+
+      <div class="mb-3">
+        <strong>Fecha de nacimiento</strong>
+        <p><%= @booking.user.date_of_birth.strftime("%d-%m-%Y") %></p>
+      </div>
+
+      <div class="mb-3">
+        <strong>Teléfono</strong>
+        <p><%= @booking.phone %></p>
+      </div>
+
+      <div class="mb-3">
+        <strong>Correo electrónico</strong>
+        <p><%= @booking.email %></p>
+      </div>
+
+      <div class="mb-3">
+        <strong>Motivo de consulta</strong>
+        <p><%= @booking.reason %></p>
+      </div>
+    </div>
+
+    <div class="col-md-5">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Resumen de tu cita</h5>
+          <p><i class="fas fa-map-marker-alt"></i> <%= @psychologist.address %></p>
+          <p><i class="fas fa-shopping-cart"></i> 1 servicio</p>
+          <p><i class="far fa-calendar-alt"></i> <%= "#{I18n.l(@booking.day, format: '%A %d/%m')} a las #{@booking.time}" %></p>
+
+          <h6 class="mt-4">Servicios</h6>
+          <div class="d-flex justify-content-between">
+            <span>Consulta psicológica</span>
+            <span><%= number_to_currency(@psychologist.price_per_session, unit: @psychologist.currency) %></span>
+          </div>
+
+          <hr>
+
+          <div class="d-flex justify-content-between">
+            <strong>Monto a pagar</strong>
+            <strong><%= number_to_currency(@psychologist.price_per_session, unit: @psychologist.currency) %></strong>
+          </div>
+
+          <%= link_to "Ir a pago seguro", "#", class: "btn btn-primary w-100 mt-3" %>
+
+          <p class="text-muted small mt-3">
+            Al continuar aceptas nuestros <%= link_to "Términos y Condiciones", "#" %>,
+            <%= link_to "Políticas de Privacidad", "#" %> y Consentimientos Informados.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

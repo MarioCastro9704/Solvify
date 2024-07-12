@@ -1,7 +1,7 @@
 class Booking < ApplicationRecord
   belongs_to :user
   belongs_to :psychologist
-
+  validates :sex, inclusion: { in: ['male', 'female'] }, allow_nil: true
   validates :date, presence: true
   validates :time, presence: true
   validates :date, :time, :end_time, :psychologist_id, :user_id, presence: true

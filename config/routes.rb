@@ -6,7 +6,8 @@ Rails.application.routes.draw do
   get 'pages/home', to: 'pages#home', as: 'pages_home'
   get 'pages/update_dates', to: 'pages#update_dates', as: 'pages_update_dates'
   get 'availabilities', to: 'availabilities#for_date'
-
+  get 'bookings/:id/summary', to: 'bookings#summary', as: 'booking_summary'
+  resources :bookings
   resources :bookings, only: [:new, :create, :index, :show, :edit, :update, :destroy] do
     collection do
       get 'new/:psychologist_id', action: :new, as: :new_with_psychologist

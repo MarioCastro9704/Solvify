@@ -1,28 +1,89 @@
-<div class="container">
-  <h1>Schedule a Session</h1>
+<div class="container" data-controller="booking" data-booking-psychologist-id-value="<%= @psychologist.id %>">
+  <h1>Programar una Sesión</h1>
 
   <% if @psychologist.present? %>
     <div class="row">
       <div class="col-md-7">
-        <%= form_with(model: @booking, local: true) do |form| %>
-          <div class="mb-3">
-            <%= form.label :day, "Select a day", class: "form-label" %>
-            <%= form.select :day, @days, {}, { class: "form-select", id: "day_select" } %>
+        <div class="mb-4">
+          <label class="form-label d-block">¿Para quién es la cita?</label>
+          <div class="btn-group" role="group" aria-label="Para quién es la cita">
+            <%= radio_button_tag :for_whom, 'me', true, class: "btn-check", id: "for_whom_me", autocomplete: "off", data: { action: "change->booking#togglePatientForm" } %>
+            <%= label_tag :for_whom_me, "Para mí", class: "btn btn-outline-primary" %>
+
+            <%= radio_button_tag :for_whom, 'other', false, class: "btn-check", id: "for_whom_other", autocomplete: "off", data: { action: "change->booking#togglePatientForm" } %>
+            <%= label_tag :for_whom_other, "Para alguien más", class: "btn btn-outline-primary" %>
+          </div>
+        </div>
+
+        <%= form_with(model: @booking, local: true, data: { booking_target: "form" }) do |form| %>
+          <div data-booking-target="patientForm" style="display: none;">
+            <%= form.label :dni, "DNI", class: "form-label" %>
+            <%= form.text_field :dni, class: "form-control mb-3" %>
+
+            <%= form.label :name, "Nombre", class: "form-label" %>
+            <%= form.text_field :name, class: "form-control mb-3" %>
+
+            <%= form.label :last_name, "Apellidos", class: "form-label" %>
+            <%= form.text_field :last_name, class: "form-control mb-3" %>
+
+            <%= form.label :email, "Correo electrónico", class: "form-label" %>
+            <%= form.email_field :email, class: "form-control mb-3" %>
+
+            <%= form.label :phone, "Teléfono", class: "form-label" %>
+            <%= form.telephone_field :phone, class: "form-control mb-3" %>
+
+            <div class="mb-3">
+              <label class="form-label d-block">Sexo al nacer</label>
+              <div class="btn-group" role="group" aria-label="Sexo al nacer">
+                <%= form.radio_button :sex, 'female', class: "btn-check", id: "sex_female", autocomplete: "off" %>
+                <%= form.label :sex_female, "Femenino", class: "btn btn-outline-primary" %>
+
+                <%= form.radio_button :sex, 'male', class: "btn-check", id: "sex_male", autocomplete: "off" %>
+                <%= form.label :sex_male, "Masculino", class: "btn btn-outline-primary" %>
+              </div>
+            </div>
           </div>
 
           <div class="mb-3">
-            <%= form.label :time, "Select a time", class: "form-label" %>
-            <%= form.select :time, [], {}, { class: "form-select", id: "time_select" } %>
+            <%= form.label :day, "Selecciona un día", class: "form-label" %>
+            <%= form.select :day, @days, { prompt: "Selecciona un día" }, {
+              class: "form-select",
+              data: {
+                booking_target: "daySelect",
+                action: "change->booking#dayChanged"
+              }
+            } %>
+          </div>
+
+          <div class="mb-3">
+            <%= form.label :time, "Selecciona una hora", class: "form-label" %>
+            <%= form.select :time, [], { prompt: "Selecciona una hora" }, {
+              class: "form-select",
+              data: {
+                booking_target: "timeSelect",
+                action: "change->booking#validateForm"
+              }
+            } %>
+          </div>
+
+          <div class="mb-3">
+            <%= form.label :reason, "Motivo de consulta", class: "form-label" %>
+            <%= form.select :reason, @psychologist.specialties, { prompt: "Selecciona una especialidad" }, {
+              class: "form-select",
+              data: { booking_target: "reasonSelect" }
+            } %>
           </div>
 
           <%= form.hidden_field :psychologist_id, value: @psychologist.id %>
 
-          <%= form.submit "Book Session", class: "btn btn-primary" %>
+          <%= form.submit "Reservar Sesión", class: "btn btn-primary", data: { booking_target: "submitButton" } %>
+          <%= link_to root_path, class: "btn btn-outline-secondary rounded-pill mx-1" do %>Volver<% end %>
+
         <% end %>
       </div>
 
       <div class="col-md-5">
-        <h2>Session Summary</h2>
+        <h2>Resumen de la Sesión</h2>
         <div class="card custom-rounded">
           <div class="card-body">
             <div class="d-flex align-items-center mb-3">
@@ -32,7 +93,7 @@
                 <%= image_tag "default_avatar.png", class: "img-fluid rounded-circle me-3", width: 100, height: 100 %>
               <% end %>
               <div>
-                <h5 class="card-title mb-0"><%= "#{@psychologist.user.name} #{@psychologist.user.last_name}" %></h5>
+                <h5 class="card-title mb-0"><%= @psychologist.full_name %></h5>
                 <p class="text-muted mb-0">Cédula: <%= @psychologist.document_of_identity %></p>
               </div>
             </div>
@@ -53,39 +114,8 @@
         </div>
       </div>
     </div>
-
-     <script>
-     document.addEventListener('DOMContentLoaded', function() {
-       const daySelect = document.getElementById('day_select');
-       const timeSelect = document.getElementById('time_select');
-
-       daySelect.addEventListener('change', function() {
-         const selectedDate = this.value;
-         fetch(`/availabilities?date=${selectedDate}&psychologist_id=<%= @psychologist.id %>`)
-           .then(response => {
-             if (!response.ok) {
-               throw new Error('Network response was not ok');
-             }
-             return response.json();
-           })
-           .then(data => {
-             timeSelect.innerHTML = '<option value="">Select a time</option>';
-             data.forEach(time => {
-               const option = document.createElement('option');
-               option.value = time;
-               option.textContent = time;
-               timeSelect.appendChild(option);
-             });
-           })
-           .catch(error => {
-             console.error('There was a problem with the fetch operation:', error);
-             timeSelect.innerHTML = '<option value="">No times available</option>';
-           });
-       });
-     });
-     </script>
   <% else %>
-    <p>Please select a psychologist to book a session.</p>
-    <%= link_to "View Psychologists", psychologists_path, class: "btn btn-primary" %>
+    <p>Por favor, selecciona un psicólogo para reservar una sesión.</p>
+    <%= link_to "Ver Psicólogos", psychologists_path, class: "btn btn-primary rounded-pill" %>
   <% end %>
 </div>
