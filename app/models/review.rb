@@ -1,5 +1,5 @@
 class Review < ApplicationRecord
-  belongs_to :psychologist
+  belongs_to :psychologist, dependent: :destroy
 
   validates :comments, presence: true
   validates :ratings, presence: true,
