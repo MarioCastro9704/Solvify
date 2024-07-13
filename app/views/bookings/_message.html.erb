@@ -1,4 +1,8 @@
-<div>
-  <%= message.content %>
-  <%= message.user.email %>
+<!-- app/views/bookings/_message.html.erb -->
+<div class="d-flex <%= message.user == current_user ? 'justify-content-end' : 'justify-content-start' %> mb-2">
+  <div class="<%= message.user == current_user ? 'bg-primary text-white' : 'bg-light' %> p-2 rounded" style="max-width: 60%;">
+    <div class="fw-bold"><%= message.user.name %></div>
+    <div><%= message.content %></div>
+    <div class="text-muted small text-end"><%= message.created_at.strftime("%H:%M") %></div>
+  </div>
 </div>
