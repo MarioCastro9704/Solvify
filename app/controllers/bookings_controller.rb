@@ -7,7 +7,9 @@ class BookingsController < ApplicationController
     @bookings = current_user.bookings
   end
 
-  def show; end
+  def show
+    @message = Message.new
+  end
 
   def new
     @booking = Booking.new

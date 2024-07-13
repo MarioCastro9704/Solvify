@@ -1,6 +1,7 @@
 class Booking < ApplicationRecord
   belongs_to :user
   belongs_to :psychologist
+  has_many :messages
 
   validates :date, :time, :end_time, :psychologist_id, :user_id, :reason, presence: true
   validate :availability_must_be_free

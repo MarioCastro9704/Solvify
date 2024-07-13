@@ -34,6 +34,9 @@ Rails.application.routes.draw do
     resources :clientes, only: [:index]
   end
 
+  resources :bookings, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
+    resources :messages, only: [:create]
+  end
   resources :services, only: [:new, :create, :edit, :update] do
     member do
       patch :publish

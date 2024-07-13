@@ -1,2 +1,23 @@
-<h1>Reviews#index</h1>
-<p>Find me in app/views/reviews/index.html.erb</p>
+<h2>Opiniones para <%= @psychologist.full_name %></h2>
+
+<%= link_to "Escribir una reseña", new_psychologist_review_path(@psychologist), class: "btn btn-primary mb-3" %>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Reseña</th>
+      <th>Calificación</th>
+      <th>Fecha</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    <% @reviews.each do |review| %>
+      <tr>
+        <td><%= review.comments %></td>
+        <td><%= review.ratings %></td>
+        <td><%= review.created_at.strftime("%d/%m/%Y") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

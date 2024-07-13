@@ -84,6 +84,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_13_062225) do
     t.index ["user_id"], name: "index_bookings_on_user_id"
   end
 
+  create_table "messages", force: :cascade do |t|
+    t.text "content"
+    t.bigint "booking_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["booking_id"], name: "index_messages_on_booking_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
+  end
+
   create_table "psychologists", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "specialty"
@@ -153,6 +163,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_13_062225) do
   add_foreign_key "availabilities", "psychologists"
   add_foreign_key "bookings", "psychologists"
   add_foreign_key "bookings", "users"
+  add_foreign_key "messages", "bookings"
+  add_foreign_key "messages", "users"
   add_foreign_key "psychologists", "users"
   add_foreign_key "reviews", "psychologists"
   add_foreign_key "services", "psychologists"
