@@ -1,4 +1,3 @@
-# app/controllers/bookings_controller.rb
 class BookingsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_booking, only: %i[show edit update destroy summary]
@@ -41,7 +40,6 @@ class BookingsController < ApplicationController
   end
 
   def summary
-    @booking = Booking.find(params[:id])
     @psychologist = @booking.psychologist
   end
 
@@ -76,18 +74,20 @@ class BookingsController < ApplicationController
   private
 
   def set_booking
-    @booking = Booking.find(params[:id])
-    unless can_manage_booking?(@booking)
-      redirect_to bookings_path, alert: 'No tienes permiso para acceder a esta reserva.'
+    @booking = if current_user.psychologist.present?
+                 Booking.find(params[:id])
+               else
+                 current_user.bookings.find(params[:id])
+               end
+
+    unless @booking
+      flash[:alert] = "No se encontró la reserva."
+      redirect_to bookings_path
     end
   end
 
-  def can_manage_booking?(booking)
-    current_user == booking.user || current_user == booking.psychologist.user
-  end
-
   def booking_params
-    params.require(:booking).permit(:date, :time, :end_time, :psychologist_id, :link_to_meet, :reason, :dni)
+    params.require(:booking).permit(:psychologist_id, :date, :time, :reason, user_attributes: [:document_of_identity, :name, :last_name, :gender, :phone, :email])
   end
 
   def user_params
