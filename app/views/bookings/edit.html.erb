@@ -1,4 +1,5 @@
 <%= turbo_frame_tag "edit" do %>
+<div class="container">
   <h1 class="fs-3"><%= @booking.user.name %></h1>
 
   <%= form_with model: @booking, local: true do |form| %>
@@ -14,20 +15,14 @@
       <%= form.label :end_time, 'Hora de finalización' %>
       <%= form.time_field :end_time, class: 'form-control' %>
     </div>
-    <div class="form-group my-4">
-      <%= form.label :psychologist_id, 'Psicólogo' %>
-      <%= form.collection_select :psychologist_id, Psychologist.includes(:user).all, :id, :user_name, { prompt: 'Select Psychologist' }, class: 'form-control' %>
-    </div>
+
     <div class="form-group my-4">
       <%= form.label :link_to_meet, 'Enlace para la videollamada' %>
       <%= form.text_field :link_to_meet, class: 'form-control' %>
     </div>
 
     <div>
-      <h2>Call</h2>
       <div data-controller="daily-video" data-daily-video-target="daily" data-daily-video-videocall-value= <%= @booking.videocall_id %>>
-        <h2 data-action="click->daily-video#joinCall">Join Call</h2>
-        <h2 data-action="click->daily-video#endCall">End Call</h2>
       </div>
     </div>
 
@@ -44,4 +39,6 @@
       <%= form.submit 'Actualizar reserva', class: 'btn btn-primary rounded-pill mx-2', data: { turbo_frame: "_top" } %>
     </div>
   <% end %>
+</div>
+
 <% end %>

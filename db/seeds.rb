@@ -201,15 +201,15 @@ end
 
 # Create Bookings with alternating payment statuses
 psychologists.each do |psychologist|
-  2.times do |j|
+  users.each_with_index do |user, index|
     Booking.create!(
-      date: Date.today + (j + 1).weeks,
+      date: Date.today + (index + 1).days,
       time: "10:00",
       end_time: "11:00",
       psychologist: psychologist,
-      user: users.sample,
-      payment_status: j.even? ? 'paid' : 'pending',
-      link_to_meet: j.even? ? "https://solvify.daily.co/#{SecureRandom.hex(10)}" : nil,
+      user: user,
+      payment_status: 'paid',
+      link_to_meet: "https://solvify.daily.co/#{SecureRandom.hex(10)}",
       reason: "Consulta de prueba"
     )
   end
