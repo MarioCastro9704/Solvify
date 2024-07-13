@@ -7,6 +7,7 @@ class Booking < ApplicationRecord
   validate :availability_must_be_free
 
   before_validation :set_end_time
+  before_validation :set_default_payment_status
 
   after_create :create_videocall
   after_create :mark_availability_as_reserved
@@ -43,6 +44,10 @@ class Booking < ApplicationRecord
 
   def set_end_time
     self.end_time = time + 1.hour if time.present?
+  end
+
+  def set_default_payment_status
+    self.payment_status ||= 'pending'
   end
 
   def availability_must_be_free

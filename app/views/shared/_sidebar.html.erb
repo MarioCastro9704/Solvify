@@ -2,6 +2,7 @@
   <ul class="nav flex-column mb-auto text-center">
     <% if user_signed_in? %>
       <% if current_user&.psychologist.present? %>
+        <!-- Links para psicólogos -->
         <li class="nav-item mb-3">
           <%= link_to users_path, class: "nav-link #{current_page?(users_path) ? 'active' : 'text-secondary'} d-flex flex-column align-items-center py-4 rounded-pill" do %>
             <i class="fa-solid fa-house mb-3" style="font-size: 1.5rem;"></i>
@@ -20,29 +21,31 @@
             <span style="font-size: 1rem;">Mi Servicio</span>
           <% end %>
         </li>
-        <!-- Solo para hacer pruebas-->
+        <!-- Solo para hacer pruebas -->
         <li class="nav-item mb-3">
           <%= link_to pages_home_path, class: "nav-link #{current_page?(pages_home_path) ? 'active' : 'text-secondary'} d-flex flex-column align-items-center py-4 rounded-pill" do %>
             <i class="fa-solid fa-user-doctor mb-3" style="font-size: 1.5rem;"></i>
             <span style="font-size: 1rem;"> Psicólogos</span>
           <% end %>
         </li>
-        <!--Fin-->
+        <!-- Fin -->
       <% else %>
+        <!-- Links para usuarios regulares -->
         <li class="nav-item mb-3">
-          <%= link_to user_bookings_path(current_user), class: "nav-link #{current_page?(user_bookings_path(current_user)) ? 'active ' : 'text-secondary'} d-flex flex-column align-items-center py-4 rounded-pill" do %>
-            <i class="fas fa-calendar-check mb-3" style="font-size: 1.5rem;"></i>
-            <span style="font-size: 1rem;">Citas</span>
+          <%= link_to root_path, class: "nav-link #{current_page?(root_path) ? 'active' : 'text-secondary'} d-flex flex-column align-items-center py-4 rounded-pill" do %>
+            <i class="fa-solid fa-user-doctor mb-3" style="font-size: 1.5rem;"></i>
+            <span style="font-size: 1rem;">Psicólogos</span>
           <% end %>
         </li>
         <li class="nav-item mb-3">
-          <%= link_to edit_user_registration_path, class: "nav-link #{current_page?(edit_user_registration_path) ? 'active' : 'text-secondary'} d-flex flex-column align-items-center py-4 rounded-pill" do %>
-            <i class="fas fa-user-cog fa-lg mb-3"></i>
-            <span style="font-size: 1rem;">Config</span>
+          <%= link_to user_bookings_path(current_user), class: "nav-link #{current_page?(user_bookings_path(current_user)) ? 'active ' : 'text-secondary'} d-flex flex-column align-items-center py-4 rounded-pill" do %>
+            <i class="fas fa-calendar-check mb-3" style="font-size: 1.5rem;"></i>
+            <span style="font-size: 1rem;">Mis Citas</span>
           <% end %>
         </li>
       <% end %>
     <% else %>
+      <!-- Link para usuarios no registrados -->
       <li class="nav-item mb-3">
         <%= link_to new_user_session_path, class: "nav-link #{current_page?(new_user_session_path) ? 'active' : 'text-secondary'} d-flex flex-column align-items-center" do %>
           <i class="fas fa-sign-in-alt fa-sm mb-1"></i>
