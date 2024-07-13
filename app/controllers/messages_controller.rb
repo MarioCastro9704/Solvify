@@ -5,7 +5,7 @@ class MessagesController < ApplicationController
     @message.booking = @booking
     @message.user = current_user
     if @message.save
-      Turbo::StreamsChannel.broadcast_append_to @booking, target: "messages", partial: "bookings/message", locals: { message: @message}
+      Turbo::StreamsChannel.broadcast_append_to @booking, target: "messages", partial: "bookings/message", locals: { message: @message, current_user: current_user}
       # redirect_to booking_path(@booking)
     else
       render "bookings/show", status: :unprocessable_entity
