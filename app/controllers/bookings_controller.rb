@@ -76,11 +76,18 @@ class BookingsController < ApplicationController
   private
 
   def set_booking
-    @booking = current_user.bookings.find(params[:id])
+    @booking = Booking.find(params[:id])
+    unless can_manage_booking?(@booking)
+      redirect_to bookings_path, alert: 'No tienes permiso para acceder a esta reserva.'
+    end
+  end
+
+  def can_manage_booking?(booking)
+    current_user == booking.user || current_user == booking.psychologist.user
   end
 
   def booking_params
-    params.require(:booking).permit(:psychologist_id, :date, :time, :reason, user_attributes: [:document_of_identity, :name, :last_name, :gender, :phone, :email])
+    params.require(:booking).permit(:date, :time, :end_time, :psychologist_id, :link_to_meet, :reason, :dni)
   end
 
   def user_params
