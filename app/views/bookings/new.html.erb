@@ -1,3 +1,4 @@
+<!-- app/views/bookings/new.html.erb -->
 <div class="container" data-controller="booking" data-booking-psychologist-id-value="<%= @psychologist.id %>">
   <h1>Programar una Sesión</h1>
 
@@ -34,6 +35,40 @@
               data: { booking_target: "reasonSelect" }
             } %>
           </div>
+
+          <%= form.fields_for :user, current_user do |user_form| %>
+            <div class="mb-3">
+              <%= user_form.label :document_of_identity, "Pasaporte", class: "form-label" %>
+              <%= user_form.text_field :document_of_identity, class: "form-control" %>
+            </div>
+
+            <div class="mb-3">
+              <%= user_form.label :name, "Nombre", class: "form-label" %>
+              <%= user_form.text_field :name, class: "form-control" %>
+            </div>
+
+            <div class="mb-3">
+              <%= user_form.label :last_name, "Apellido", class: "form-label" %>
+              <%= user_form.text_field :last_name, class: "form-control" %>
+            </div>
+
+            <div class="mb-3">
+              <%= user_form.label :gender, "Sexo", class: "form-label" %>
+              <%= user_form.select :gender, [["Masculino", "masculino"], ["Femenino", "femenino"]], { prompt: "Selecciona el sexo" }, class: "form-select" %>
+            </div>
+
+            <% if current_user.respond_to?(:phone) %>
+              <div class="mb-3">
+                <%= user_form.label :phone, "Teléfono", class: "form-label" %>
+                <%= user_form.text_field :phone, class: "form-control" %>
+              </div>
+            <% end %>
+
+            <div class="mb-3">
+              <%= user_form.label :email, "Correo electrónico", class: "form-label" %>
+              <%= user_form.email_field :email, class: "form-control" %>
+            </div>
+          <% end %>
 
           <%= form.hidden_field :psychologist_id, value: @psychologist.id %>
 

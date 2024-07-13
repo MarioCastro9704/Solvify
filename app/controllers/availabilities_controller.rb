@@ -1,3 +1,4 @@
+# app/controllers/availabilities_controller.rb
 class AvailabilitiesController < ApplicationController
   def index
     @availabilities = Availability.all
@@ -42,15 +43,14 @@ class AvailabilitiesController < ApplicationController
   def for_date
     date = Date.parse(params[:date])
     psychologist = Psychologist.find(params[:psychologist_id])
-    availabilities = psychologist.availabilities.where(business_date: date)
+    availabilities = psychologist.availabilities.free.where(business_date: date)
     times = availabilities.map { |a| a.starting_hour.strftime("%H:%M") }
     render json: times
   end
 
-
   private
 
   def availability_params
-    params.require(:availability).permit(:psychologist_id, :business_date, :starting_hour, :ending_hour)
+    params.require(:availability).permit(:psychologist_id, :business_date, :starting_hour, :ending_hour, :reserved)
   end
 end

@@ -3,8 +3,12 @@ class Booking < ApplicationRecord
   belongs_to :psychologist
 
   validates :date, :time, :end_time, :psychologist_id, :user_id, :reason, presence: true
+  validate :availability_must_be_free
+
+  before_validation :set_end_time
 
   after_create :create_videocall
+  after_create :mark_availability_as_reserved
 
   def sessions_completed
     self[:sessions_completed]
@@ -32,5 +36,22 @@ class Booking < ApplicationRecord
     rescue RestClient::ExceptionWithResponse => e
       puts "Error: #{e.response}"
     end
+  end
+
+  private
+
+  def set_end_time
+    self.end_time = time + 1.hour if time.present?
+  end
+
+  def availability_must_be_free
+    if Availability.where(psychologist: psychologist, business_date: date, starting_hour: time, reserved: true).exists?
+      errors.add(:time, 'Este horario ya está reservado.')
+    end
+  end
+
+  def mark_availability_as_reserved
+    availability = Availability.find_by(psychologist: psychologist, business_date: date, starting_hour: time)
+    availability.update(reserved: true) if availability
   end
 end

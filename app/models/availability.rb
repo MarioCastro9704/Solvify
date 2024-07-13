@@ -4,4 +4,8 @@ class Availability < ApplicationRecord
   validates :business_date, presence: true
   validates :starting_hour, presence: true
   validates :ending_hour, presence: true
+
+  scope :free, -> { where(reserved: false) }
+
+  attribute :reserved, :boolean, default: false
 end

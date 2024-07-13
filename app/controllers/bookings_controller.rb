@@ -1,19 +1,19 @@
+# app/controllers/bookings_controller.rb
 class BookingsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_booking, only: %i[show edit update destroy]
+  before_action :set_booking, only: %i[show edit update destroy summary]
 
   def index
     @bookings = current_user.bookings
   end
 
-  def show
-  end
+  def show; end
 
   def new
     @booking = Booking.new
     if params[:psychologist_id].present?
       @psychologist = Psychologist.find(params[:psychologist_id])
-      @availabilities = @psychologist.availabilities.where('business_date >= ?', Date.today).order(:business_date)
+      @availabilities = @psychologist.availabilities.free.where('business_date >= ?', Date.today).order(:business_date)
       @days = @availabilities.map { |a| [I18n.l(a.business_date, format: '%A, %d %B'), a.business_date.to_s] }.uniq
     else
       flash[:alert] = "Por favor, selecciona un psicólogo primero."
@@ -24,12 +24,16 @@ class BookingsController < ApplicationController
   def create
     @booking = current_user.bookings.new(booking_params)
     @psychologist = Psychologist.find(booking_params[:psychologist_id])
+    availability = Availability.find_by(psychologist: @psychologist, business_date: booking_params[:date], starting_hour: booking_params[:time])
 
-    if @booking.save
+    if availability && !availability.reserved && @booking.save
+      current_user.update(user_params)
+      availability.update(reserved: true)
       redirect_to booking_summary_path(@booking), notice: 'La reserva se ha creado exitosamente.'
     else
-      @availabilities = @psychologist.availabilities.where('business_date >= ?', Date.today).order(:business_date)
+      @availabilities = @psychologist.availabilities.free.where('business_date >= ?', Date.today).order(:business_date)
       @days = @availabilities.map { |a| [I18n.l(a.business_date, format: '%A, %d %B'), a.business_date.to_s] }.uniq
+      flash[:alert] = "No se pudo crear la reserva. Intente de nuevo."
       render :new
     end
   end
@@ -74,6 +78,10 @@ class BookingsController < ApplicationController
   end
 
   def booking_params
-    params.require(:booking).permit(:psychologist_id, :date, :time, :end_time, :reason)
+    params.require(:booking).permit(:psychologist_id, :date, :time, :reason)
+  end
+
+  def user_params
+    params.require(:user).permit(:name, :last_name, :document_of_identity, :gender, :phone, :email)
   end
 end
