@@ -1,5 +1,5 @@
-<!-- app/views/bookings/new.html.erb -->
 <div class="container" data-controller="booking" data-booking-psychologist-id-value="<%= @psychologist.id %>">
+  <% content_for :page_title, "Programar una Sesión" %>
   <h1>Programar una Sesión</h1>
 
   <% if @psychologist.present? %>
@@ -72,7 +72,7 @@
 
           <%= form.hidden_field :psychologist_id, value: @psychologist.id %>
 
-          <%= form.submit "Reservar Sesión", class: "btn btn-primary", data: { booking_target: "submitButton" } %>
+          <%= form.submit "Reservar Sesión", class: "btn btn-primary rounded-pill", data: { booking_target: "submitButton" } %>
           <%= link_to "Volver", root_path, class: "btn btn-outline-secondary rounded-pill mx-1" %>
         <% end %>
       </div>

@@ -1,3 +1,4 @@
+// app/javascript/controllers/booking_controller.js
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
@@ -15,7 +16,7 @@ export default class extends Controller {
   }
 
   fetchAvailabilities(date) {
-    fetch(`/availabilities/for_date?date=${date}&psychologist_id=${this.psychologistIdValue}`)
+    fetch(`/availabilities?date=${date}&psychologist_id=${this.psychologistIdValue}`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok')

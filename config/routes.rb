@@ -1,4 +1,3 @@
-# config/routes.rb
 Rails.application.routes.draw do
   devise_for :users
 
@@ -6,9 +5,10 @@ Rails.application.routes.draw do
 
   get 'pages/home', to: 'pages#home', as: 'pages_home'
   get 'pages/update_dates', to: 'pages#update_dates', as: 'pages_update_dates'
-  get 'availabilities/for_date', to: 'availabilities#for_date'
+  get 'availabilities', to: 'availabilities#for_date'
   get 'bookings/:id/summary', to: 'bookings#summary', as: 'booking_summary'
-  resources :bookings
+  get 'bookings/:id/payment', to: 'bookings#payment', as: 'payment'
+
   resources :bookings, only: [:new, :create, :index, :show, :edit, :update, :destroy] do
     collection do
       get 'new/:psychologist_id', action: :new, as: :new_with_psychologist

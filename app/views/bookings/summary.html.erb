@@ -1,53 +1,34 @@
-<!-- app/views/bookings/summary.html.erb -->
 <div class="container mt-4">
-  <h1>Tus datos</h1>
-  <p class="text-muted">Asegúrate de que los datos sean idénticos a tu carnet o pasaporte.</p>
+  <% content_for :page_title, "Resumen" %>
+  <h1>Resumen de tu Reserva</h1>
+  <p class="text-muted">Revisa los detalles de tu reserva y procede al pago de la primera sesión.</p>
 
   <div class="row">
     <div class="col-md-7">
-      <p><strong>Servicio (1)</strong> <%= link_to "Ver detalle", "#", class: "text-primary" %></p>
+      <h3>Detalles de la Reserva</h3>
+      <p><strong>Psicólogo:</strong> <%= @psychologist.full_name %></p>
+      <p><strong>Fecha:</strong> <%= @booking.date.strftime("%d-%m-%Y") %></p>
+      <p><strong>Hora:</strong> <%= @booking.time.strftime("%H:%M") %></p>
+      <p><strong>Motivo de consulta:</strong> <%= @booking.reason %></p>
 
-      <div class="mb-3">
-        <strong>Pasaporte</strong>
-        <p><%= @booking.dni.presence || "No proporcionado" %></p>
-      </div>
-
-      <div class="mb-3">
-        <strong>Nombre completo</strong>
-        <p><%= "#{@booking.name.presence || "No proporcionado"} #{@booking.last_name.presence || ""}" %></p>
-      </div>
-
-      <div class="mb-3">
-        <strong>Sexo al nacer</strong>
-        <p><%= @booking.sex&.capitalize.presence || "No proporcionado" %></p>
-      </div>
-
-      <div class="mb-3">
-        <strong>Fecha de nacimiento</strong>
-        <p><%= @booking.user.date_of_birth.strftime("%d-%m-%Y") %></p>
-      </div>
-
-      <div class="mb-3">
-        <strong>Teléfono</strong>
-        <p><%= @booking.phone.presence || "No proporcionado" %></p>
-      </div>
-
-      <div class="mb-3">
-        <strong>Correo electrónico</strong>
-        <p><%= @booking.email.presence || "No proporcionado" %></p>
-      </div>
-
-      <div class="mb-3">
-        <strong>Motivo de consulta</strong>
-        <p><%= @booking.reason %></p>
-      </div>
+      <h4>Datos Personales</h4>
+      <p><strong>Nombre completo:</strong> <%= "#{current_user.name} #{current_user.last_name}" %></p>
+      <p><strong>Pasaporte:</strong> <%= current_user.document_of_identity.presence || "No proporcionado" %></p>
+      <p><strong>Sexo:</strong> <%= current_user.gender.presence || "No proporcionado" %></p>
+      <p><strong>Fecha de nacimiento:</strong> <%= current_user.date_of_birth.strftime("%d-%m-%Y") %></p>
+      <p><strong>Teléfono:</strong> <%= current_user.phone.presence || "No proporcionado" %></p>
+      <p><strong>Correo electrónico:</strong> <%= current_user.email.presence || "No proporcionado" %></p>
     </div>
 
     <div class="col-md-5">
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Resumen de tu cita</h5>
-          <p><i class="fas fa-map-marker-alt"></i> <%= @psychologist.address %></p>
+          <% if @psychologist.address.present? %>
+            <p><i class="fas fa-map-marker-alt"></i> <%= @psychologist.address %></p>
+          <% else %>
+            <p><i class="fas fa-map-marker-alt"></i> Online</p>
+          <% end %>
           <p><i class="fas fa-shopping-cart"></i> 1 servicio</p>
           <p><i class="far fa-calendar-alt"></i> <%= "#{I18n.l(@booking.date, format: '%A %d/%m')} a las #{@booking.time.strftime('%H:%M')}" %></p>
 
@@ -64,7 +45,7 @@
             <strong><%= number_to_currency(@psychologist.price_per_session, unit: @psychologist.currency) %></strong>
           </div>
 
-          <%= link_to "Ir a pago seguro", "#", class: "btn btn-primary w-100 mt-3" %>
+          <%= link_to "Ir a pago seguro", payment_path(@booking), class: "btn btn-primary w-100 mt-3 rounded-pill" %>
 
           <p class="text-muted small mt-3">
             Al continuar aceptas nuestros <%= link_to "Términos y Condiciones", "#" %>,
