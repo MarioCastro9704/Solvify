@@ -199,7 +199,7 @@ psychologists.each do |psychologist|
   end
 end
 
-# Create Bookings
+# Create Bookings with alternating payment statuses
 psychologists.each do |psychologist|
   2.times do |j|
     Booking.create!(
@@ -208,7 +208,9 @@ psychologists.each do |psychologist|
       end_time: "11:00",
       psychologist: psychologist,
       user: users.sample,
-      link_to_meet: "http://meeting-link#{psychologist.id}.com"
+      payment_status: j.even? ? 'paid' : 'pending',
+      link_to_meet: j.even? ? "https://solvify.daily.co/#{SecureRandom.hex(10)}" : nil,
+      reason: "Consulta de prueba"
     )
   end
 end

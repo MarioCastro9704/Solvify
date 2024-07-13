@@ -1,0 +1,58 @@
+<div class="container mt-4">
+  <% content_for :page_title, "Resumen" %>
+  <h1>Resumen de tu Reserva</h1>
+  <p class="text-muted">Revisa los detalles de tu reserva y procede al pago de la primera sesión.</p>
+
+  <div class="row">
+    <div class="col-md-7">
+      <h3>Detalles de la Reserva</h3>
+      <p><strong>Psicólogo:</strong> <%= @psychologist.full_name %></p>
+      <p><strong>Fecha:</strong> <%= @booking.date.strftime("%d-%m-%Y") %></p>
+      <p><strong>Hora:</strong> <%= @booking.time.strftime("%H:%M") %></p>
+      <p><strong>Motivo de consulta:</strong> <%= @booking.reason %></p>
+
+      <h4>Datos Personales</h4>
+      <p><strong>Nombre completo:</strong> <%= "#{current_user.name} #{current_user.last_name}" %></p>
+      <p><strong>Pasaporte:</strong> <%= current_user.document_of_identity.presence || "No proporcionado" %></p>
+      <p><strong>Sexo:</strong> <%= current_user.gender.presence || "No proporcionado" %></p>
+      <p><strong>Fecha de nacimiento:</strong> <%= current_user.date_of_birth.strftime("%d-%m-%Y") %></p>
+      <p><strong>Teléfono:</strong> <%= current_user.phone.presence || "No proporcionado" %></p>
+      <p><strong>Correo electrónico:</strong> <%= current_user.email.presence || "No proporcionado" %></p>
+    </div>
+
+    <div class="col-md-5">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Resumen de tu cita</h5>
+          <% if @psychologist.address.present? %>
+            <p><i class="fas fa-map-marker-alt"></i> <%= @psychologist.address %></p>
+          <% else %>
+            <p><i class="fas fa-map-marker-alt"></i> Online</p>
+          <% end %>
+          <p><i class="fas fa-shopping-cart"></i> 1 servicio</p>
+          <p><i class="far fa-calendar-alt"></i> <%= "#{I18n.l(@booking.date, format: '%A %d/%m')} a las #{@booking.time.strftime('%H:%M')}" %></p>
+
+          <h6 class="mt-4">Servicios</h6>
+          <div class="d-flex justify-content-between">
+            <span>Consulta psicológica</span>
+            <span><%= number_to_currency(@psychologist.price_per_session, unit: @psychologist.currency) %></span>
+          </div>
+
+          <hr>
+
+          <div class="d-flex justify-content-between">
+            <strong>Monto a pagar</strong>
+            <strong><%= number_to_currency(@psychologist.price_per_session, unit: @psychologist.currency) %></strong>
+          </div>
+
+          <%= link_to "Ir a pago seguro", payment_path(@booking), class: "btn btn-primary w-100 mt-3 rounded-pill" %>
+
+          <p class="text-muted small mt-3">
+            Al continuar aceptas nuestros <%= link_to "Términos y Condiciones", "#" %>,
+            <%= link_to "Políticas de Privacidad", "#" %> y Consentimientos Informados.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

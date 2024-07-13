@@ -1,2 +1,30 @@
-<h1>Bookings#index</h1>
-<p>Find me in app/views/bookings/index.html.erb</p>
+
+<% content_for :page_title, "Mis Citas" %>
+<div class="container mt-4">
+  <h1>Mis Citas</h1>
+
+  <% if @bookings.any? %>
+    <div class="row">
+      <% @bookings.each do |booking| %>
+        <div class="col-md-4 mb-3">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title"><%= booking.psychologist.full_name %></h5>
+              <p class="card-text"><strong>Fecha:</strong> <%= booking.date.strftime("%d-%m-%Y") %></p>
+              <p class="card-text"><strong>Hora:</strong> <%= booking.time.strftime("%H:%M") %></p>
+              <p class="card-text"><strong>Motivo de consulta:</strong> <%= booking.reason %></p>
+
+              <% if booking.payment_status == 'paid' %>
+                <%= link_to 'Videollamada', "https://solvify.daily.co/#{booking.videocall_id}", class: 'btn btn-success' %>
+              <% else %>
+                <%= link_to 'Pagar', payment_path(booking), class: 'btn btn-warning' %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p>No tienes citas agendadas.</p>
+  <% end %>
+</div>

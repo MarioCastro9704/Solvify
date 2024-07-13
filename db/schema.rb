@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_12_000626) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_13_062225) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -49,6 +49,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_12_000626) do
     t.time "ending_hour"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "reserved"
     t.index ["psychologist_id"], name: "index_availabilities_on_psychologist_id"
   end
 
@@ -65,6 +66,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_12_000626) do
     t.integer "sessions_requested"
     t.integer "sessions_completed"
     t.string "videocall_id"
+    t.string "sex"
+    t.date "day"
+    t.string "reason"
+    t.string "dni"
     t.index ["psychologist_id"], name: "index_bookings_on_psychologist_id"
     t.index ["user_id"], name: "index_bookings_on_user_id"
   end
@@ -97,6 +102,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_12_000626) do
     t.string "nationality"
     t.decimal "price_per_session"
     t.string "currency"
+    t.string "address"
     t.index ["user_id"], name: "index_psychologists_on_user_id"
   end
 
@@ -137,6 +143,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_12_000626) do
     t.string "address"
     t.string "nationality"
     t.string "document_of_identity"
+    t.string "phone"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

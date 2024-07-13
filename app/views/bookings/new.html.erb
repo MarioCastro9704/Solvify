@@ -1,2 +1,116 @@
-<h1>Bookings#new</h1>
-<p>Find me in app/views/bookings/new.html.erb</p>
+<div class="container" data-controller="booking" data-booking-psychologist-id-value="<%= @psychologist.id %>">
+  <% content_for :page_title, "Programar una Sesión" %>
+  <h1>Programar una Sesión</h1>
+
+  <% if @psychologist.present? %>
+    <div class="row">
+      <div class="col-md-7">
+        <%= form_with(model: @booking, local: true, data: { booking_target: "form" }) do |form| %>
+          <div class="mb-3">
+            <%= form.label :date, "Selecciona un día", class: "form-label" %>
+            <%= form.select :date, @days, { prompt: "Selecciona un día" }, {
+              class: "form-select",
+              data: {
+                booking_target: "daySelect",
+                action: "change->booking#dayChanged"
+              }
+            } %>
+          </div>
+
+          <div class="mb-3">
+            <%= form.label :time, "Selecciona una hora", class: "form-label" %>
+            <%= form.select :time, [], { prompt: "Selecciona una hora" }, {
+              class: "form-select",
+              data: {
+                booking_target: "timeSelect",
+                action: "change->booking#validateForm"
+              }
+            } %>
+          </div>
+
+          <div class="mb-3">
+            <%= form.label :reason, "Motivo de consulta", class: "form-label" %>
+            <%= form.select :reason, @psychologist.specialties, { prompt: "Selecciona una especialidad" }, {
+              class: "form-select",
+              data: { booking_target: "reasonSelect" }
+            } %>
+          </div>
+
+          <%= form.fields_for :user, current_user do |user_form| %>
+            <div class="mb-3">
+              <%= user_form.label :document_of_identity, "Pasaporte", class: "form-label" %>
+              <%= user_form.text_field :document_of_identity, class: "form-control" %>
+            </div>
+
+            <div class="mb-3">
+              <%= user_form.label :name, "Nombre", class: "form-label" %>
+              <%= user_form.text_field :name, class: "form-control" %>
+            </div>
+
+            <div class="mb-3">
+              <%= user_form.label :last_name, "Apellido", class: "form-label" %>
+              <%= user_form.text_field :last_name, class: "form-control" %>
+            </div>
+
+            <div class="mb-3">
+              <%= user_form.label :gender, "Sexo", class: "form-label" %>
+              <%= user_form.select :gender, [["Masculino", "masculino"], ["Femenino", "femenino"]], { prompt: "Selecciona el sexo" }, class: "form-select" %>
+            </div>
+
+            <% if current_user.respond_to?(:phone) %>
+              <div class="mb-3">
+                <%= user_form.label :phone, "Teléfono", class: "form-label" %>
+                <%= user_form.text_field :phone, class: "form-control" %>
+              </div>
+            <% end %>
+
+            <div class="mb-3">
+              <%= user_form.label :email, "Correo electrónico", class: "form-label" %>
+              <%= user_form.email_field :email, class: "form-control" %>
+            </div>
+          <% end %>
+
+          <%= form.hidden_field :psychologist_id, value: @psychologist.id %>
+
+          <%= form.submit "Reservar Sesión", class: "btn btn-primary rounded-pill", data: { booking_target: "submitButton" } %>
+          <%= link_to "Volver", root_path, class: "btn btn-outline-secondary rounded-pill mx-1" %>
+        <% end %>
+      </div>
+
+      <div class="col-md-5">
+        <h2>Resumen de la Sesión</h2>
+        <div class="card custom-rounded">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <% if @psychologist.profile_picture.attached? %>
+                <%= cl_image_tag @psychologist.profile_picture.key, class: "img-fluid rounded-circle me-3", transformation: { width: 100, height: 100, crop: :fill } %>
+              <% else %>
+                <%= image_tag "default_avatar.png", class: "img-fluid rounded-circle me-3", width: 100, height: 100 %>
+              <% end %>
+              <div>
+                <h5 class="card-title mb-0"><%= @psychologist.full_name %></h5>
+                <p class="text-muted mb-0">Cédula: <%= @psychologist.document_of_identity %></p>
+              </div>
+            </div>
+            <p><strong>Enfoque:</strong> <%= @psychologist.approach %></p>
+            <p><strong>Especialidades:</strong></p>
+            <div class="mb-3">
+              <% @psychologist.specialties.each do |specialty| %>
+                <% unless specialty.blank? %>
+                  <span class="badge rounded-pill text-bg-primary me-1"><%= specialty %></span>
+                <% end %>
+              <% end %>
+            </div>
+            <p><i class="fas fa-language"></i> <strong>Idiomas:</strong> <%= @psychologist.languages %></p>
+            <p><i class="fas fa-flag"></i> <strong>Nacionalidad:</strong> <%= @psychologist.nationality %></p>
+            <h3 class="text-primary mt-3"><%= number_to_currency(@psychologist.price_per_session, unit: @psychologist.currency, precision: 0) %></h3>
+            <p class="text-muted">Precio por sesión (50 min)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <p>Por favor, selecciona un psicólogo para reservar una sesión.</p>
+    <%= link_to "Ver Psicólogos", psychologists_path, class: "btn btn-primary rounded-pill" %>
+  <% end %>
+</div>
