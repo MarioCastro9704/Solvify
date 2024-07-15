@@ -1,6 +1,8 @@
+require 'mercadopago'
+
 class BookingsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_booking, only: %i[show edit update destroy summary]
+  before_action :set_booking, only: %i[show edit update destroy summary success failure pending]
 
   def index
     @bookings = current_user.bookings
@@ -41,6 +43,7 @@ class BookingsController < ApplicationController
 
   def summary
     @psychologist = @booking.psychologist
+    @preference_id = create_preference(@booking)
   end
 
   def edit
@@ -71,7 +74,52 @@ class BookingsController < ApplicationController
     end
   end
 
+  def success
+    @booking.update(payment_status: 'paid')
+    redirect_to user_bookings_path(current_user), notice: 'El pago fue exitoso. Ahora puedes acceder a la videollamada.'
+  end
+
+  def failure
+    flash[:alert] = 'El pago falló. Por favor, inténtalo de nuevo.'
+    render :payment_failure
+  end
+
+  def pending
+    flash[:notice] = 'El pago está pendiente. Te notificaremos cuando se complete.'
+    render :payment_pending
+  end
+
   private
+
+  def create_preference(booking)
+    sdk = Mercadopago::SDK.new(ENV['MERCADOPAGO_ACCESS_TOKEN'])
+
+    preference_data = {
+      items: [
+        {
+          title: "Sesión con #{booking.psychologist.user.name}",
+          unit_price: booking.psychologist.price_per_session.to_i,
+          quantity: 1
+        }
+      ],
+      payer: {
+        name: current_user.name,
+        surname: current_user.last_name,
+        email: current_user.email
+      },
+      back_urls: {
+        success: success_booking_url(booking),
+        failure: failure_booking_url(booking),
+        pending: pending_booking_url(booking)
+      },
+      auto_return: 'approved'
+    }
+
+    preference_response = sdk.preference.create(preference_data)
+    preference = preference_response[:response]
+
+    preference['id']
+  end
 
   def set_booking
     @booking = if current_user.psychologist.present?

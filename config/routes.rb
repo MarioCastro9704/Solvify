@@ -13,6 +13,11 @@ Rails.application.routes.draw do
     collection do
       get 'new/:psychologist_id', action: :new, as: :new_with_psychologist
     end
+    member do
+      get 'success', to: 'bookings#success', as: 'success'
+      get 'failure', to: 'bookings#failure', as: 'failure'
+      get 'pending', to: 'bookings#pending', as: 'pending'
+    end
   end
 
   resources :users, only: [:index, :show, :edit, :update, :destroy] do

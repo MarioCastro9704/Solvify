@@ -45,7 +45,10 @@
             <strong><%= number_to_currency(@psychologist.price_per_session, unit: @psychologist.currency) %></strong>
           </div>
 
-          <%= link_to "Ir a pago seguro", payment_path(@booking), class: "btn btn-primary w-100 mt-3 rounded-pill" %>
+          <<form action="https://www.mercadopago.com.ar/checkout/v1/redirect" method="POST">
+            <input type="hidden" name="preference_id" value="<%= @preference_id %>">
+            <button type="submit" class="btn btn-primary w-100 mt-3">Ir a pago seguro</button>
+          </form>
 
           <p class="text-muted small mt-3">
             Al continuar aceptas nuestros <%= link_to "Términos y Condiciones", "#" %>,
