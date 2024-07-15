@@ -77,5 +77,5 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
-
+gem "mercadopago-sdk"
 gem "rest-client"
