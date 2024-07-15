@@ -2,7 +2,7 @@ require 'mercadopago'
 
 class BookingsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_booking, only: %i[show edit update destroy summary success failure pending]
+  before_action :set_booking, only: %i[show edit update destroy summary success failure pending payment]
 
   def index
     @bookings = current_user.bookings
@@ -89,6 +89,11 @@ class BookingsController < ApplicationController
     render :payment_pending
   end
 
+  def payment
+    @preference_id = create_preference(@booking)
+    redirect_to "https://www.mercadopago.cl/checkout/v1/redirect?pref_id=#{@preference_id}", allow_other_host: true
+  end
+
   private
 
   def create_preference(booking)
@@ -99,7 +104,8 @@ class BookingsController < ApplicationController
         {
           title: "Sesión con #{booking.psychologist.user.name}",
           unit_price: booking.psychologist.price_per_session.to_i,
-          quantity: 1
+          quantity: 1,
+          currency_id: 'CLP'  # Asegúrate de que esta moneda esté configurada correctamente
         }
       ],
       payer: {
