@@ -45,8 +45,8 @@
             <strong><%= number_to_currency(@psychologist.price_per_session, unit: @psychologist.currency) %></strong>
           </div>
 
-          <<form action="https://www.mercadopago.com.ar/checkout/v1/redirect" method="POST">
-            <input type="hidden" name="preference_id" value="<%= @preference_id %>">
+          <form action="https://www.mercadopago.cl/checkout/v1/redirect" method="GET">
+            <input type="hidden" name="pref_id" value="<%= @preference_id %>">
             <button type="submit" class="btn btn-primary w-100 mt-3">Ir a pago seguro</button>
           </form>
 
