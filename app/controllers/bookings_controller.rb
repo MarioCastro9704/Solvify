@@ -2,7 +2,7 @@ require 'mercadopago'
 
 class BookingsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_booking, only: %i[show edit update destroy summary payment]
+  before_action :set_booking, only: %i[show edit update destroy summary success failure pending payment]
 
   def index
     @bookings = current_user.bookings
@@ -91,8 +91,15 @@ class BookingsController < ApplicationController
 
   def payment
     @preference_id = create_preference(@booking)
-    redirect_to "https://www.mercadopago.cl/checkout/v1/redirect?pref_id=#{@preference_id}", allow_other_host: true
+
+    if @preference_id.present?
+      redirect_to "https://www.mercadopago.cl/checkout/v1/redirect?pref_id=#{@preference_id}", allow_other_host: true
+    else
+      flash[:alert] = 'Hubo un problema al procesar el pago. Por favor, inténtalo de nuevo.'
+      redirect_to booking_summary_path(@booking)
+    end
   end
+
 
   private
 
@@ -104,7 +111,8 @@ class BookingsController < ApplicationController
         {
           title: "Sesión con #{booking.psychologist.user.name}",
           unit_price: booking.psychologist.price_per_session.to_i,
-          quantity: 1
+          quantity: 1,
+          currency_id: 'CLP'
         }
       ],
       payer: {
@@ -113,17 +121,27 @@ class BookingsController < ApplicationController
         email: current_user.email
       },
       back_urls: {
-        success: booking_success_url(booking),
-        failure: booking_failure_url(booking),
-        pending: booking_pending_url(booking)
+        success: success_booking_url(booking),
+        failure: failure_booking_url(booking),
+        pending: pending_booking_url(booking)
       },
       auto_return: 'approved'
     }
 
-    preference_response = sdk.preference.create(preference_data)
-    preference = preference_response[:response]
+    begin
+      preference_response = sdk.preference.create(preference_data)
+      preference = preference_response[:response]
 
-    preference['id']
+      if preference && preference['id']
+        preference['id']
+      else
+        Rails.logger.error("Error creating MercadoPago preference: #{preference_response.inspect}")
+        nil
+      end
+    rescue StandardError => e
+      Rails.logger.error("Exception creating MercadoPago preference: #{e.message}")
+      nil
+    end
   end
 
   def set_booking
