@@ -91,7 +91,13 @@ class BookingsController < ApplicationController
 
   def payment
     @preference_id = create_preference(@booking)
-    redirect_to "https://www.mercadopago.cl/checkout/v1/redirect?pref_id=#{@preference_id}", allow_other_host: true
+
+    if @preference_id.present?
+      redirect_to "https://www.mercadopago.cl/checkout/v1/redirect?pref_id=#{@preference_id}", allow_other_host: true
+    else
+      flash[:alert] = 'Hubo un problema al procesar el pago. Por favor, inténtalo de nuevo.'
+      redirect_to booking_summary_path(@booking)
+    end
   end
 
   private
@@ -121,10 +127,20 @@ class BookingsController < ApplicationController
       auto_return: 'approved'
     }
 
-    preference_response = sdk.preference.create(preference_data)
-    preference = preference_response[:response]
+    begin
+      preference_response = sdk.preference.create(preference_data)
+      preference = preference_response[:response]
 
-    preference['id']
+      if preference && preference['id']
+        preference['id']
+      else
+        Rails.logger.error("Error creating MercadoPago preference: #{preference_response.inspect}")
+        nil
+      end
+    rescue StandardError => e
+      Rails.logger.error("Exception creating MercadoPago preference: #{e.message}")
+      nil
+    end
   end
 
   def set_booking
