@@ -1,6 +1,8 @@
 namespace :mercadopago do
   desc "Test MercadoPago preference creation"
   task create_preference: :environment do
+    require 'mercadopago'
+
     sdk = Mercadopago::SDK.new(ENV['MERCADOPAGO_ACCESS_TOKEN'])
 
     preference_data = {
@@ -18,9 +20,9 @@ namespace :mercadopago do
         email: "test@example.com"
       },
       back_urls: {
-        success: "https://yourapp.herokuapp.com/success",
-        failure: "https://yourapp.herokuapp.com/failure",
-        pending: "https://yourapp.herokuapp.com/pending"
+        success: "https://solvify-app-9441069b05b4.herokuapp.com/success",
+        failure: "https://solvify-app-9441069b05b4.herokuapp.com/failure",
+        pending: "https://solvify-app-9441069b05b4.herokuapp.com/pending"
       },
       auto_return: 'approved'
     }
