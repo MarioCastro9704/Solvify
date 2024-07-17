@@ -1,3 +1,4 @@
+// app/javascript/controllers/scroll_controller.js
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
@@ -5,6 +6,7 @@ export default class extends Controller {
 
   connect() {
     this.scrollToBottom();
+    this.messagesTarget.addEventListener("DOMNodeInserted", this.scrollToBottom.bind(this));
   }
 
   scrollToBottom() {
