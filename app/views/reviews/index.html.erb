@@ -1,22 +1,27 @@
 <h2>Opiniones para <%= @psychologist.full_name %></h2>
+<h4>Calificación promedio: <%= render 'shared/star_rating', rating: @psychologist.average_rating %><span class="ms-2"><%= @psychologist.average_rating %></span></h4>
 
 <%= link_to "Escribir una reseña", new_psychologist_review_path(@psychologist), class: "btn btn-primary mb-3" %>
 
 <table class="table">
   <thead>
     <tr>
-      <th>Reseña</th>
-      <th>Calificación</th>
-      <th>Fecha</th>
-
+      <th class="text-center">Reseña</th>
+      <th class="text-center">Calificación</th>
+      <th class="text-center">Fecha</th>
     </tr>
   </thead>
   <tbody>
     <% @reviews.each do |review| %>
       <tr>
         <td><%= review.comments %></td>
-        <td><%= review.ratings %></td>
-        <td><%= review.created_at.strftime("%d/%m/%Y") %></td>
+        <td class="text-center">
+          <div class="d-flex align-items-center justify-content-center mb-2">
+            <%= render 'shared/star_rating', rating: review.ratings %>
+            <span class="ms-2"><%= review.ratings %></span>
+          </div>
+        </td>
+        <td class="text-center"><%= review.created_at.strftime("%d/%m/%Y") %></td>
       </tr>
     <% end %>
   </tbody>
