@@ -36,6 +36,6 @@ class Psychologist < ApplicationRecord
   end
 
   def average_rating
-    reviews.average(:rating).to_f.round(1)
+    reviews.average(:ratings).to_f.round(1)
   end
 end

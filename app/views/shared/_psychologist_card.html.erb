@@ -12,7 +12,16 @@
       <h5 class="card-title mb-1"><%= psychologist.full_name %></h5>
       <p class="text-muted mb-2">Cédula: <%= psychologist.document_of_identity %></p>
       <p class="mb-1"><strong>Enfoque:</strong> <%= psychologist.approach %></p>
-      <%= link_to "Ver opiniones #{psychologist.reviews.count}", psychologist_reviews_path(psychologist), class: "text-decoration-none mb-2 d-block" %>
+
+      <!-- rating -->
+      <div class="d-flex align-items-center mb-2">
+        <%= render 'shared/star_rating', rating: psychologist.average_rating %>
+        <span class="ms-2"><%= psychologist.average_rating %></span>
+      </div>
+
+      <!-- Ver opiniones -->
+      <%= link_to "Ver opiniones (#{psychologist.reviews.count})", psychologist_reviews_path(psychologist), class: "text-decoration-none mb-2 d-block" %>
+
       <div class="mb-2">
         <% psychologist.specialties.each do |specialty| %>
           <span class="badge bg-secondary me-1"><%= specialty %></span>
