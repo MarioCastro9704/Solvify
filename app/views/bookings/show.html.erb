@@ -1,12 +1,12 @@
-<h1>Bookings#show</h1>
-<p>Find me in app/views/bookings/show.html.erb</p>
+<!-- app/views/bookings/show.html.erb -->
+<h1>Chat</h1>
 <%= turbo_stream_from @booking %>
-<div id="messages">
+<div id="messages" class="border p-3" style="max-height: 400px; overflow-y: auto;" data-controller="scroll" data-scroll-target="messages">
   <% @booking.messages.each do |message| %>
-  <%= render "message", message: message  %>
+    <%= render partial: "message", locals: { message: message, current_user: current_user } %>
   <% end %>
 </div>
-<%= simple_form_for [@booking, @message] do |f| %>
-<%= f.input :content, input_html: {id: "content"} %>
-<%= f.submit %>
+<%= simple_form_for [@booking, @message], data: { controller: "clear-input", action: "turbo:submit-end->clear-input#clear" } do |f| %>
+  <%= f.input :content, input_html: { id: "content", data: { clear_input_target: "content" } } %>
+  <%= f.submit class: "btn btn-primary" %>
 <% end %>
