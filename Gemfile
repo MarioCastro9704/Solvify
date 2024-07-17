@@ -79,3 +79,4 @@ group :test do
 end
 gem "mercadopago-sdk"
 gem "rest-client"
+gem 'faker'

@@ -1,14 +1,16 @@
-# db/seeds.rb
+require_relative '../app/services/daily_service'
 
-# Clear existing data
-Booking.destroy_all
 Review.destroy_all
 Availability.destroy_all
+Booking.destroy_all
 Service.destroy_all
 Psychologist.destroy_all
 User.destroy_all
 
-# Create Users
+daily_service = DailyService.new('afd0d96efeb72db1d03e5c1618aaa78a35e2ecac1cd249b411ce2196ceddae26')
+daily_service.delete_all_rooms
+
+# Creación de Usuarios
 users = []
 users << User.create!(
   name: "Ana",
@@ -20,46 +22,23 @@ users << User.create!(
   address: "Calle Falsa 123, Ciudad",
   nationality: "Argentina"
 )
-users << User.create!(
-  name: "Carlos",
-  last_name: "Pérez",
-  email: "carlos.perez@example.com",
-  password: 'password',
-  date_of_birth: "1990-09-17",
-  gender: "Masculino",
-  address: "Avenida Siempre Viva 742, Ciudad",
-  nationality: "México"
-)
-users << User.create!(
-  name: "Laura",
-  last_name: "López",
-  email: "laura.lopez@example.com",
-  password: 'password',
-  date_of_birth: "1992-11-11",
-  gender: "Femenino",
-  address: "Calle Principal 456, Ciudad",
-  nationality: "Chile"
-)
-users << User.create!(
-  name: "Juan",
-  last_name: "Martínez",
-  email: "juan.martinez@example.com",
-  password: 'password',
-  date_of_birth: "1988-02-14",
-  gender: "Masculino",
-  address: "Pasaje Secundario 789, Ciudad",
-  nationality: "Colombia"
-)
-users << User.create!(
-  name: "María",
-  last_name: "Rodríguez",
-  email: "maria.rodriguez@example.com",
-  password: 'password',
-  date_of_birth: "1995-07-29",
-  gender: "Femenino",
-  address: "Boulevard Central 321, Ciudad",
-  nationality: "Perú"
-)
+
+2.times do
+  gender = ['Femenino', 'Masculino'].sample
+  first_name = gender == 'Masculino' ? Faker::Name.male_first_name : Faker::Name.female_first_name
+
+  nationality = Faker::Nation.nationality
+  users << User.create!(
+    name: first_name,
+    last_name: Faker::Name.last_name,
+    email: Faker::Internet.unique.email,
+    password: 'password',
+    date_of_birth: Faker::Date.birthday(min_age: 25, max_age: 70),
+    gender: gender,
+    address: Faker::Address.full_address,
+    nationality: nationality
+  )
+end
 
 # Create Psychologists
 psychologists = []
@@ -83,86 +62,45 @@ psychologists << User.create!(
   specialty: "Terapia Cognitivo-Conductual",
   specialties: ["Terapia Cognitivo-Conductual", "Psicoanálisis"]
 )
-psychologists << User.create!(
-  name: "Dra. Elena",
-  last_name: "Gómez",
-  email: "elena.gomez@example.com",
-  password: 'password',
-  date_of_birth: "1980-08-15",
-  gender: "Femenino",
-  address: "Avenida Psicología 456, Ciudad",
-  nationality: "Argentina"
-).create_psychologist!(
-  degree: "Licenciatura en Psicología",
-  document_of_identity: "DNI87654321",
-  price_per_hour: 80,
-  approach: "Psicoanálisis",
-  languages: "Español, Francés",
-  nationality: "Argentina",
-  currency: "USD",
-  specialty: "Psicoanálisis",
-  specialties: ["Psicoanálisis", "Terapia Familiar"]
-)
-psychologists << User.create!(
-  name: "Dr. Roberto",
-  last_name: "Fernández",
-  email: "roberto.fernandez@example.com",
-  password: 'password',
-  date_of_birth: "1983-12-05",
-  gender: "Masculino",
-  address: "Calle Terapia 789, Ciudad",
-  nationality: "Chile"
-).create_psychologist!(
-  degree: "Licenciatura en Psicología",
-  document_of_identity: "DNI11223344",
-  price_per_hour: 75,
-  approach: "Terapia Familiar",
-  languages: "Español, Italiano",
-  nationality: "Chile",
-  currency: "CLP",
-  specialty: "Terapia Familiar",
-  specialties: ["Terapia Familiar", "Psicología Infantil"]
-)
-psychologists << User.create!(
-  name: "Dra. Laura",
-  last_name: "Hernández",
-  email: "laura.hernandez@example.com",
-  password: 'password',
-  date_of_birth: "1987-06-25",
-  gender: "Femenino",
-  address: "Boulevard Terapia 321, Ciudad",
-  nationality: "México"
-).create_psychologist!(
-  degree: "Licenciatura en Psicología",
-  document_of_identity: "DNI44556677",
-  price_per_hour: 65,
-  approach: "Terapia Cognitivo-Conductual",
-  languages: "Español, Alemán",
-  nationality: "México",
-  currency: "MXN",
-  specialty: "Terapia Cognitivo-Conductual",
-  specialties: ["Terapia Cognitivo-Conductual", "Neuropsicología"]
-)
-psychologists << User.create!(
-  name: "Dr. Luis",
-  last_name: "García",
-  email: "luis.garcia@example.com",
-  password: 'password',
-  date_of_birth: "1982-01-30",
-  gender: "Masculino",
-  address: "Avenida Psicología 987, Ciudad",
-  nationality: "Perú"
-).create_psychologist!(
-  degree: "Licenciatura en Psicología",
-  document_of_identity: "DNI99887766",
-  price_per_hour: 90,
-  approach: "Psicología Organizacional",
-  languages: "Español, Portugués",
-  nationality: "Perú",
-  currency: "PEN",
-  specialty: "Psicología Organizacional",
-  specialties: ["Psicología Organizacional", "Terapia de Pareja"]
-)
+
+15.times do
+  gender = ['Femenino', 'Masculino'].sample
+  title = gender == 'Masculino' ? 'Dr.' : 'Dra.'
+  first_name = gender == 'Masculino' ? Faker::Name.male_first_name : Faker::Name.female_first_name
+
+  nationality_currency = {
+    "Argentina" => "ARS",
+    "España" => "EUR",
+    "México" => "MXN",
+    "Chile" => "CLP",
+    "Perú" => "PEN"
+  }
+  nationality = nationality_currency.keys.sample
+  currency = nationality_currency[nationality]
+
+  psychologist_user = User.create!(
+    name: "#{title} #{first_name}",
+    last_name: Faker::Name.last_name,
+    email: Faker::Internet.unique.email,
+    password: 'password',
+    date_of_birth: Faker::Date.birthday(min_age: 25, max_age: 70),
+    gender: gender,
+    address: Faker::Address.full_address,
+    nationality: nationality
+  )
+  psychologists << psychologist_user.create_psychologist!(
+    degree: "Licenciatura en Psicología",
+    document_of_identity: "DNI#{Faker::Number.unique.number(digits: 8)}",
+    price_per_hour: rand(50..120),
+    approach: ['Cognitivo-Conductual', 'Psicoanálisis', 'Terapia Familiar', 'Neuropsicología'].sample,
+    languages: ['Español', 'Inglés', 'Francés', 'Alemán'].sample(rand(1..4)).join(', '),
+    nationality: psychologist_user.nationality,
+    currency: currency,
+    specialty: ['Terapia Cognitivo-Conductual', 'Psicoanálisis', 'Terapia Familiar', 'Psicología Organizacional', 'Terapia de Pareja'].sample,
+    specialties: ['Terapia Cognitivo-Conductual', 'Psicoanálisis', 'Terapia Familiar', 'Psicología Infantil', 'Neuropsicología'].sample(rand(1..3))
+  )
+end
+
 
 # Create Services
 psychologists.each do |psychologist|
@@ -202,6 +140,8 @@ end
 # Create Bookings with alternating payment statuses
 psychologists.each do |psychologist|
   users.each_with_index do |user, index|
+
+
     Booking.create!(
       date: Date.today + (index + 1).days,
       time: "10:00",
@@ -209,7 +149,8 @@ psychologists.each do |psychologist|
       psychologist: psychologist,
       user: user,
       payment_status: 'paid',
-      link_to_meet: "https://solvify.daily.co/#{SecureRandom.hex(10)}",
+      link_to_meet: '',
+      # link_to_meet: "https://solvify.daily.co/#{SecureRandom.hex(10)}",
       reason: "Consulta de prueba"
     )
   end
