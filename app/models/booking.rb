@@ -33,6 +33,7 @@ class Booking < ApplicationRecord
     begin
       response = RestClient.post(url, payload.to_json, headers)
       self.update(videocall_id: JSON.parse(response)['name'])
+      self.update(link_to_meet: "https://solvify.daily.co/#{JSON.parse(response)['name']}")
       puts "Código de respuesta: #{response.code}"
       puts "Cuerpo de la respuesta: #{response.body}"
     rescue RestClient::ExceptionWithResponse => e

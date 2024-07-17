@@ -30,7 +30,7 @@
       </div>
       <p class="mb-1"><strong>Idiomas:</strong> <%= psychologist.languages %></p>
       <p class="mb-1"><strong>Nacionalidad:</strong> <%= psychologist.nationality %></p>
-      <p class="mb-1"><strong>Precio por sesión (50 min):</strong> <span class="text-success"><%= number_to_currency(psychologist.price_per_session, unit: psychologist.currency) %></span></p>
+      <p class="mb-1"><strong>Precio por sesión (50 min):</strong> <span class="text-success"><%= number_to_currency(psychologist.price_per_hour, unit: psychologist.currency) %></span></p>
     </div>
   </div>
 
