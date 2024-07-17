@@ -1,10 +1,11 @@
 class ReviewsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:index, :show]
   before_action :set_psychologist
   before_action :set_review, only: [:show, :edit, :update, :destroy]
 
   def index
     @reviews = @psychologist.reviews
+    @average_rating = @psychologist.average_rating
   end
 
   def show
@@ -12,12 +13,11 @@ class ReviewsController < ApplicationController
   end
 
   def new
-    @review = @psychologist.reviews.new
+    @review = Review.new
   end
 
   def create
     @review = @psychologist.reviews.new(review_params)
-    # @review.user = current_user
     if @review.save
       redirect_to psychologist_reviews_path(@psychologist), notice: 'Review was successfully created.'
     else

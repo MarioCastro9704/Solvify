@@ -1,17 +1,13 @@
 <h2>Nueva Reseña para <%= @psychologist.full_name %></h2>
 
-<%= form_with model: [@psychologist, @review] do |form| %>
-  <div class="mb-3">
-    <%= form.label :comments, "Reseña" %>
-    <%= form.text_area :comments, class: "form-control" %>
+<div class="container">
+  <div class="row">
+    <div class="col-xs-4">
+      <%= simple_form_for [@psychologist, @review] do |f| %>
+        <%= f.input :comments %>
+        <%= f.input :ratings, collection: (1..5).to_a, label: "Rate your experience", input_html: { data: { controller: "star-rating" } } %>
+        <%= f.submit "Send your review" %>
+      <% end %>
+    </div>
   </div>
-
-  <div class="mb-3">
-    <%= form.label :ratings, "Calificación" %>
-    <%= form.number_field :ratings, class: "form-control", min: 1, max: 5 %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.submit "Enviar", class: "btn btn-primary" %>
-  </div>
-<% end %>
+</div>

@@ -15,8 +15,7 @@
 @import "components/calendar";
 @import "components/sidebar";
 @import "components/topbar";
-
-@import "star-rating.js/dist/star-rating.css";
+//@import "star-rating.js/dist/star-rating.css";
 
 .content-wrapper {
   margin-left: 175px;
@@ -70,4 +69,28 @@
 
 .starrr {
   display: inline-block;
+}
+
+
+.star-rating {
+  display: inline-flex;
+  align-items: center; /* Alinea verticalmente */
+}
+
+.star-rating .star {
+  color: #FFD700; /* Color de las estrellas llenas */
+}
+
+.star-rating .half-star::before {
+  content: '\00bd'; /* Media estrella */
+  position: relative;
+  color: #FFD700; /* Color de la media estrella */
+}
+
+.star-rating .star:not(:last-child) {
+  margin-right: 2px; /* Espacio entre las estrellas */
+}
+
+.star-rating svg {
+  color: #FFD700; /* Color amarillo para las estrellas */
 }
