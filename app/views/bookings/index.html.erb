@@ -1,23 +1,49 @@
 <% content_for :page_title, "Mis Citas" %>
 <div class="container mt-4">
-  <h1>Mis Citas</h1>
+  <h1 class="mx-1 ">Citas</h1>
 
   <% if @bookings.any? %>
     <div class="row">
       <% @bookings.each do |booking| %>
         <div class="col-md-4 mb-3">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title"><%= booking.psychologist.full_name %></h5>
-              <p class="card-text"><strong>Fecha:</strong> <%= booking.date.strftime("%d-%m-%Y") %></p>
-              <p class="card-text"><strong>Hora:</strong> <%= booking.time.strftime("%H:%M") %></p>
-              <p class="card-text"><strong>Motivo de consulta:</strong> <%= booking.reason %></p>
+          <div class="card h-100 custom-rounded">
+            <div class="card-body d-flex">
+              <div class="me-3">
+                <% if booking.psychologist.profile_picture.attached? %>
+                  <%= cl_image_tag booking.psychologist.profile_picture.key, class: "img-fluid rounded-circle", transformation: { width: 200, height: 200, crop: :fill } %>
+                <% else %>
+                  <%= image_tag "default_avatar.png", class: "img-fluid rounded-circle", width: 200, height: 200 %>
+                <% end %>
+              </div>
 
-              <% if booking.payment_status == 'paid' %>
-                <%= link_to 'Videollamada', "https://solvify.daily.co/#{booking.videocall_id}", class: 'btn btn-success' %>
-              <% else %>
-                <%= link_to 'Pagar', payment_booking_path(booking), class: 'btn btn-warning' %>
-              <% end %>
+              <div>
+                <h5 class="card-title mb-1"><%= booking.psychologist.full_name %></h5>
+                <p class="text-muted mb-2">Cédula: <%= booking.psychologist.document_of_identity %></p>
+                <p class="mb-1"><strong>Enfoque:</strong> <%= booking.psychologist.approach %></p>
+                <%= link_to "Ver opiniones #{booking.psychologist.reviews.count}", psychologist_reviews_path(booking.psychologist), class: "text-decoration-none mb-2 d-block" %>
+                <div class="mb-2">
+                  <% booking.psychologist.specialties.each do |specialty| %>
+                    <span class="badge bg-secondary me-1"><%= specialty %></span>
+                  <% end %>
+                  <a href="#" class: "text-decoration-none">Ver más</a>
+                </div>
+                <p class="mb-1"><strong>Precio por sesión (50 min):</strong> <span class="text-success"><%= number_to_currency(booking.psychologist.price_per_session, unit: booking.psychologist.currency) %></span></p>
+                <p class="mb-1"><strong>Fecha:</strong> <%= booking.date.strftime("%d-%m-%Y") %></p>
+                <p class="mb-1"><strong>Hora:</strong> <%= booking.time.strftime("%H:%M") %></p>
+                <p class="mb-1"><strong>Motivo de consulta:</strong> <%= booking.reason %></p>
+              </div>
+            </div>
+
+            <div class="card-footer border-top">
+              <div class="row">
+                <div class="col-12 text-center">
+                  <% if booking.payment_status == 'paid' %>
+                    <%= link_to 'Videollamada', "https://solvify.daily.co/#{booking.videocall_id}", class: 'btn btn-success text-white w-100 rounded-pill' %>
+                  <% else %>
+                    <%= link_to 'Pagar', payment_booking_path(booking), class: 'btn btn-primary w-100 rounded-pill' %>
+                  <% end %>
+                </div>
+              </div>
             </div>
           </div>
         </div>
