@@ -8,7 +8,7 @@
     <div class="row g-4 pb-3">
       <div class="col-sm-8">
         <div class="vstack gap-3">
-          <!-- 5 stars -->
+
           <% ratings_count = Hash.new(0) %>
           <% @reviews.each do |review| %>
             <% ratings_count[review.ratings] += 1 %>
@@ -33,7 +33,7 @@
       </div>
       <div class="col-sm-4">
         <div class="d-flex flex-column align-items-center justify-content-center h-100 bg-body-tertiary rounded p-4">
-          <div class="h1 pb-2 mb-1">4.1</div>
+          <div class="h1 pb-2 mb-1"> <%= @psychologist.average_rating %> </div>
           <div class="hstack justify-content-center gap-1 fs-sm mb-2">
             <i class="ci-star-filled text-warning"></i>
             <i class="ci-star-filled text-warning"></i>
@@ -41,7 +41,7 @@
             <i class="ci-star-filled text-warning"></i>
             <i class="ci-star text-body-tertiary opacity-60"></i>
           </div>
-          <div class="fs-sm">68 reviews</div>
+          <div class="fs-sm"><%= "#{@psychologist.reviews.count} reviews" %></div>
         </div>
       </div>
     </div>

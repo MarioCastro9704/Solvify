@@ -160,7 +160,7 @@ psychologists.each do |psychologist|
       end_time: "11:00",
       psychologist: psychologist,
       user: user,
-      payment_status: 'pending',
+      payment_status: PaymentStatus.find_or_create_by(status: 'pending'),
       link_to_meet: '',
       # link_to_meet: "https://solvify.daily.co/#{SecureRandom.hex(10)}",
       reason: "Consulta de prueba"
