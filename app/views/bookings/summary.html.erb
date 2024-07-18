@@ -5,19 +5,61 @@
 
   <div class="row">
     <div class="col-md-7">
-      <h3>Detalles de la Reserva</h3>
-      <p><strong>Psicólogo:</strong> <%= @psychologist.full_name %></p>
-      <p><strong>Fecha:</strong> <%= @booking.date.strftime("%d-%m-%Y") %></p>
-      <p><strong>Hora:</strong> <%= @booking.time.strftime("%H:%M") %></p>
-      <p><strong>Motivo de consulta:</strong> <%= @booking.reason %></p>
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="mb-0">Detalles de la Reserva</h3>
+        </div>
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-sm-4"><strong>Psicólogo:</strong></div>
+            <div class="col-sm-8"><%= @psychologist.full_name %></div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-4"><strong>Fecha:</strong></div>
+            <div class="col-sm-8"><%= @booking.date.strftime("%d-%m-%Y") %></div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-4"><strong>Hora:</strong></div>
+            <div class="col-sm-8"><%= @booking.time.strftime("%H:%M") %></div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-4"><strong>Motivo de consulta:</strong></div>
+            <div class="col-sm-8"><%= @booking.reason %></div>
+          </div>
+        </div>
+      </div>
 
-      <h4>Datos Personales</h4>
-      <p><strong>Nombre completo:</strong> <%= "#{current_user.name} #{current_user.last_name}" %></p>
-      <p><strong>Pasaporte:</strong> <%= current_user.document_of_identity.presence || "No proporcionado" %></p>
-      <p><strong>Sexo:</strong> <%= current_user.gender.presence || "No proporcionado" %></p>
-      <p><strong>Fecha de nacimiento:</strong> <%= current_user.date_of_birth.strftime("%d-%m-%Y") %></p>
-      <p><strong>Teléfono:</strong> <%= current_user.phone.presence || "No proporcionado" %></p>
-      <p><strong>Correo electrónico:</strong> <%= current_user.email.presence || "No proporcionado" %></p>
+      <div class="card">
+        <div class="card-header">
+          <h4 class="mb-0">Datos Personales</h4>
+        </div>
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-sm-4"><strong>Nombre completo:</strong></div>
+            <div class="col-sm-8"><%= "#{current_user.name} #{current_user.last_name}" %></div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-4"><strong>Pasaporte:</strong></div>
+            <div class="col-sm-8"><%= current_user.document_of_identity.presence || "No proporcionado" %></div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-4"><strong>Sexo:</strong></div>
+            <div class="col-sm-8"><%= current_user.gender.presence || "No proporcionado" %></div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-4"><strong>Fecha de nacimiento:</strong></div>
+            <div class="col-sm-8"><%= current_user.date_of_birth.strftime("%d-%m-%Y") %></div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-4"><strong>Teléfono:</strong></div>
+            <div class="col-sm-8"><%= current_user.phone.presence || "No proporcionado" %></div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-4"><strong>Correo electrónico:</strong></div>
+            <div class="col-sm-8"><%= current_user.email.presence || "No proporcionado" %></div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="col-md-5">
@@ -47,7 +89,7 @@
 
           <form action="https://www.mercadopago.cl/checkout/v1/redirect" method="GET">
             <input type="hidden" name="pref_id" value="<%= @preference_id %>">
-            <button type="submit" class="btn btn-primary w-100 mt-3">Ir a pago seguro</button>
+            <button type="submit" class="btn btn-primary w-100 mt-3 rounded-pill">Ir a pago seguro</button>
           </form>
 
           <p class="text-muted small mt-3">
