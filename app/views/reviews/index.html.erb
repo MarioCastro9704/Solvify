@@ -1,28 +1,73 @@
-<h2>Opiniones para <%= @psychologist.full_name %></h2>
-<h4>Calificación promedio: <%= render 'shared/star_rating', rating: @psychologist.average_rating %><span class="ms-2"><%= @psychologist.average_rating %></span></h4>
+<section class="container pb-5 mb-1 mb-sm-2 mb-md-3 mb-lg-4 mb-xl-5">
+  <div class="d-flex justify-content-between align-items-start mb-5">
+    <h2 class="mb-0">Opiniones para <%= @psychologist.full_name %></h2>
+    <%= link_to "Escribir una reseña", new_psychologist_review_path(@psychologist), class: "btn btn-outline-secondary rounded-pill" %>
+  </div>
 
-<%= link_to "Escribir una reseña", new_psychologist_review_path(@psychologist), class: "btn btn-primary mb-3" %>
+  <div class="card-body" style="max-width: 560px;">
+    <div class="row g-4 pb-3">
+      <div class="col-sm-8">
+        <div class="vstack gap-3">
+          <!-- 5 stars -->
+          <% ratings_count = Hash.new(0) %>
+          <% @reviews.each do |review| %>
+            <% ratings_count[review.ratings] += 1 %>
+          <% end %>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th class="text-center">Reseña</th>
-      <th class="text-center">Calificación</th>
-      <th class="text-center">Fecha</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @reviews.each do |review| %>
-      <tr>
-        <td><%= review.comments %></td>
-        <td class="text-center">
-          <div class="d-flex align-items-center justify-content-center mb-2">
-            <%= render 'shared/star_rating', rating: review.ratings %>
-            <span class="ms-2"><%= review.ratings %></span>
+          <% total_reviews = @reviews.size %>
+
+          <% (1..5).reverse_each do |rating| %>
+            <% count = ratings_count[rating] %>
+            <% percentage = total_reviews.zero? ? 0 : (count.to_f / total_reviews * 100).round(1) %>
+            <div class="hstack gap-2">
+              <div class="hstack fs-sm gap-1">
+                <%= rating %><i class="ci-star-filled text-warning"></i>
+              </div>
+              <div class="progress w-100" role="progressbar" aria-label="<%= rating %> stars" aria-valuenow="<%= percentage %>" aria-valuemin="0" aria-valuemax="100" style="height: 4px">
+                <div class="progress-bar bg-warning rounded-pill" style="width: <%= percentage %>%"></div>
+              </div>
+              <div class="fs-sm text-nowrap text-end" style="width: 40px;"><%= count %></div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="d-flex flex-column align-items-center justify-content-center h-100 bg-body-tertiary rounded p-4">
+          <div class="h1 pb-2 mb-1">4.1</div>
+          <div class="hstack justify-content-center gap-1 fs-sm mb-2">
+            <i class="ci-star-filled text-warning"></i>
+            <i class="ci-star-filled text-warning"></i>
+            <i class="ci-star-filled text-warning"></i>
+            <i class="ci-star-filled text-warning"></i>
+            <i class="ci-star text-body-tertiary opacity-60"></i>
           </div>
-        </td>
-        <td class="text-center"><%= review.created_at.strftime("%d/%m/%Y") %></td>
+          <div class="fs-sm">68 reviews</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th class="text-center">Reseña</th>
+        <th class="text-center">Calificación</th>
+        <th class="text-center">Fecha</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @reviews.each do |review| %>
+        <tr>
+          <td><%= review.comments %></td>
+          <td class="text-center">
+            <div class="d-flex align-items-center justify-content-center mb-2">
+              <%= render 'shared/star_rating', rating: review.ratings %>
+              <span class="ms-2"><%= review.ratings %></span>
+            </div>
+          </td>
+          <td class="text-center"><%= review.created_at.strftime("%d/%m/%Y") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</section>
