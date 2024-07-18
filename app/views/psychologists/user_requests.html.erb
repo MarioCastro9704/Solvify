@@ -37,8 +37,10 @@
                 <%= link_to booking_path(request), method: :delete, remote: true, data: { confirm: "¿Estás seguro?" }, class: "btn btn-danger btn-sm rounded-pill mx-1 text-white", title: "Eliminar", data: { toggle: "tooltip" } do %>
                   <i class="fa-solid fa-trash-alt"></i>
                 <% end %>
-                <%= link_to booking_path(request), class: "btn btn-secondary btn-sm rounded-pill mx-1", title: "Acceder al Chat", data: { toggle: "tooltip" } do %>
-                  <i class="fa-solid fa-comments"></i>
+                <% if request.bookings.any? %>
+                  <%= link_to booking_path(request.bookings.first), class: "btn btn-secondary btn-sm rounded-pill mx-1", title: "Acceder al Chat", data: { toggle: "tooltip" } do %>
+                    <i class="fa-solid fa-comments"></i>
+                  <% end %>
                 <% end %>
               </div>
             </td>
