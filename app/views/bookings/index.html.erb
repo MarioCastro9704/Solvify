@@ -38,7 +38,7 @@
                 <div class="col-12 text-center">
                   <% if booking.payment_status&.status == 'paid' %>
                     <%= link_to 'Videollamada', booking.link_to_meet, class: 'btn btn-success text-white w-100 rounded-pill', target: '_blank' %>
-                    <%= link_to 'Acceder al Chat', chat_booking_path(booking), class: 'btn btn-secondary text-white w-100 rounded-pill mt-2' %>
+                    <%= link_to 'Acceder al Chat', booking_path(booking), class: 'btn btn-secondary text-white w-100 rounded-pill mt-2' %>
                   <% else %>
                     <%= link_to 'Pagar', payment_booking_path(booking), class: 'btn btn-primary w-100 rounded-pill' %>
                   <% end %>
