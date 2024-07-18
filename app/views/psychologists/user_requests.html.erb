@@ -23,8 +23,8 @@
             <td class="text-start"><%= request.user.document_of_identity %></td>
             <td class="text-start"><%= request.psychologist.specialties.join(', ') %></td>
             <td class="text-start"><%= request.created_at.strftime("%d/%m/%Y") %></td>
-            <td class="text-start"><%= request.sessions_requested %></td>
-            <td class="text-start"><%= request.sessions_completed %></td>
+            <td class="text-start"><%= request.bookings.count %></td>
+            <td class="text-start"><%= request.bookings.where(payment_status: { status: 'paid' }).count %></td>
             <td class="text-start"><%= request.first_payment_status %></td>
             <td class="text-center">
               <div class="btn-group" role="group" aria-label="Opciones">

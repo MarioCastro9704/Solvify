@@ -10,9 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_13_062225) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_18_045414) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "action_text_rich_texts", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "body"
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
+  end
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -84,6 +94,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_13_062225) do
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
+  create_table "payment_statuses", force: :cascade do |t|
+    t.bigint "booking_id", null: false
+    t.string "status", default: "pending", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["booking_id"], name: "index_payment_statuses_on_booking_id"
+  end
+
   create_table "psychologists", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "specialty"
@@ -128,6 +146,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_13_062225) do
     t.index ["psychologist_id"], name: "index_services_on_psychologist_id"
   end
 
+  create_table "user_requests", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "psychologist_id", null: false
+    t.string "first_payment_status", default: "pending", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["psychologist_id"], name: "index_user_requests_on_psychologist_id"
+    t.index ["user_id"], name: "index_user_requests_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -155,7 +183,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_13_062225) do
   add_foreign_key "bookings", "users"
   add_foreign_key "messages", "bookings"
   add_foreign_key "messages", "users"
+  add_foreign_key "payment_statuses", "bookings"
   add_foreign_key "psychologists", "users"
   add_foreign_key "reviews", "psychologists"
   add_foreign_key "services", "psychologists"
+  add_foreign_key "user_requests", "psychologists"
+  add_foreign_key "user_requests", "users"
 end

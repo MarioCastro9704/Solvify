@@ -30,6 +30,9 @@ class BookingsController < ApplicationController
     availability = Availability.find_by(psychologist: @psychologist, business_date: booking_params[:date], starting_hour: booking_params[:time])
 
     if availability && !availability.reserved && @booking.save
+      @booking.create_payment_status!(status: 'pending')
+      user_request = UserRequest.find_or_create_by(user: current_user, psychologist: @psychologist)
+      user_request.update(first_payment_status: 'pendiente')
       current_user.update(user_params)
       availability.update(reserved: true)
       redirect_to booking_summary_path(@booking), notice: 'La reserva se ha creado exitosamente.'
@@ -40,7 +43,6 @@ class BookingsController < ApplicationController
       render :new
     end
   end
-
   def summary
     @psychologist = @booking.psychologist
     @preference_id = create_preference(@booking)
@@ -75,11 +77,19 @@ class BookingsController < ApplicationController
   end
 
   def success
-    @booking.update(payment_status: 'paid')
+    @booking.payment_status ||= @booking.create_payment_status(status: 'pending')
+    @booking.payment_status.update(status: 'paid')
+
+    user_request = UserRequest.find_or_create_by(user: @booking.user, psychologist: @booking.psychologist)
+    user_request.update(first_payment_status: 'pagado')
+
     redirect_to user_bookings_path(current_user), notice: 'El pago fue exitoso. Ahora puedes acceder a la videollamada.'
   end
 
+
   def failure
+    @booking.payment_status ||= @booking.create_payment_status(status: 'pending')
+    @booking.payment_status.update(status: 'rejected')
     flash[:alert] = 'El pago falló. Por favor, inténtalo de nuevo.'
     render :payment_failure
   end
