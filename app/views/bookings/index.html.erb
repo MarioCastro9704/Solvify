@@ -37,8 +37,8 @@
             <div class="card-footer border-top">
               <div class="row">
                 <div class="col-12 text-center">
-                  <% if booking.payment_status == 'paid' %>
-                    <%= link_to 'Videollamada', "https://solvify.daily.co/#{booking.videocall_id}", class: 'btn btn-success text-white w-100 rounded-pill' %>
+                  <% if booking.payment_status&.status == 'paid' %>
+                    <%= link_to 'Videollamada', booking.link_to_meet, class: 'btn btn-success text-white w-100 rounded-pill', target: '_blank' %>
                   <% else %>
                     <%= link_to 'Pagar', payment_booking_path(booking), class: 'btn btn-primary w-100 rounded-pill' %>
                   <% end %>

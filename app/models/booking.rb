@@ -7,10 +7,11 @@ class Booking < ApplicationRecord
   validate :availability_must_be_free
 
   before_validation :set_end_time
-  before_validation :set_default_payment_status
 
   after_create :create_videocall
   after_create :mark_availability_as_reserved
+  has_one :payment_status, dependent: :destroy
+  after_create :ensure_payment_status
 
   def sessions_completed
     self[:sessions_completed]
@@ -43,6 +44,12 @@ class Booking < ApplicationRecord
 
   private
 
+  def create_payment_status
+    build_payment_status(status: 'pending').save!
+  end
+  def ensure_payment_status
+    create_payment_status!(status: 'pending') if payment_status.nil?
+  end
   def set_end_time
     self.end_time = time + 1.hour if time.present?
   end
