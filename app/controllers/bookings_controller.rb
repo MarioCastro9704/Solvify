@@ -31,7 +31,8 @@ class BookingsController < ApplicationController
 
     if availability && !availability.reserved && @booking.save
       @booking.create_payment_status!(status: 'pending')
-      UserRequest.find_or_create_by(user: current_user, psychologist: @psychologist, first_payment_status: 'pending')
+      user_request = UserRequest.find_or_create_by(user: current_user, psychologist: @psychologist)
+      user_request.update(first_payment_status: 'pendiente')
       current_user.update(user_params)
       availability.update(reserved: true)
       redirect_to booking_summary_path(@booking), notice: 'La reserva se ha creado exitosamente.'
@@ -78,6 +79,10 @@ class BookingsController < ApplicationController
   def success
     @booking.payment_status ||= @booking.create_payment_status(status: 'pending')
     @booking.payment_status.update(status: 'paid')
+
+    user_request = UserRequest.find_or_create_by(user: @booking.user, psychologist: @booking.psychologist)
+    user_request.update(first_payment_status: 'pagado')
+
     redirect_to user_bookings_path(current_user), notice: 'El pago fue exitoso. Ahora puedes acceder a la videollamada.'
   end
 

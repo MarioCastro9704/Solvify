@@ -47,7 +47,7 @@ class PsychologistsController < ApplicationController
   end
 
   def user_requests
-    @requests = @psychologist.bookings.includes(:user)
+    @requests = UserRequest.where(psychologist: current_user.psychologist).includes(:user)
   end
 
   def load_availabilities

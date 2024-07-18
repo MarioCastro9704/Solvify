@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_18_041529) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_18_045414) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -146,6 +146,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_18_041529) do
     t.index ["psychologist_id"], name: "index_services_on_psychologist_id"
   end
 
+  create_table "user_requests", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "psychologist_id", null: false
+    t.string "first_payment_status", default: "pending", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["psychologist_id"], name: "index_user_requests_on_psychologist_id"
+    t.index ["user_id"], name: "index_user_requests_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -177,4 +187,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_18_041529) do
   add_foreign_key "psychologists", "users"
   add_foreign_key "reviews", "psychologists"
   add_foreign_key "services", "psychologists"
+  add_foreign_key "user_requests", "psychologists"
+  add_foreign_key "user_requests", "users"
 end
