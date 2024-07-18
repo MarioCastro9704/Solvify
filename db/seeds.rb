@@ -10,6 +10,9 @@ User.destroy_all
 daily_service = DailyService.new('afd0d96efeb72db1d03e5c1618aaa78a35e2ecac1cd249b411ce2196ceddae26')
 daily_service.delete_all_rooms
 
+def normalize_name(name)
+  name.downcase.gsub(/[^a-z]/, '')
+end
 # Creación de Usuarios
 users = []
 users << User.create!(
@@ -26,12 +29,18 @@ users << User.create!(
 2.times do
   gender = ['Femenino', 'Masculino'].sample
   first_name = gender == 'Masculino' ? Faker::Name.male_first_name : Faker::Name.female_first_name
+  last_name = Faker::Name.last_name
+
+  normalized_first_name = normalize_name(first_name)
+  normalized_last_name = normalize_name(last_name)
+  email = "#{normalized_first_name}.#{normalized_last_name}@example.com"
+
 
   nationality = Faker::Nation.nationality
   users << User.create!(
     name: first_name,
-    last_name: Faker::Name.last_name,
-    email: Faker::Internet.unique.email,
+    last_name: last_name,
+    email: email,
     password: 'password',
     date_of_birth: Faker::Date.birthday(min_age: 25, max_age: 70),
     gender: gender,
@@ -67,6 +76,11 @@ psychologists << User.create!(
   gender = ['Femenino', 'Masculino'].sample
   title = gender == 'Masculino' ? 'Dr.' : 'Dra.'
   first_name = gender == 'Masculino' ? Faker::Name.male_first_name : Faker::Name.female_first_name
+  last_name = Faker::Name.last_name
+
+  normalized_first_name = normalize_name(first_name)
+  normalized_last_name = normalize_name(last_name)
+  email = "#{normalized_first_name}.#{normalized_last_name}@example.com"
 
   nationality_currency = {
     "Argentina" => "ARS",
@@ -80,8 +94,8 @@ psychologists << User.create!(
 
   psychologist_user = User.create!(
     name: "#{title} #{first_name}",
-    last_name: Faker::Name.last_name,
-    email: Faker::Internet.unique.email,
+    last_name: last_name,
+    email: email,
     password: 'password',
     date_of_birth: Faker::Date.birthday(min_age: 25, max_age: 70),
     gender: gender,
@@ -140,15 +154,13 @@ end
 # Create Bookings with alternating payment statuses
 psychologists.each do |psychologist|
   users.each_with_index do |user, index|
-
-
     Booking.create!(
       date: Date.today + (index + 1).days,
       time: "10:00",
       end_time: "11:00",
       psychologist: psychologist,
       user: user,
-      payment_status: 'paid',
+      payment_status: PaymentStatus.find_or_create_by(status: 'pending'),
       link_to_meet: '',
       # link_to_meet: "https://solvify.daily.co/#{SecureRandom.hex(10)}",
       reason: "Consulta de prueba"
