@@ -1,13 +1,22 @@
 <% content_for :page_title, "Psicólogos" %>
+
 <div class="container">
-  <h2 class="mt-5 mb-4">Agenda hoy tu primera cita con un psicólogo en línea</h2>
-  <div class="container">
-    <div class="row" id="services">
-      <% Service.where(published: true).each do |service| %>
-        <div class="col-md-6 mb-4">
-          <%= render partial: "shared/psychologist_card", locals: { psychologist: service.psychologist, service: service } %>
-        </div>
-      <% end %>
+  <% unless current_user %>
+    <div class="hero-section custom-rounded mt-4">
+      <div class="hero-content">
+        <h1>Encuentra tu psicólogo ideal</h1>
+        <p>Agenda hoy tu primera cita con un profesional en línea y comienza tu camino hacia el bienestar emocional.</p>
+        <%= link_to "Comenzar ahora", new_user_registration_path, class: "btn btn-light btn-lg rounded-pill px-5", role: "button"%>
+      </div>
     </div>
+  <% end %>
+
+  <h2 class="mt-5 mb-4">Psicólogos disponibles</h2>
+  <div class="row" id="services">
+    <% Service.where(published: true).each do |service| %>
+      <div class="col-md-6 mb-4">
+        <%= render partial: "shared/psychologist_card", locals: { psychologist: service.psychologist, service: service } %>
+      </div>
+    <% end %>
   </div>
 </div>

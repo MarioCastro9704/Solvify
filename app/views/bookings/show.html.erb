@@ -7,6 +7,6 @@
   <% end %>
 </div>
 <%= simple_form_for [@booking, @message], data: { controller: "clear-input", action: "turbo:submit-end->clear-input#clear" } do |f| %>
-  <%= f.input :content, input_html: { id: "content", data: { clear_input_target: "content" } } %>
-  <%= f.submit class: "btn btn-primary" %>
+  <%= f.input :content, label: "Chatea con tu Psicologo/Paciente", input_html: { id: "content", data: { clear_input_target: "content" } } %>
+  <%= f.submit 'Enviar', class: "btn btn-primary" %>
 <% end %>

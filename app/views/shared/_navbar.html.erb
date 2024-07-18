@@ -1,53 +1,51 @@
-<div class="navbar navbar-expand-sm navbar-light bg-light">
-  <div class="container-fluid">
-    <%= link_to root_path, class: "navbar-brand" do %>
-      <%= image_tag "logo-solvify.svg", alt: "Logo", class: "logo" %>
-    <% end %>
+<nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+  <div class="container-fluid px-5">
+    <div class="d-flex justify-content-between align-items-center w-100">
+      <%= link_to root_path, class: "navbar-brand" do %>
+        <%= image_tag "logo-solvify.svg", alt: "Logo", class: "logo", width: "30", height: "30" %>
+      <% end %>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" data-controller="toggle" data-action="click->toggle#toggle">
-      <%= image_tag "menu-icon.svg", alt: "menu icon", id: "menu-icon", data: { toggle_target: "menuIcon" } %>
-      <%= image_tag "close-icon.svg", alt: "close icon", id: "close-icon", class: "d-none", data: { toggle_target: "closeIcon" } %>
-    </button>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-    <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
-      <ul class="navbar-nav">
-        <% if user_signed_in? %>
-          <li class="nav-item">
-            <%#= link_to "Messages", messages_path, class: "nav-link btn btn-primary" %>
-          </li>
-          <% if current_user.psychologist.present? %>
-            <li class="nav-item">
-              <%= link_to "Manage Psychologist Profile", edit_psychologist_path(current_user.psychologist), class: "nav-link btn btn-secondary" %>
+      <div class="collapse navbar-collapse flex-grow-0" id="navbarSupportedContent">
+        <ul class="navbar-nav align-items-center">
+          <% if user_signed_in? %>
+            <% if current_user.psychologist.present? %>
+              <li class="nav-item pe-2">
+                <%= link_to "Gestionar Perfil", edit_psychologist_path(current_user.psychologist), class: "btn btn-outline-primary rounded-pill" %>
+              </li>
+              <li class="nav-item pe-2">
+                <% if current_user.psychologist.service.present? %>
+                  <%= link_to "Editar Servicio", edit_service_path(current_user.psychologist.service), class: "btn btn-outline-primary rounded-pill" %>
+                <% else %>
+                  <%= link_to "Crear Servicio", new_service_path, class: "btn btn-outline-primary rounded-pill" %>
+                <% end %>
+              </li>
+            <% end %>
+            <li class="nav-item dropdown">
+              <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Menú de usuario">
+                <i class="fas fa-user"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <%= link_to "Perfil", edit_user_registration_path, class: "dropdown-item" %>
+                <%= link_to "Cerrar sesión", destroy_user_session_path, data: { turbo_method: :delete }, class: "dropdown-item" %>
+              </div>
+            </li>
+          <% else %>
+            <li class="nav-item pe-2">
+              <%= link_to "Iniciar sesión", new_user_session_path, class: "btn btn-outline-primary rounded-pill" %>
+            </li>
+            <li class="nav-item pe-2">
+              <%= link_to "Registrarse como Cliente", new_user_registration_path, class: "btn btn-outline-secondary rounded-pill" %>
             </li>
             <li class="nav-item">
-              <% if current_user.psychologist.service.present? %>
-                <%= link_to "Edit Service", edit_service_path(current_user.psychologist.service), class: "nav-link btn btn-secondary" %>
-              <% else %>
-                <%= link_to "Create Service", new_service_path, class: "nav-link btn btn-secondary" %>
-              <% end %>
+              <%= link_to "Registrarse como Psicólogo", new_psychologist_path, class: "btn btn-outline-secondary rounded-pill" %>
             </li>
           <% end %>
-          <li class="nav-item dropdown">
-            <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-
-            </a>
-            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-              <%= link_to "Profile", edit_user_registration_path, class: "dropdown-item" %>
-              <%= link_to "Log out", destroy_user_session_path, data: { turbo_method: :delete }, class: "dropdown-item" %>
-            </div>
-          </li>
-        <% else %>
-          <li class="nav-item">
-            <%= link_to "Login", new_user_session_path, class: "nav-link btn btn-primary" %>
-          </li>
-          <li class="nav-item">
-            <%= link_to "Register as Client", new_user_registration_path, class: "nav-link btn btn-secondary" %>
-          </li>
-          <li class="nav-item">
-            <%= link_to "Register as Psychologist", new_psychologist_path, class: "nav-link btn btn-secondary" %>
-          </li>
-        <% end %>
-      </ul>
+        </ul>
+      </div>
     </div>
   </div>
-</div>
+</nav>
