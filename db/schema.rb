@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_18_045414) do
+ActiveRecord::Schema[7.1].define(version: 2025_05_24_071153) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -60,7 +60,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_18_045414) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "reserved"
+    t.index ["business_date", "starting_hour", "reserved"], name: "index_availabilities_search"
     t.index ["psychologist_id"], name: "index_availabilities_on_psychologist_id"
+    t.index ["reserved"], name: "index_availabilities_on_reserved"
   end
 
   create_table "bookings", force: :cascade do |t|
@@ -80,6 +82,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_18_045414) do
     t.date "day"
     t.string "reason"
     t.string "dni"
+    t.index ["payment_status"], name: "index_bookings_on_payment_status"
+    t.index ["psychologist_id", "date", "time"], name: "index_bookings_by_psychologist_date_time"
     t.index ["psychologist_id"], name: "index_bookings_on_psychologist_id"
     t.index ["user_id"], name: "index_bookings_on_user_id"
   end
@@ -130,6 +134,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_18_045414) do
     t.bigint "psychologist_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["psychologist_id", "ratings"], name: "index_reviews_on_psychologist_id_and_ratings"
     t.index ["psychologist_id"], name: "index_reviews_on_psychologist_id"
   end
 

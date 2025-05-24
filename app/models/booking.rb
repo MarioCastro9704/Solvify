@@ -1,24 +1,36 @@
 class Booking < ApplicationRecord
   belongs_to :user
   belongs_to :psychologist
-  has_many :messages
+  has_many :messages, dependent: :destroy
+  has_one :payment_status, dependent: :destroy
 
   validates :date, :time, :end_time, :psychologist_id, :user_id, :reason, presence: true
   validate :availability_must_be_free
+  validate :user_cannot_book_own_service
 
   before_validation :set_end_time
-
   after_create :create_videocall
   after_create :mark_availability_as_reserved
-  has_one :payment_status, dependent: :destroy
   after_create :ensure_payment_status
+  
+  # Alcances útiles para consultas frecuentes
+  scope :upcoming, -> { where('date > ? OR (date = ? AND time > ?)', Date.today, Date.today, Time.now) }
+  scope :past, -> { where('date < ? OR (date = ? AND time < ?)', Date.today, Date.today, Time.now) }
+  scope :for_user, ->(user_id) { where(user_id: user_id) }
+  scope :for_psychologist, ->(psychologist_id) { where(psychologist_id: psychologist_id) }
+  scope :pending_payment, -> { joins(:payment_status).where(payment_statuses: { status: 'pending' }) }
+  scope :paid, -> { joins(:payment_status).where(payment_statuses: { status: 'paid' }) }
 
   def sessions_completed
-    self[:sessions_completed]
+    self[:sessions_completed] || 0
   end
-
-  def first_payment_status
-    self[:payment_status]
+  
+  def remaining_sessions
+    (self[:sessions_requested] || 0) - sessions_completed
+  end
+  
+  def payment_complete?
+    payment_status&.status == 'paid'
   end
 
   def create_videocall
@@ -33,39 +45,50 @@ class Booking < ApplicationRecord
 
     begin
       response = RestClient.post(url, payload.to_json, headers)
-      self.update(videocall_id: JSON.parse(response)['name'])
-      self.update(link_to_meet: "https://solvify.daily.co/#{JSON.parse(response)['name']}")
-      puts "Código de respuesta: #{response.code}"
-      puts "Cuerpo de la respuesta: #{response.body}"
+      parsed_response = JSON.parse(response)
+      
+      # Actualización en una sola operación para reducir consultas a la base de datos
+      self.update(
+        videocall_id: parsed_response['name'],
+        link_to_meet: "https://solvify.daily.co/#{parsed_response['name']}"
+      )
+      
+      Rails.logger.info("Video call created: #{parsed_response['name']}")
     rescue RestClient::ExceptionWithResponse => e
-      puts "Error: #{e.response}"
+      Rails.logger.error("Error creating video call: #{e.response}")
     end
   end
 
   private
 
-  def create_payment_status
-    build_payment_status(status: 'pending').save!
-  end
   def ensure_payment_status
     create_payment_status!(status: 'pending') if payment_status.nil?
   end
+  
   def set_end_time
     self.end_time = time + 1.hour if time.present?
   end
 
-  def set_default_payment_status
-    self.payment_status ||= 'pending'
-  end
-
   def availability_must_be_free
-    if Availability.where(psychologist: psychologist, business_date: date, starting_hour: time, reserved: true).exists?
+    # Usamos scope para una consulta más limpia y eficiente
+    if Availability.for_psychologist(psychologist_id)
+                   .for_day(date)
+                   .where(starting_hour: time, reserved: true)
+                   .exists?
       errors.add(:time, 'Este horario ya está reservado.')
     end
   end
 
   def mark_availability_as_reserved
-    availability = Availability.find_by(psychologist: psychologist, business_date: date, starting_hour: time)
-    availability.update(reserved: true) if availability
+    availability = Availability.find_by(psychologist_id: psychologist_id, 
+                                       business_date: date, 
+                                       starting_hour: time)
+    availability&.update(reserved: true)
+  end
+  
+  def user_cannot_book_own_service
+    if user_id.present? && psychologist&.user_id == user_id
+      errors.add(:base, 'No puedes reservar tu propio servicio')
+    end
   end
 end

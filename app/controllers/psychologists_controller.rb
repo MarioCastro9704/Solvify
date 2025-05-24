@@ -4,11 +4,11 @@ class PsychologistsController < ApplicationController
   before_action :ensure_user_is_not_already_psychologist, only: [:new, :create]
 
   def index
-    @psychologists = Psychologist.all
+    @psychologists = Psychologist.with_reviews.with_service.includes(:user)
   end
 
   def show
-    @availabilities = @psychologist.availabilities.where('business_date >= ?', Date.today).order(:business_date, :starting_hour)
+    @availabilities = @psychologist.future_availabilities
   end
 
   def new
@@ -47,11 +47,11 @@ class PsychologistsController < ApplicationController
   end
 
   def user_requests
-    @requests = UserRequest.where(psychologist: current_user.psychologist).includes(:user)
+    @requests = UserRequest.where(psychologist_id: current_user.psychologist.id).includes(:user)
   end
 
   def load_availabilities
-    @availabilities = @psychologist.availabilities.where('business_date >= ?', Date.today).order(:business_date)
+    @availabilities = @psychologist.future_availabilities
     render partial: "pages/availabilities", locals: { availabilities: @availabilities }
   end
 
@@ -85,26 +85,41 @@ class PsychologistsController < ApplicationController
     availabilities_params = params[:psychologist][:availabilities]
     return unless availabilities_params
 
-    @psychologist.availabilities.destroy_all
-
-    availabilities_params.each do |day, hours|
-      hours.each do |start_hour, value|
-        next unless value == "1"
-
-        4.times do |week_offset|
-          date = Date.today.beginning_of_week + day.to_i.days + (week_offset * 7).days
-          @psychologist.availabilities.create!(
-            business_date: date,
-            starting_hour: Time.zone.parse("#{start_hour}:00"),
-            ending_hour: Time.zone.parse("#{(start_hour.to_i + 1)}:00")
-          )
+    # Usamos transacción para garantizar la atomicidad de la operación
+    ActiveRecord::Base.transaction do
+      @psychologist.availabilities.destroy_all
+      
+      # Preparamos todas las disponibilidades para crear en un solo batch
+      new_availabilities = []
+      
+      availabilities_params.each do |day, hours|
+        hours.each do |start_hour, value|
+          next unless value == "1"
+          
+          4.times do |week_offset|
+            date = Date.today.beginning_of_week + day.to_i.days + (week_offset * 7).days
+            new_availabilities << {
+              psychologist_id: @psychologist.id,
+              business_date: date,
+              starting_hour: Time.zone.parse("#{start_hour}:00"),
+              ending_hour: Time.zone.parse("#{(start_hour.to_i + 1)}:00"),
+              reserved: false,
+              created_at: Time.current,
+              updated_at: Time.current
+            }
+          end
         end
       end
+      
+      # Creamos todas las disponibilidades en una sola operación
+      Availability.insert_all(new_availabilities) if new_availabilities.any?
     end
   end
 
   def load_availability_data
-    @availabilities = @psychologist.availabilities.group_by { |a| a.business_date.wday }
+    # Optimizamos para cargar solo las disponibilidades necesarias
+    availabilities = @psychologist.availabilities.includes(:psychologist)
+    @availabilities = availabilities.group_by { |a| a.business_date.wday }
     @time_slots = (7..20).map { |hour| [hour, hour + 1] }
   end
 end

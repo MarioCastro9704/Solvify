@@ -2,11 +2,15 @@ class Psychologist < ApplicationRecord
   belongs_to :user
   has_one_attached :profile_picture
   has_one :service, dependent: :destroy
-  has_many :availabilities
-  has_many :reviews
-  has_many :bookings
-  has_many :users, through: :bookings
-  has_many :clientes, class_name: 'User', foreign_key: 'psychologist_id'
+  has_many :availabilities, dependent: :destroy
+  has_many :reviews, dependent: :destroy
+  has_many :bookings, dependent: :destroy
+  has_many :clients, through: :bookings, source: :user
+  
+  # Alcances para consultas comunes
+  scope :with_availabilities, -> { includes(:availabilities) }
+  scope :with_reviews, -> { includes(:reviews) }
+  scope :with_service, -> { includes(:service) }
 
   validates :specialty, presence: true
   validates :degree, presence: true
@@ -36,6 +40,16 @@ class Psychologist < ApplicationRecord
   end
 
   def average_rating
-    reviews.average(:ratings).to_f.round(1)
+    @average_rating ||= reviews.average(:ratings).to_f.round(1)
+  end
+  
+  def future_availabilities
+    availabilities.where('business_date >= ?', Date.today).order(:business_date, :starting_hour)
+  end
+  
+  def available_slots(date = nil)
+    scope = availabilities.where(reserved: false)
+    scope = scope.where(business_date: date) if date.present?
+    scope.order(:business_date, :starting_hour)
   end
 end
